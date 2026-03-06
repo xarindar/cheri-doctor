@@ -10,9 +10,6 @@ Walks all pages and blocks in document.json to:
 import re
 from typing import Any
 
-import extract as _extract
-import assembler as _assembler
-
 SECTION_CODE_RE = re.compile(r"\b([0-9]{1,2}[A-Z]\d{0,2})-(?:[A-Z]\d*-)?([0-9]+)\b")
 # Broader pattern to extract a section label from page_label
 # Matches: "7B-11", "6E2-A-60", "6E2-C1-2", "10-8-2", "5-18"
@@ -28,11 +25,36 @@ def _is_date_label(label: str) -> bool:
     return bool(m) and int(m.group(3)) >= 70
 
 
+_LEGACY_SECTION_CODE_RE = re.compile(r'\b([O0-9]+[A-Z]\d*)-(\d+)\b')
+
+
+def _detect_section(text: str) -> dict:
+    """Extract section code from block text (first/last 3 lines).
+
+    Inlined from legacy/extract.py to avoid symspellpy import chain.
+    """
+    if not text:
+        return {"section_code": None, "section_page": None}
+    lines = text.strip().splitlines()
+    if not lines:
+        return {"section_code": None, "section_page": None}
+    for line in (lines[:3] + lines[-3:]):
+        m = _LEGACY_SECTION_CODE_RE.search(line.strip())
+        if m:
+            return {
+                "section_code": m.group(1).replace('O', '0'),
+                "section_page": m.group(2),
+            }
+    return {"section_code": None, "section_page": None}
+
+
 def build_structure(pages: list[dict], config: dict):
     """Assign section_path and source_label to all blocks across all pages.
 
     Modifies pages list in-place.
     """
+    import assembler as _assembler
+
     section_names = config.get("structure", {}).get("section_names", {})
     stack = SectionStack(section_names)
 
@@ -42,7 +64,7 @@ def build_structure(pages: list[dict], config: dict):
         # Try to extract section info from page header/footer blocks first
         for block in page["blocks"]:
             if block.get("type") in ("heading", "paragraph"):
-                info = _extract.detect_section(block.get("text") or "")
+                info = _detect_section(block.get("text") or "")
                 if info["section_code"]:
                     stack.update_from_section_code(
                         info["section_code"],

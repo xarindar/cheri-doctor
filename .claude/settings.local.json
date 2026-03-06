@@ -7,7 +7,8 @@
       "WebSearch",
       "Bash(curl:*)",
       "Bash(tasklist:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(source:*)"
     ]
   }
 }
