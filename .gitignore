@@ -1,0 +1,20 @@
+# Metro Project
+.venv/
+venv/
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+Reference Manuals/
+build/pages/
+build/pages_pre/
+build/chunks.jsonl
+tools/rag_index/*.pkl
+tools/rag_index/*.npy
+*.log
+.DS_Store
+test_worksheet*.pdf

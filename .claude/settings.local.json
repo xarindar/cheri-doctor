@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(netstat:*)",
+      "Bash(python:*)",
+      "WebFetch(domain:ai.google.dev)",
+      "WebSearch",
+      "Bash(curl:*)",
+      "Bash(tasklist:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}

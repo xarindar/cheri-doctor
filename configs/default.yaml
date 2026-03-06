@@ -1,0 +1,169 @@
+# Metro Manual Pipeline Configuration
+
+pipeline:
+  doc_id: "geo_metro_1990"
+  source_pdf: "Reference Manuals/1990 Geo Metro Manual.pdf"
+  build_dir: "build"
+  front_matter_pages: 4        # skip cover/foreword/comment pages (1-4)
+  toc_markdown: "Reference Manuals/TABLE OF CONTENTS.md"  # manually converted TOC
+  skip_pages: [11, 12, 15, 16] # pages to exclude entirely (metric/conversion tables, schedule pages)
+  manual_tables:               # hand-curated CSVs to inject as table chunks
+    - path: "Reference Manuals/maintenance-schedule.csv"
+      section_code: "0B"
+      source_label: "Maintenance Schedule"
+      section_path: "Maintenance and Lubrication > Scheduled Maintenance"
+      page: 15
+
+rasterize:
+  dpi: 350
+  format: "png"
+
+preprocess:
+  content_crop:
+    row_threshold_pct: 0.005
+    col_threshold_pct: 0.005
+    margin_px: 40
+  deskew:
+    min_angle: 0.3
+    hough_threshold: 100
+  normalize:
+    clahe_clip: 2.0
+    clahe_tile: [8, 8]
+    denoise_h: 10
+    adaptive_block: 25
+    adaptive_c: 12
+  border_removal:
+    margin_pct: 0.03
+    dark_threshold: 80
+
+layout:
+  engine: "surya"
+  min_confidence: 0.3
+  overlap_iou_threshold: 0.50
+
+column_detection:
+  search_band: [0.30, 0.70]
+  min_gutter_width_px: 10
+  density_ratio: 0.33
+  smoothing_fraction: 0.25
+  header_skip_frac: 0.10   # skip top 10% of content to ignore running headers
+  footer_skip_frac: 0.03   # skip bottom 3% to ignore page footers
+
+ocr:
+  # Use system tesseract (Linux/macOS). Override in local config if needed.
+  tesseract_cmd: "tesseract"
+  upscale_factor: 2
+  upscale_tiny_threshold: 20
+  use_consensus: true
+  psm_modes:
+    text_column: 4
+    single_block: 6
+    single_line: 7
+    sparse: 11
+  easyocr:
+    gpu: true
+    languages: ["en"]
+
+text_correction:
+  automotive_dict: "legacy/automotive_dictionary.txt"
+  symspell_max_edit: 2
+  symspell_prefix_length: 7
+  confidence_threshold: 80
+
+table_extraction:
+  primary: "img2table"
+  fallback: "opencv"
+  min_rows: 2
+  min_cols: 2
+  cell_psm: 7
+  debug: true
+  infer_symptom_cause_cure_header: true
+
+figure_extraction:
+  export_format: "webp"
+  webp_quality: 85
+  caption_search_distance_px: 100
+  caption_pattern: "(?:Figure|Fig\\.?)\\s*\\d+"
+  legend_search_distance_px: 300
+  legend_min_items: 3
+
+vision:
+  enabled: true
+  primary: "claude"
+  model: "claude-sonnet-4-6"
+  fallback: "gpt-4o"
+  fallbacks:
+    - provider: "gpt-4o"
+    - provider: "gemini"
+      model: "gemini-1.5-pro-latest"
+  max_image_dim: 1568
+  rate_limit_delay: 1.0
+  max_retries: 3
+  classify_boxes: true
+  classify_model: "claude-sonnet-4-6"
+  table_model: "claude-sonnet-4-6"
+  full_page_model: "claude-sonnet-4-6"
+
+structure:
+  heading_patterns:
+    all_caps_min_length: 4
+    section_code_re: "\\b([0-9]+[A-Z]\\d*)-([0-9]+)\\b"
+  section_names:
+    "0A": "General Information"
+    "0B": "Maintenance and Lubrication"
+    "1A": "Heater and Ventilation"
+    "1B": "Air Conditioner"
+    "2A": "Suspension Front"
+    "2B": "Suspension Rear"
+    "3A": "Manual Steering"
+    "3B": "Power Steering"
+    "4A": "Drive Axle"
+    "5A": "Brakes"
+    "5B": "Brakes Hydraulic"
+    "6A": "Engine Mechanical"
+    "6B": "Engine Cooling"
+    "6C": "Engine Fuel"
+    "6D": "Engine Electrical"
+    "6E": "Emission Controls"
+    "7A": "Automatic Transaxle"
+    "7B": "Manual Transaxle"
+    "8A": "Electrical"
+    "8B": "Electrical Wiring"
+
+chunking:
+  min_tokens: 200
+  max_tokens: 600
+  chars_per_token: 4
+  procedure_whole: true
+  caution_whole: true
+
+indexing:
+  bm25:
+    k1: 1.5
+    b: 0.75
+  embeddings:
+    model: "all-MiniLM-L6-v2"
+    dimension: 384
+    batch_size: 64
+
+# --- Providers (for future multi-provider support) --------------------------
+providers:
+  claude:
+    api_key_env: "CLAUDE_API_KEY"
+  gemini:
+    api_base: "https://generativelanguage.googleapis.com"
+    api_version: "v1beta"
+    api_key_env: "GEMINI_API_KEY"
+    default_model: "gemini-1.5-pro-latest"
+    allow_list_models_probe: true
+
+chat:
+  model: "gemini-2.5-flash"
+  provider: "gemini"
+  fallbacks:
+    - provider: "gemini"
+      model: "gemini-1.5-pro-latest"
+  max_tokens: 4096
+  top_k_retrieve: 20
+  top_n_rerank: 10
+  temperature: 0.1

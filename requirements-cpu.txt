@@ -1,0 +1,27 @@
+# Metro Project — CPU-only (no CUDA). Use for standard dev/servers.
+# For GPU: use requirements.txt and install torch from PyTorch cu128 index first.
+
+anthropic==0.83.0
+fastapi==0.129.0
+uvicorn==0.41.0
+pydantic==2.11.7
+python-dotenv==1.2.1
+PyYAML==6.0.3
+openai==1.93.1
+
+numpy==2.3.5
+rank-bm25==0.2.2
+scikit-learn==1.8.0
+sentence-transformers==5.2.3
+transformers==4.57.6
+
+PyMuPDF==1.27.1
+fpdf2==2.8.2
+pillow==12.0.0
+opencv-contrib-python-headless==4.13.0.92
+pytesseract==0.3.13
+scikit-image==0.26.0
+
+# CPU PyTorch (from default PyPI)
+torch==2.10.0
+torchvision==0.25.0

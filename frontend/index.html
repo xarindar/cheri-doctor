@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geo Metro — Service Manual Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <style>
+    :root {
+      --bg:              #09090b;
+      --sidebar-bg:      #0f0f11;
+      --surface:         #18181b;
+      --surface-2:       #1f1f23;
+      --surface-3:       #27272a;
+      --border:          #27272a;
+      --border-subtle:   #1c1c1f;
+      --accent:          #3b82f6;
+      --accent-hover:    #2563eb;
+      --accent-dim:      #172554;
+      --accent-glow:     rgba(59,130,246,0.12);
+      --text-1:          #fafafa;
+      --text-2:          #a1a1aa;
+      --text-3:          #52525b;
+      --green:           #22c55e;
+      --green-dim:       #052e16;
+      --green-border:    #14532d;
+      --red:             #ef4444;
+      --yellow:          #eab308;
+      --sidebar-w:       268px;
+      --pane-w:          400px;
+      --radius:          10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      overflow: hidden;
+    }
+
+    /* ── LAYOUT ────────────────────────────────────────────────────── */
+    #app {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── SIDEBAR ───────────────────────────────────────────────────── */
+    #sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: width 0.22s cubic-bezier(.4,0,.2,1),
+                  min-width 0.22s cubic-bezier(.4,0,.2,1),
+                  opacity 0.22s;
+    }
+
+    #sidebar.collapsed {
+      width: 0;
+      min-width: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Brand header */
+    .sidebar-top {
+      padding: 18px 14px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 2px 4px;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    .brand-info { flex: 1; min-width: 0; }
+
+    .brand-name {
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: var(--text-1);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-sub {
+      font-size: 0.69rem;
+      color: var(--text-3);
+      margin-top: 1px;
+    }
+
+    #new-chat-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 100%;
+      padding: 8px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-2);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    #new-chat-btn:hover {
+      background: var(--surface-2);
+      color: var(--text-1);
+      border-color: var(--surface-3);
+    }
+
+    /* History list */
+    #history-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 6px 8px;
+    }
+
+    .history-group-label {
+      font-size: 0.66rem;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      padding: 12px 8px 4px;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background 0.1s;
+      position: relative;
+    }
+
+    .history-item:hover { background: var(--surface); }
+    .history-item.active {
+      background: var(--surface-2);
+    }
+
+    .history-icon {
+      font-size: 12px;
+      color: var(--text-3);
+      flex-shrink: 0;
+    }
+
+    .history-item-text {
+      flex: 1;
+      font-size: 0.79rem;
+      color: var(--text-2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.4;
+    }
+
+    .history-item.active .history-item-text { color: var(--text-1); }
+
+    .history-delete {
+      opacity: 0;
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      line-height: 1;
+      transition: opacity 0.1s, color 0.1s;
+      flex-shrink: 0;
+    }
+
+    .history-item:hover .history-delete { opacity: 1; }
+    .history-delete:hover { color: var(--red); }
+
+    /* Sidebar footer */
+    .sidebar-footer {
+      padding: 12px 14px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.7rem;
+      color: var(--text-3);
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+      box-shadow: 0 0 5px var(--green);
+    }
+
+    /* ── MAIN ──────────────────────────────────────────────────────── */
+    #main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0;
+      position: relative;
+    }
+
+    /* Header bar */
+    #header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg);
+      flex-shrink: 0;
+      height: 56px;
+    }
+
+    #toggle-sidebar-btn, #toggle-pane-btn {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s, background 0.15s;
+      flex-shrink: 0;
+    }
+
+    #toggle-sidebar-btn:hover, #toggle-pane-btn:hover { color: var(--text-1); background: var(--surface); }
+
+    .header-title {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .header-title h1 {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-1);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .header-title p {
+      font-size: 0.69rem;
+      color: var(--text-3);
+      margin-top: 1px;
+    }
+
+    .badge {
+      background: var(--green-dim);
+      border: 1px solid var(--green-border);
+      color: var(--green);
+      font-size: 0.66rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    #clear-btn, #pdf-worksheet-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-3);
+      cursor: pointer;
+      padding: 5px 11px;
+      border-radius: 7px;
+      font-size: 0.75rem;
+      font-family: inherit;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    #clear-btn:hover, #pdf-worksheet-btn:hover { border-color: var(--surface-3); color: var(--text-1); }
+    #pdf-worksheet-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ── MESSAGES ──────────────────────────────────────────────────── */
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    /* Empty / welcome state */
+    #empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100%;
+      padding: 48px 24px;
+      text-align: center;
+      gap: 20px;
+    }
+
+    .empty-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 8px 24px rgba(59,130,246,0.25);
+    }
+
+    #empty-state h2 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+
+    #empty-state p {
+      font-size: 0.87rem;
+      color: var(--text-2);
+      max-width: 400px;
+      line-height: 1.65;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      max-width: 540px;
+    }
+
+    .chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.79rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      line-height: 1;
+    }
+
+    .chip:hover {
+      background: var(--surface-2);
+      border-color: var(--accent);
+      color: var(--text-1);
+    }
+
+    /* Message rows */
+    .msg-row {
+      padding: 12px 0;
+      display: flex;
+    }
+
+    .msg-row:hover .msg-actions { opacity: 1; }
+
+    .msg-inner {
+      width: 100%;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .msg-row.user .msg-inner { flex-direction: row-reverse; }
+
+    /* Avatar */
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 1px;
+    }
+
+    .avatar.asst {
+      background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
+      color: #fff;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.1);
+    }
+
+    .avatar.user {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+    }
+
+    /* Bubble */
+    .msg-body { flex: 1; min-width: 0; }
+
+    .msg-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-3);
+      margin-bottom: 5px;
+      letter-spacing: 0.04em;
+    }
+
+    .bubble {
+      font-size: 0.93rem;
+      line-height: 1.75;
+      color: var(--text-1);
+    }
+
+    .msg-row.user .msg-body {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .msg-row.user .msg-label {
+      text-align: right;
+    }
+
+    .msg-row.user .msg-actions {
+      justify-content: flex-end;
+    }
+
+    .msg-row.user .bubble {
+      display: inline-block;
+      background: var(--accent-dim);
+      border: 1px solid rgba(59,130,246,0.25);
+      padding: 11px 16px;
+      border-radius: 12px 12px 4px 12px;
+      max-width: 100%;
+      text-align: left;
+    }
+
+    /* Markdown inside bubbles */
+    .bubble h1, .bubble h2, .bubble h3 {
+      color: var(--text-1);
+      font-weight: 600;
+      margin: 14px 0 6px;
+    }
+    .bubble h1 { font-size: 1.08rem; }
+    .bubble h2 { font-size: 0.98rem; }
+    .bubble h3 { font-size: 0.9rem; color: var(--text-2); }
+
+    .bubble p { margin: 8px 0; }
+    .bubble p:first-child { margin-top: 0; }
+    .bubble p:last-child { margin-bottom: 0; }
+
+    .bubble ul, .bubble ol { padding-left: 22px; margin: 8px 0; }
+    .bubble li { margin: 5px 0; }
+
+    .bubble strong { color: var(--text-1); font-weight: 600; }
+    .bubble em { color: var(--text-2); }
+
+    .bubble code {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 0.82em;
+      color: #93c5fd;
+    }
+
+    .bubble pre {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 14px 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+
+    .bubble pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--text-2);
+      font-size: 0.84em;
+    }
+
+    .bubble blockquote {
+      border-left: 3px solid var(--accent);
+      padding-left: 14px;
+      color: var(--text-2);
+      margin: 10px 0;
+      font-style: italic;
+    }
+
+    .bubble table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: 0.84rem;
+    }
+
+    .bubble th, .bubble td {
+      border: 1px solid var(--border);
+      padding: 7px 12px;
+      text-align: left;
+    }
+
+    .bubble th {
+      background: var(--surface-2);
+      font-weight: 600;
+      color: var(--text-1);
+    }
+
+    .bubble td { color: var(--text-2); }
+
+    .bubble hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 14px 0;
+    }
+
+    /* Fig Jump Links */
+    .fig-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 1px dashed var(--accent);
+      padding: 0 2px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .fig-link:hover {
+      background: var(--accent-glow);
+      border-bottom-style: solid;
+    }
+
+    /* Message actions (copy) */
+    .msg-actions {
+      opacity: 0;
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      transition: opacity 0.15s;
+      align-items: center;
+    }
+
+    .msg-action-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-3);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .msg-action-btn:hover { color: var(--text-1); border-color: var(--surface-3); }
+
+    /* Citations */
+    .citations {
+      margin-top: 12px;
+    }
+
+    .citations-label {
+      font-size: 0.66rem;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .citation-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .cite-tag {
+      background: var(--green-dim);
+      border: 1px solid var(--green-border);
+      color: var(--green);
+      font-size: 0.7rem;
+      padding: 3px 9px;
+      border-radius: 5px;
+      font-family: 'Menlo', 'Monaco', monospace;
+      cursor: default;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+
+    .cite-tag:hover { background: #064e3b; }
+
+    /* ── REFERENCE PANE ───────────────────────────────────────────── */
+    #reference-pane {
+      width: var(--pane-w);
+      min-width: var(--pane-w);
+      background: var(--sidebar-bg);
+      border-left: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: width 0.22s cubic-bezier(.4,0,.2,1),
+                  min-width 0.22s cubic-bezier(.4,0,.2,1),
+                  opacity 0.22s;
+    }
+
+    #reference-pane.collapsed {
+      width: 0;
+      min-width: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .pane-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .pane-header h2 { font-size: 0.82rem; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    #pane-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .fig-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--surface);
+      cursor: zoom-in;
+      transition: border-color 0.15s, transform 0.15s, box-shadow 0.2s;
+      scroll-margin-top: 16px;
+    }
+
+    .fig-card.highlight {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+      transform: scale(1.02);
+    }
+
+    .fig-card:hover {
+      border-color: var(--accent);
+    }
+
+    /* Skeleton Loading */
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .fig-card img { width: 100%; display: block; }
+    .fig-card img.hidden { display: none; }
+
+    .fig-caption {
+      padding: 8px 12px 10px;
+      font-size: 0.74rem;
+      color: var(--text-3);
+      line-height: 1.4;
+      background: var(--surface-2);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── LIGHTBOX ─────────────────────────────────────────────────── */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 9999;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #lightbox.open { display: flex; }
+
+    .lightbox-header {
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.4);
+      z-index: 10;
+    }
+    .lightbox-title { font-size: 0.9rem; color: var(--text-2); }
+    .lightbox-close { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; padding: 5px; }
+
+    #lightbox-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #lightbox-viewport:active { cursor: grabbing; }
+
+    #lightbox-img {
+      max-width: 100%;
+      max-height: 100%;
+      transition: transform 0.1s ease-out;
+      user-select: none;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    .lightbox-controls {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      background: rgba(30,30,30,0.8);
+      padding: 8px 16px;
+      border-radius: 30px;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .lb-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 18px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    .lb-btn:hover { background: rgba(255,255,255,0.1); }
+
+    /* Typing indicator */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 22px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-3);
+      animation: bounce 1.3s infinite;
+    }
+
+    .dot:nth-child(2) { animation-delay: 0.18s; }
+    .dot:nth-child(3) { animation-delay: 0.36s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+      30%            { transform: translateY(-6px); opacity: 1; }
+    }
+
+    /* ── INPUT ─────────────────────────────────────────────────────── */
+    #input-area {
+      padding: 14px 24px 18px;
+      background: var(--bg);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #input-shell {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      width: 100%;
+      max-width: 780px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 11px 11px 11px 16px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    #input-shell:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    #query {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-1);
+      font-size: 0.94rem;
+      font-family: inherit;
+      resize: none;
+      min-height: 26px;
+      max-height: 160px;
+      outline: none;
+      line-height: 1.62;
+      padding: 0;
+    }
+
+    #query::placeholder { color: var(--text-3); }
+
+    #send-btn {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      border-radius: 9px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, opacity 0.15s, transform 0.1s;
+    }
+
+    #send-btn:hover:not(:disabled) { background: var(--accent-hover); transform: scale(1.05); }
+    #send-btn:disabled { background: var(--surface-2); opacity: 0.45; cursor: default; }
+
+    .input-hint {
+      font-size: 0.68rem;
+      color: var(--text-3);
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--surface-3); }
+
+    /* Mobile handling */
+    @media (max-width: 1024px) {
+      #reference-pane { position: fixed; right: 0; top: 0; bottom: 0; z-index: 100; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── SIDEBAR ────────────────────────────────────────────────────── -->
+  <nav id="sidebar">
+    <div class="sidebar-top">
+      <div class="brand">
+        <div class="brand-logo">🔧</div>
+        <div class="brand-info">
+          <div class="brand-name">Geo Metro Manual</div>
+          <div class="brand-sub">1990 Factory Service</div>
+        </div>
+      </div>
+      <button id="new-chat-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Chat
+      </button>
+    </div>
+
+    <div id="history-list"></div>
+
+    <div class="sidebar-footer">
+      <div class="status-row">
+        <div class="status-dot"></div>
+        RAG · Claude Vision · Port 8000
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ──────────────────────────────────────────────────────── -->
+  <div id="main">
+
+    <!-- Header -->
+    <div id="header">
+      <button id="toggle-sidebar-btn" title="Toggle sidebar">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+
+      <div class="header-title">
+        <h1 id="header-title-text">Cheri Doctor</h1>
+        <p>1990 Geo Metro · G10 3-cyl · Automatic · Schedule I</p>
+      </div>
+
+      <div class="badge">RAG + Vision</div>
+      <button id="pdf-worksheet-btn" title="Generate PDF worksheet from topic below">📄 PDF Worksheet</button>
+      <button id="clear-btn" style="margin-right: 8px;">Clear</button>
+      
+      <button id="toggle-pane-btn" title="Toggle Reference Pane">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+           <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+           <line x1="15" y1="3" x2="15" y2="21"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Messages -->
+    <div id="messages">
+      <div id="empty-state">
+        <div class="empty-logo">🔧</div>
+        <h2>Ask the Manual</h2>
+        <p>Troubleshooting, torque values, or wiring. Every answer is cited directly from the factory service manual.</p>
+        <div class="chips" id="chips">
+          <button class="chip">Oil change procedure</button>
+          <button class="chip">AC filter drier replacement</button>
+          <button class="chip">Idle speed spec</button>
+          <button class="chip">Valve clearance adjustment</button>
+          <button class="chip">Coolant system flush</button>
+          <button class="chip chip-worksheet" data-prompt="alternator diagnostic tests">📄 Alternator worksheet</button>
+          <button class="chip chip-worksheet" data-prompt="cooling system diagnostic tests">📄 Cooling system worksheet</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Input -->
+    <div id="input-area">
+      <div style="width:100%;max-width:780px;margin-bottom:8px;display:flex;justify-content:flex-end;">
+        <label for="model-select" style="font-size:0.82rem;color:var(--text-3);margin-right:7px;">Model:</label>
+        <select id="model-select" style="font-size:0.85rem;padding:2px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-1);">
+          <option value="claude-sonnet-4-6">Claude Sonnet</option>
+          <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+          <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+        </select>
+      </div>
+      <div id="input-shell">
+        <textarea id="query" placeholder="Ask about your Geo Metro…" rows="1" spellcheck="true"></textarea>
+        <button id="send-btn" title="Send (Enter)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+      </div>
+      <div class="input-hint">Enter to send &nbsp;·&nbsp; Shift+Enter for new line</div>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- ── REFERENCE PANE ───────────────────────────────────────────── -->
+  <aside id="reference-pane" class="collapsed">
+    <div class="pane-header">
+      <h2>Diagrams &amp; Figures</h2>
+      <button id="close-pane-btn" class="lb-btn" style="color:var(--text-3); font-size:14px;">×</button>
+    </div>
+    <div id="pane-content">
+      <div style="padding:40px 20px; text-align:center; color:var(--text-3); font-size:0.85rem;">
+        Figures mentioned in the chat will appear here for easy reference.
+      </div>
+    </div>
+  </aside>
+
+</div><!-- /app -->
+
+<!-- Lightbox -->
+<div id="lightbox">
+  <div class="lightbox-header">
+    <div class="lightbox-title" id="lb-title">Figure</div>
+    <button class="lightbox-close" id="lb-close">×</button>
+  </div>
+  <div id="lightbox-viewport">
+    <img id="lightbox-img" src="" alt="">
+  </div>
+  <div class="lightbox-controls">
+    <button class="lb-btn" id="lb-zoom-out" title="Zoom Out">-</button>
+    <button class="lb-btn" id="lb-reset" title="Reset Zoom">1:1</button>
+    <button class="lb-btn" id="lb-zoom-in" title="Zoom In">+</button>
+  </div>
+</div>
+
+<script>
+// ── Config ─────────────────────────────────────────────────────────────────
+const API_URL    = '/api/chat';
+const STORE_KEY  = 'geo_metro_sessions_v2';
+const MODEL_KEY  = 'geo_metro_selected_model';
+
+// ── State ──────────────────────────────────────────────────────────────────
+let sessions     = loadSessions();
+let activeId     = null;
+let conversation = [];
+let isLoading    = false;
+
+// Context-aware diagrams state
+let msgFiguresMap = {}; // msgId -> figures array
+let currentlyViewingMsgId = null;
+
+// Lightbox state
+let scale = 1;
+let translateX = 0;
+let translateY = 0;
+let isDragging = false;
+let startX, startY;
+
+// ── DOM ────────────────────────────────────────────────────────────────────
+const sidebar         = document.getElementById('sidebar');
+const historyList     = document.getElementById('history-list');
+const messagesEl      = document.getElementById('messages');
+const emptyState      = document.getElementById('empty-state');
+const queryEl         = document.getElementById('query');
+const sendBtn         = document.getElementById('send-btn');
+const lightbox        = document.getElementById('lightbox');
+const lightboxImg     = document.getElementById('lightbox-img');
+const headerTitleText = document.getElementById('header-title-text');
+const modelSelect     = document.getElementById('model-select');
+const refPane         = document.getElementById('reference-pane');
+const paneContent     = document.getElementById('pane-content');
+const togglePaneBtn   = document.getElementById('toggle-pane-btn');
+
+// ── Session persistence ────────────────────────────────────────────────────
+function loadSessions() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+  catch { return {}; }
+}
+
+function saveSessions() {
+  localStorage.setItem(STORE_KEY, JSON.stringify(sessions));
+}
+
+function createSession() {
+  const id = Date.now().toString();
+  const now = Date.now();
+  sessions[id] = { id, title: 'New Chat', messages: [], created: now, updated: now };
+  saveSessions();
+  return id;
+}
+
+function deleteSession(id) {
+  delete sessions[id];
+  saveSessions();
+  const remaining = Object.values(sessions).sort((a, b) => (b.updated || b.created) - (a.updated || a.created));
+  if (remaining.length) loadSession(remaining[0].id);
+  else startNewChat();
+  renderSidebar();
+}
+
+function setSessionTitle(id, firstMessage) {
+  sessions[id].title = firstMessage.length > 42 ? firstMessage.slice(0, 42) + '…' : firstMessage;
+  saveSessions();
+  renderSidebar();
+}
+
+function updateSessionTimestamp(id) {
+  if (sessions[id]) {
+    sessions[id].updated = Date.now();
+    saveSessions();
+    renderSidebar();
+  }
+}
+
+// ── Sidebar rendering ──────────────────────────────────────────────────────
+function renderSidebar() {
+  historyList.innerHTML = '';
+  const sorted = Object.values(sessions).sort((a, b) => (b.updated || b.created) - (a.updated || a.created));
+  if (!sorted.length) {
+    historyList.innerHTML = `<div style="padding:24px 10px;font-size:0.77rem;color:var(--text-3);text-align:center">No conversations yet</div>`;
+    return;
+  }
+  const DAY = 86400000;
+  const now = Date.now();
+  const groups = [
+    { label: 'Today',     items: sorted.filter(s => now - (s.updated || s.created) < DAY) },
+    { label: 'Yesterday', items: sorted.filter(s => now - (s.updated || s.created) >= DAY && now - (s.updated || s.created) < 2*DAY) },
+    { label: 'This Week', items: sorted.filter(s => now - (s.updated || s.created) >= 2*DAY && now - (s.updated || s.created) < 7*DAY) },
+    { label: 'Older',     items: sorted.filter(s => now - (s.updated || s.created) >= 7*DAY) },
+  ];
+  for (const group of groups) {
+    if (!group.items.length) continue;
+    const labelEl = document.createElement('div');
+    labelEl.className = 'history-group-label';
+    labelEl.textContent = group.label;
+    historyList.appendChild(labelEl);
+    for (const sess of group.items) {
+      const el = document.createElement('div');
+      el.className = 'history-item' + (sess.id === activeId ? ' active' : '');
+      el.innerHTML = `<span class="history-icon">💬</span><span class="history-item-text">${escHtml(sess.title)}</span><button class="history-delete" title="Delete">×</button>`;
+      el.querySelector('.history-delete').addEventListener('click', (e) => { e.stopPropagation(); deleteSession(sess.id); });
+      el.addEventListener('click', () => loadSession(sess.id));
+      historyList.appendChild(el);
+    }
+  }
+}
+
+// ── Session load / new ─────────────────────────────────────────────────────
+function startNewChat() {
+  activeId = createSession();
+  conversation = [];
+  msgFiguresMap = {};
+  currentlyViewingMsgId = null;
+  clearMessages();
+  paneContent.innerHTML = '<div style="padding:40px 20px; text-align:center; color:var(--text-3); font-size:0.85rem;">Figures mentioned in the chat will appear here for easy reference.</div>';
+  renderSidebar();
+  headerTitleText.textContent = 'Cheri Doctor';
+  queryEl.focus();
+}
+
+function loadSession(id) {
+  if (!sessions[id]) return;
+  activeId = id;
+  conversation = sessions[id].messages.map(m => ({ role: m.role, text: m.text }));
+  msgFiguresMap = {};
+  currentlyViewingMsgId = null;
+  clearMessages();
+  paneContent.innerHTML = '';
+  headerTitleText.textContent = sessions[id].title === 'New Chat' ? 'Cheri Doctor' : sessions[id].title;
+  if (sessions[id].messages.length) {
+    for (const msg of sessions[id].messages) {
+      if (msg.role === 'user') renderUserMessage(msg.text);
+      else renderAssistantMessage(msg.text, msg.citations || [], msg.figures || []);
+    }
+    scrollToBottom();
+  }
+  renderSidebar();
+}
+
+function clearMessages() {
+  messagesEl.innerHTML = '';
+  messagesEl.appendChild(emptyState);
+  emptyState.style.display = 'flex';
+  refPane.classList.add('collapsed');
+}
+
+// ── Message rendering ──────────────────────────────────────────────────────
+function renderUserMessage(text) {
+  emptyState.style.display = 'none';
+  const row = document.createElement('div');
+  row.className = 'msg-row user';
+  row.innerHTML = `
+    <div class="msg-inner">
+      <div class="avatar user">U</div>
+      <div class="msg-body">
+        <div class="msg-label">You</div>
+        <div class="bubble">${escHtml(text)}</div>
+      </div>
+    </div>`;
+  messagesEl.appendChild(row);
+  return row;
+}
+
+function renderAssistantMessage(text, citations = [], figures = []) {
+  emptyState.style.display = 'none';
+  const row = document.createElement('div');
+  row.className = 'msg-row assistant';
+  const msgId = 'msg-' + Date.now() + '-' + Math.floor(Math.random()*1000);
+  row.dataset.msgId = msgId;
+  
+  if (figures && figures.length) {
+    msgFiguresMap[msgId] = figures;
+  }
+
+  const bubbleHtml = parseMarkdown(text);
+
+  let citeHtml = '';
+  if (citations.length) {
+    const tags = citations.map(c => `<span class="cite-tag" title="${escHtml(c.section_path)}">p${c.page}${c.source_label ? ' ' + escHtml(c.source_label) : ''} · ${escHtml(c.chunk_id)}</span>`).join('');
+    citeHtml = `<div class="citations"><div class="citations-label">Sources</div><div class="citation-tags">${tags}</div></div>`;
+  }
+
+  row.innerHTML = `
+    <div class="msg-inner">
+      <div class="avatar asst">CD</div>
+      <div class="msg-body">
+        <div class="msg-label">Cheri Doctor</div>
+        <div class="bubble">${bubbleHtml}</div>
+        ${citeHtml}
+        <div class="msg-actions">
+           <button class="msg-action-btn copy-btn">
+             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+             Copy
+           </button>
+        </div>
+      </div>
+    </div>`;
+  
+  row.querySelector('.copy-btn').onclick = (e) => copyText(e.currentTarget, text);
+
+  messagesEl.appendChild(row);
+  return row;
+}
+
+function refreshPaneContent(figures) {
+  paneContent.innerHTML = '';
+  const figs = Array.isArray(figures) ? figures : [figures];
+  if (!figs.length) {
+    paneContent.innerHTML = '<div style="padding:40px 20px; text-align:center; color:var(--text-3); font-size:0.85rem;">No diagrams selected.</div>';
+    return;
+  }
+  figs.forEach(f => addFigureToPane(f));
+}
+
+function addFigureToPane(f) {
+  const card = document.createElement('div');
+  card.className = 'fig-card';
+  card.id = `fig-${f.figure_id}`;
+  card.dataset.figId = f.figure_id;
+  
+  // Skeleton loader
+  const skeleton = document.createElement('div');
+  skeleton.className = 'skeleton';
+  skeleton.innerHTML = '<span style="font-size:10px; color:var(--text-3);">LOADING DIAGRAM...</span>';
+  card.appendChild(skeleton);
+
+  const img = document.createElement('img');
+  img.src = f.url;
+  img.alt = f.caption_text || '';
+  img.className = 'hidden';
+  img.onload = () => {
+    skeleton.remove();
+    img.classList.remove('hidden');
+  };
+  card.appendChild(img);
+
+  const cap = document.createElement('div');
+  cap.className = 'fig-caption';
+  cap.textContent = `${f.caption_text || 'Figure'} · Page ${f.page}`;
+  card.appendChild(cap);
+
+  card.addEventListener('click', () => openLightbox(f.url, cap.textContent));
+  paneContent.appendChild(card);
+}
+
+function appendTypingRow() {
+  const row = document.createElement('div');
+  row.className = 'msg-row assistant';
+  row.id = 'typing-row';
+  row.innerHTML = `
+    <div class="msg-inner"><div class="avatar asst">CD</div><div class="msg-body">
+      <div class="msg-label">Cheri Doctor</div>
+      <div class="bubble"><div class="typing-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+    </div></div>`;
+  messagesEl.appendChild(row);
+  scrollToBottom();
+  return row;
+}
+
+// ── Send ───────────────────────────────────────────────────────────────────
+async function sendMessage() {
+  if (isLoading) return;
+  const q = queryEl.value.trim();
+  if (!q) return;
+
+  queryEl.value = '';
+  queryEl.style.height = 'auto';
+  sendBtn.disabled = true;
+  isLoading = true;
+
+  if (activeId && !sessions[activeId].messages.length) {
+    setSessionTitle(activeId, q);
+  }
+  updateSessionTimestamp(activeId);
+  renderUserMessage(q);
+  conversation.push({ role: "user", text: q });
+  if (activeId) sessions[activeId].messages.push({ role: "user", text: q });
+
+  const typingRow = appendTypingRow();
+
+  try {
+    const model = modelSelect?.value || 'claude-sonnet-4-6';
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: q, conversation, model }),
+    });
+    if (!res.ok) throw new Error(`Server error ${res.status}`);
+    const data = await res.json();
+    typingRow.remove();
+
+    renderAssistantMessage(data.answer, data.citations || [], data.figures || []);
+    conversation.push({ role: "assistant", text: data.answer });
+    if (activeId) {
+      sessions[activeId].messages.push({
+        role: "assistant", text: data.answer,
+        citations: data.citations || [], figures: data.figures || []
+      });
+      saveSessions();
+    }
+  } catch (err) {
+    typingRow.remove();
+    const errRow = document.createElement('div');
+    errRow.className = 'msg-row assistant';
+    errRow.innerHTML = `<div class="msg-inner"><div class="avatar asst">CD</div><div class="msg-body"><div class="msg-label">Error</div><div class="bubble" style="color:var(--red)">${escHtml(err.message)}</div></div></div>`;
+    messagesEl.appendChild(errRow);
+  }
+  sendBtn.disabled = false;
+  isLoading = false;
+  scrollToBottom();
+}
+
+// ── Lightbox Logic (Zoom & Pan) ───────────────────────────────────────────
+function openLightbox(url, title) {
+  lightboxImg.src = url;
+  document.getElementById('lb-title').textContent = title;
+  lightbox.classList.add('open');
+  resetLightbox();
+}
+
+function resetLightbox() {
+  scale = 1; translateX = 0; translateY = 0;
+  updateImageTransform();
+}
+
+function updateImageTransform() {
+  lightboxImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+}
+
+document.getElementById('lb-zoom-in').onclick = (e) => { e.stopPropagation(); scale *= 1.4; updateImageTransform(); };
+document.getElementById('lb-zoom-out').onclick = (e) => { e.stopPropagation(); scale /= 1.4; updateImageTransform(); };
+document.getElementById('lb-reset').onclick = (e) => { e.stopPropagation(); resetLightbox(); };
+document.getElementById('lb-close').onclick = () => lightbox.classList.remove('open');
+
+// Drag to pan
+const viewport = document.getElementById('lightbox-viewport');
+viewport.onmousedown = (e) => {
+  if (lightbox.classList.contains('open')) {
+    isDragging = true;
+    startX = e.clientX - translateX;
+    startY = e.clientY - translateY;
+  }
+};
+window.onmousemove = (e) => {
+  if (isDragging) {
+    translateX = e.clientX - startX;
+    translateY = e.clientY - startY;
+    updateImageTransform();
+  }
+};
+window.onmouseup = () => isDragging = false;
+
+// Scroll to zoom
+viewport.onwheel = (e) => {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? 0.9 : 1.1;
+  scale *= delta;
+  scale = Math.max(0.2, Math.min(scale, 10));
+  updateImageTransform();
+};
+
+// ── Utilities ──────────────────────────────────────────────────────────────
+function parseMarkdown(text) {
+  if (typeof marked === 'undefined') return escHtml(text);
+  // Replace figure citations BEFORE markdown parsing so marked doesn't mangle them.
+  // Use a placeholder that marked won't touch, then swap back after.
+  const figPlaceholders = [];
+  text = text.replace(/\[p(\d+)\s*\|\s*fig:\s*([^\]]+)\]/gi, (match, page, figId) => {
+    const idx = figPlaceholders.length;
+    figPlaceholders.push(`<a class="fig-link" onclick="jumpToFig('${figId.trim()}')">\u{1F4F7} Figure (p${page})</a>`);
+    return `%%FIG_${idx}%%`;
+  });
+  let html = marked.parse(text, { breaks: true, gfm: true });
+  // Restore figure links
+  figPlaceholders.forEach((link, i) => {
+    html = html.replace(`%%FIG_${i}%%`, link);
+  });
+  return html;
+}
+
+function jumpToFig(figId) {
+  let targetFig = null;
+  // Search for the figure data in our map
+  for (const figs of Object.values(msgFiguresMap)) {
+    targetFig = figs.find(f => f.figure_id === figId);
+    if (targetFig) break;
+  }
+
+  if (targetFig) {
+    refreshPaneContent(targetFig); // refreshPaneContent handles single or array
+    refPane.classList.remove('collapsed');
+    // Since it's the only figure, it will be at the top
+    paneContent.scrollTop = 0;
+  } else {
+    console.warn("Figure data not found in session context:", figId);
+  }
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function scrollToBottom() { messagesEl.scrollTop = messagesEl.scrollHeight; }
+
+function copyText(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const icon = btn.innerHTML;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.innerHTML = icon; }, 1500);
+  });
+}
+
+// ── UI Events ──────────────────────────────────────────────────────────────
+queryEl.addEventListener('input', () => {
+  queryEl.style.height = 'auto';
+  queryEl.style.height = Math.min(queryEl.scrollHeight, 160) + "px";
+});
+queryEl.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+sendBtn.onclick = sendMessage;
+
+document.getElementById('toggle-sidebar-btn').onclick = () => sidebar.classList.toggle('collapsed');
+togglePaneBtn.onclick = () => refPane.classList.toggle('collapsed');
+document.getElementById('close-pane-btn').onclick = () => refPane.classList.add('collapsed');
+document.getElementById('new-chat-btn').onclick = startNewChat;
+document.getElementById('clear-btn').onclick = () => { 
+  conversation = []; 
+  msgFiguresMap = {};
+  currentlyViewingMsgId = null;
+  if (activeId) { sessions[activeId].messages = []; saveSessions(); }
+  clearMessages(); 
+};
+
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') lightbox.classList.remove('open'); });
+
+document.getElementById('chips').onclick = (e) => {
+  if (e.target.classList.contains('chip')) {
+    if (e.target.classList.contains('chip-worksheet')) {
+      const prompt = e.target.dataset.prompt || e.target.textContent.replace(/^📄\s*/, '');
+      generateWorksheetPdf(prompt);
+    } else {
+      queryEl.value = e.target.textContent;
+      sendMessage();
+    }
+  }
+};
+
+async function generateWorksheetPdf(topicPrompt) {
+  console.log('generateWorksheetPdf called with prompt:', topicPrompt); // Debug log
+  let effectivePrompt = topicPrompt || queryEl.value.trim();
+  
+  // If no prompt provided, try to infer from conversation or ask user
+  if (!effectivePrompt) {
+    // Check if we have conversation history to work with
+    if (conversation.length > 0) {
+      // Get the last few user messages to suggest worksheet topics
+      const recentUserMessages = conversation
+        .filter(msg => msg.role === 'user')
+        .slice(-3)
+        .map(msg => msg.content)
+        .join(' ')
+        .toLowerCase();
+      
+      // Try to extract diagnostic topics from conversation
+      const diagnosticKeywords = [
+        'alternator', 'starter', 'battery', 'charging', 'cooling', 'radiator', 'thermostat',
+        'engine', 'idle', 'carburetor', 'fuel', 'pump', 'filter', 'spark', 'ignition',
+        'transmission', 'brakes', 'clutch', 'suspension', 'steering', 'electrical',
+        'lights', 'wiring', 'fuses', 'relays', 'sensors', 'vacuum', 'emissions'
+      ];
+      
+      const foundTopics = diagnosticKeywords.filter(keyword => 
+        recentUserMessages.includes(keyword)
+      );
+      
+      if (foundTopics.length > 0) {
+        const suggestedTopic = foundTopics[0] + ' diagnostic tests';
+        const userConfirmed = confirm(
+          `Generate diagnostic worksheet for "${suggestedTopic}" based on your recent conversation?\n\n` +
+          'Click OK to generate, or Cancel to enter a custom topic.'
+        );
+        
+        if (userConfirmed) {
+          effectivePrompt = suggestedTopic;
+        } else {
+          // Show custom input dialog
+          effectivePrompt = prompt('Enter diagnostic topic for worksheet:', 'alternator diagnostic tests');
+          if (!effectivePrompt) return; // User cancelled
+        }
+      } else {
+        // No diagnostic topics found, ask user
+        effectivePrompt = prompt('Enter diagnostic topic for worksheet:', 'alternator diagnostic tests');
+        if (!effectivePrompt) return; // User cancelled
+      }
+    } else {
+      // No conversation history, ask user directly
+      effectivePrompt = prompt('Enter diagnostic topic for worksheet:', 'alternator diagnostic tests');
+      if (!effectivePrompt) return; // User cancelled
+    }
+  }
+  
+  const btn = document.getElementById('pdf-worksheet-btn');
+  const origText = btn.textContent;
+  btn.textContent = 'Generating…';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/generate-worksheet', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: effectivePrompt }),
+    });
+    if (!res.ok) throw new Error(await res.text() || `Error ${res.status}`);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (effectivePrompt.slice(0, 40).replace(/[^a-z0-9-]/gi, '_') || 'worksheet') + '.pdf';
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    alert('Failed to generate PDF: ' + (err.message || err));
+  } finally {
+    btn.textContent = origText;
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('pdf-worksheet-btn').onclick = () => {
+  console.log('PDF worksheet button clicked!'); // Debug log
+  generateWorksheetPdf();
+};
+
+modelSelect.onchange = (e) => localStorage.setItem(MODEL_KEY, e.target.value);
+
+// ── Init ───────────────────────────────────────────────────────────────────
+(function init() {
+  const savedModel = localStorage.getItem(MODEL_KEY);
+  if (savedModel && modelSelect) modelSelect.value = savedModel;
+  const ids = Object.keys(sessions).sort((a, b) => (sessions[b].updated || sessions[b].created) - (sessions[a].updated || sessions[a].created));
+  if (ids.length) loadSession(ids[0]);
+  else startNewChat();
+  queryEl.focus();
+})();
+</script>
+</body>
+</html>
