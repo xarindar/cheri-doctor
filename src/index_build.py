@@ -137,7 +137,7 @@ class RetrievalIndex:
     """Unified BM25 + embedding retrieval with RRF merge."""
 
     RRF_K = 60          # Standard RRF constant
-    SUPPLEMENT_BOOST = 0.15  # Added to RRF score for supplement chunks (source_doc="supplement")
+    SUPPLEMENT_BOOST = 0.05  # Added to RRF score for supplement chunks (source_doc="supplement")
 
     def __init__(self, index_dir: Path, config: dict | None = None):
         self.index_dir = index_dir

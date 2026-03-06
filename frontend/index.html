@@ -388,50 +388,66 @@
       color: var(--text-1);
     }
 
-    .chip-tech {
-      background: rgba(234, 88, 12, 0.1);
+    /* Tech Mode toggle in input bar */
+    #tech-mode-btn {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-3);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 16px;
+      position: relative;
+    }
+    #tech-mode-btn:hover {
+      border-color: var(--text-3);
+      color: var(--text-2);
+      background: var(--surface);
+    }
+    #tech-mode-btn.active {
+      background: rgba(234, 88, 12, 0.15);
+      border-color: rgba(234, 88, 12, 0.5);
+      color: #f97316;
+    }
+    #tech-mode-btn.active:hover {
+      background: rgba(234, 88, 12, 0.25);
+    }
+    #tech-mode-btn .tech-label {
+      display: none;
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-3);
+      pointer-events: none;
+    }
+    #tech-mode-btn.active .tech-label {
+      display: block;
+      background: rgba(234, 88, 12, 0.15);
       border-color: rgba(234, 88, 12, 0.4);
       color: #fb923c;
     }
-    .chip-tech:hover {
-      background: rgba(234, 88, 12, 0.2);
+    body.tech-mode-active #input-shell {
+      border-color: rgba(234, 88, 12, 0.3);
+    }
+    body.tech-mode-active #input-shell:focus-within {
       border-color: #f97316;
-      color: #fdba74;
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
     }
-
-    /* Tech Mode indicator */
-    .tech-mode-badge {
-      display: none;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      border-radius: 14px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      background: rgba(234, 88, 12, 0.15);
-      color: #fb923c;
-      border: 1px solid rgba(234, 88, 12, 0.3);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .tech-mode-badge:hover {
-      background: rgba(234, 88, 12, 0.25);
-    }
-    .tech-mode-badge .pulse {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #f97316;
-      animation: techPulse 1.5s infinite;
-    }
-    @keyframes techPulse {
-      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(249,115,22,0.5); }
-      50% { opacity: 0.7; box-shadow: 0 0 0 4px rgba(249,115,22,0); }
-    }
-    body.tech-mode-active .tech-mode-badge { display: flex; }
-    body.tech-mode-active #header { border-bottom-color: rgba(234, 88, 12, 0.3); }
     body.tech-mode-active .avatar.asst {
       background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
     }
@@ -1180,7 +1196,6 @@
       </div>
 
       <div class="badge">RAG + Vision</div>
-      <div class="tech-mode-badge" id="tech-mode-badge" title="Click to exit Tech Mode"><div class="pulse"></div>Tech Mode</div>
       <button id="clear-btn" style="margin-right: 8px;">Clear</button>
       
       <button id="toggle-pane-btn" title="Toggle Reference Pane">
@@ -1205,7 +1220,6 @@
           <button class="chip">Coolant system flush</button>
           <button class="chip chip-worksheet" data-prompt="alternator diagnostic tests">☑️ Alternator checklist</button>
           <button class="chip chip-worksheet" data-prompt="cooling system diagnostic tests">☑️ Cooling system checklist</button>
-          <button class="chip chip-tech">🔧 Start Tech Mode</button>
         </div>
       </div>
     </div>
@@ -1222,6 +1236,10 @@
         </select>
       </div>
       <div id="input-shell">
+        <button id="tech-mode-btn" title="Toggle Tech Mode">
+          🔧
+          <span class="tech-label">TECH MODE</span>
+        </button>
         <textarea id="query" placeholder="Ask about your Geo Metro…" rows="1" spellcheck="true"></textarea>
         <button id="send-btn" title="Send (Enter)">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1387,6 +1405,8 @@ function startNewChat() {
   currentlyViewingMsgId = null;
   techModeActive = false;
   document.body.classList.remove('tech-mode-active');
+  techModeBtn.classList.remove('active');
+  queryEl.placeholder = 'Ask about your Geo Metro…';
   clearMessages();
   paneContent.innerHTML = '<div style="padding:40px 20px; text-align:center; color:var(--text-3); font-size:0.85rem;">Figures mentioned in the chat will appear here for easy reference.</div>';
   renderSidebar();
@@ -1420,6 +1440,8 @@ function loadSession(id) {
   }
   techModeActive = wasTechMode;
   document.body.classList.toggle('tech-mode-active', wasTechMode);
+  techModeBtn.classList.toggle('active', wasTechMode);
+  queryEl.placeholder = wasTechMode ? 'Tech Mode \u2014 describe what you see or enter readings\u2026' : 'Ask about your Geo Metro\u2026';
   renderSidebar();
 }
 
@@ -1555,13 +1577,16 @@ async function sendMessage() {
   isLoading = true;
 
   // Auto-detect Tech Mode activation/deactivation from natural language
-  const qLower = q.toLowerCase();
   if (/\[tech_mode:\s*on\]|tech mode|let'?s (do this|get to work|start)|ready to (start|work)|heading to the garage/i.test(q)) {
     techModeActive = true;
     document.body.classList.add('tech-mode-active');
+    techModeBtn.classList.add('active');
+    queryEl.placeholder = 'Tech Mode — describe what you see or enter readings…';
   } else if (/\[tech_mode:\s*off\]|i'?m done|that'?s enough|back inside|exit tech mode|stop tech mode/i.test(q)) {
     techModeActive = false;
     document.body.classList.remove('tech-mode-active');
+    techModeBtn.classList.remove('active');
+    queryEl.placeholder = 'Ask about your Geo Metro…';
   }
 
   if (activeId && !sessions[activeId].messages.length) {
@@ -1860,9 +1885,7 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape') lightbox.c
 
 document.getElementById('chips').onclick = (e) => {
   if (e.target.classList.contains('chip')) {
-    if (e.target.classList.contains('chip-tech')) {
-      toggleTechMode(true);
-    } else if (e.target.classList.contains('chip-worksheet')) {
+    if (e.target.classList.contains('chip-worksheet')) {
       const topic = e.target.dataset.prompt || e.target.textContent.replace(/^📄\s*/, '');
       queryEl.value = `Generate a detailed diagnostic checklist for: ${topic}`;
       sendMessage();
@@ -1874,18 +1897,22 @@ document.getElementById('chips').onclick = (e) => {
 };
 
 // ── Tech Mode ────────────────────────────────────────────────────────────
+const techModeBtn = document.getElementById('tech-mode-btn');
+
 function toggleTechMode(on) {
   techModeActive = on;
   document.body.classList.toggle('tech-mode-active', on);
+  techModeBtn.classList.toggle('active', on);
+  queryEl.placeholder = on ? 'Tech Mode — describe what you see or enter readings…' : 'Ask about your Geo Metro…';
   if (on) {
-    queryEl.value = '[TECH_MODE: ON] I\'m ready to start working on Cheri. Let\'s begin the hands-on diagnostic.';
+    queryEl.value = '[TECH_MODE: ON] I\'m ready to start working on Cheri. Guide me through it step by step.';
   } else {
     queryEl.value = '[TECH_MODE: OFF] I\'m done working for now. Let\'s review what we found.';
   }
   sendMessage();
 }
 
-document.getElementById('tech-mode-badge').onclick = () => toggleTechMode(false);
+techModeBtn.onclick = () => toggleTechMode(!techModeActive);
 
 modelSelect.onchange = (e) => localStorage.setItem(MODEL_KEY, e.target.value);
 
