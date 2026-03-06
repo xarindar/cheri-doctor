@@ -1586,8 +1586,13 @@ viewport.onwheel = (e) => {
 function parseMarkdown(text) {
   if (typeof marked === 'undefined') return escHtml(text);
   
-  // Handle checklist format before general markdown parsing
-  text = parseChecklist(text);
+  // Extract checklists BEFORE markdown parsing — use placeholders so marked doesn't mangle them
+  const checklistPlaceholders = [];
+  text = text.replace(/\[CHECKLIST:([^\]]+)\]([\s\S]*?)\[\/CHECKLIST\]/g, (match, title, content) => {
+    const idx = checklistPlaceholders.length;
+    checklistPlaceholders.push(buildChecklistHtml(title, content));
+    return `%%CHECKLIST_${idx}%%`;
+  });
   
   // Replace figure citations BEFORE markdown parsing so marked doesn't mangle them.
   // Use a placeholder that marked won't touch, then swap back after.
@@ -1602,14 +1607,16 @@ function parseMarkdown(text) {
   figPlaceholders.forEach((link, i) => {
     html = html.replace(`%%FIG_${i}%%`, link);
   });
+  // Restore checklists
+  checklistPlaceholders.forEach((checklistHtml, i) => {
+    html = html.replace(`%%CHECKLIST_${i}%%`, checklistHtml);
+    // Also handle if marked wrapped placeholder in <p> tags
+    html = html.replace(`<p>%%CHECKLIST_${i}%%</p>`, checklistHtml);
+  });
   return html;
 }
 
-function parseChecklist(text) {
-  // Look for checklist format markers
-  const checklistRegex = /\[CHECKLIST:([^\]]+)\]([\s\S]*?)\[\/CHECKLIST\]/g;
-  
-  return text.replace(checklistRegex, (match, title, content) => {
+function buildChecklistHtml(title, content) {
     const steps = content.trim().split('\n').filter(line => line.trim());
     const checklistId = 'checklist-' + Math.random().toString(36).substr(2, 9);
     
@@ -1683,7 +1690,6 @@ function parseChecklist(text) {
     html += `</div>`;
     
     return html;
-  });
 }
 
 function toggleCheckbox(checkbox) {

@@ -9,6 +9,7 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+build_supplement/
 Reference Manuals/
 build/pages/
 build/pages_pre/
