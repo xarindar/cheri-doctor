@@ -15,10 +15,17 @@ try:
 except ImportError:
     ANTHROPIC_AVAILABLE = False
 
+try:
+    import requests as _requests
+    REQUESTS_AVAILABLE = True
+except ImportError:
+    REQUESTS_AVAILABLE = False
+
 # Constants
 MAX_IMAGE_DIM = 1600  # Higher for full-page extraction
 RATE_LIMIT_DELAY = 1.0
 MAX_RETRIES = 3
+INITIAL_BACKOFF = 5.0  # seconds, doubles on each retry for Gemini
 
 FULL_PAGE_PROMPT = """You are extracting content from a page of an automotive service manual.
 
@@ -120,17 +127,165 @@ def extract_full_page_vision(img: Image.Image, page_num: int, model: str = "clau
     
     return None
 
-def _parse_json(text: str) -> Optional[dict[str, Any]]:
-    """Find and parse JSON in LLM response."""
-    try:
-        # Find first { and last }
-        start = text.find("{")
-        end = text.rfind("}")
-        if start == -1 or end == -1:
-            return None
-        
-        json_str = text[start:end+1]
-        return json.loads(json_str)
-    except Exception as e:
-        print(f"  [vision] Failed to parse JSON: {e}")
+def is_gemini_available() -> bool:
+    return REQUESTS_AVAILABLE and bool(os.environ.get("GEMINI_API_KEY"))
+
+
+def extract_full_page_vision_gemini(
+    img: Image.Image,
+    page_num: int,
+    model: str = "gemini-2.5-flash",
+) -> Optional[dict[str, Any]]:
+    """Send full page image to Gemini Vision API for structured extraction.
+
+    Uses the same FULL_PAGE_PROMPT as the Claude path so outputs are
+    structurally identical and downstream pipeline code is unchanged.
+    """
+    if not is_gemini_available():
+        print("  [gemini] GEMINI_API_KEY not set or requests not installed.")
         return None
+
+    api_key = os.environ.get("GEMINI_API_KEY")
+    model_name = model.removeprefix("models/")
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/"
+        f"models/{model_name}:generateContent"
+    )
+
+    # Prepare image — JPEG is smaller and Gemini handles it well
+    w, h = img.size
+    if max(w, h) > MAX_IMAGE_DIM:
+        scale = MAX_IMAGE_DIM / max(w, h)
+        img = img.resize((int(w * scale), int(h * scale)), Image.LANCZOS)
+    if img.mode != "RGB":
+        img = img.convert("RGB")
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG", quality=85)
+    b64_data = base64.b64encode(buf.getvalue()).decode("utf-8")
+
+    prompt = FULL_PAGE_PROMPT.replace("<int>", str(page_num))
+
+    payload = {
+        "contents": [{
+            "parts": [
+                {"inline_data": {"mime_type": "image/jpeg", "data": b64_data}},
+                {"text": prompt},
+            ]
+        }],
+        "generationConfig": {
+            "temperature": 0,
+            "maxOutputTokens": 8192,
+            "responseMimeType": "application/json",
+        },
+    }
+
+    for attempt in range(MAX_RETRIES):
+        try:
+            resp = _requests.post(
+                url,
+                headers={"Content-Type": "application/json"},
+                params={"key": api_key},
+                json=payload,
+                timeout=120,
+            )
+
+            if resp.status_code in (429, 503):
+                wait = INITIAL_BACKOFF * (2 ** attempt)
+                print(f"  [gemini] Rate limited ({resp.status_code}), waiting {wait:.0f}s...")
+                time.sleep(wait)
+                continue
+
+            if not resp.ok:
+                print(f"  [gemini] API error {resp.status_code}: {resp.text[:200]}")
+                return None
+
+            out = resp.json()
+            candidates = out.get("candidates", [])
+            if not candidates:
+                reason = out.get("promptFeedback", {}).get("blockReason", "unknown")
+                print(f"  [gemini] No candidates (blockReason: {reason})")
+                return None
+
+            candidate = candidates[0]
+            if "content" not in candidate:
+                print(f"  [gemini] Response blocked (finishReason: {candidate.get('finishReason')})")
+                return None
+
+            text = candidate["content"]["parts"][0]["text"]
+            return _parse_json(text)
+
+        except Exception as e:
+            print(f"  [gemini] Attempt {attempt + 1} failed: {e}")
+            if attempt < MAX_RETRIES - 1:
+                time.sleep(INITIAL_BACKOFF * (2 ** attempt))
+            continue
+
+    return None
+
+
+def _parse_json(text: str) -> Optional[dict[str, Any]]:
+    """Find and parse JSON in LLM response, with repair for truncated output."""
+    # Try clean parse first (Gemini with responseMimeType=application/json returns clean JSON)
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+
+    # Fallback: find first { to last }
+    start = text.find("{")
+    end = text.rfind("}")
+    if start == -1 or end == -1:
+        print("  [vision] Failed to parse JSON: no JSON object found")
+        return None
+
+    snippet = text[start:end + 1]
+    try:
+        return json.loads(snippet)
+    except json.JSONDecodeError:
+        pass
+
+    # Repair truncated JSON by closing open brackets/braces
+    repaired = _repair_json(snippet)
+    if repaired:
+        try:
+            return json.loads(repaired)
+        except json.JSONDecodeError as e:
+            print(f"  [vision] Failed to parse JSON even after repair: {e}")
+
+    return None
+
+
+def _repair_json(text: str) -> Optional[str]:
+    """Close truncated JSON by balancing open brackets/braces."""
+    stripped = text.rstrip()
+    if stripped.endswith(","):
+        stripped = stripped[:-1]
+
+    open_braces = open_brackets = 0
+    in_string = escape = False
+    for ch in stripped:
+        if escape:
+            escape = False
+            continue
+        if ch == "\\":
+            escape = True
+            continue
+        if ch == '"':
+            in_string = not in_string
+            continue
+        if in_string:
+            continue
+        if ch == "{":
+            open_braces += 1
+        elif ch == "}":
+            open_braces -= 1
+        elif ch == "[":
+            open_brackets += 1
+        elif ch == "]":
+            open_brackets -= 1
+
+    if open_braces < 0 or open_brackets < 0:
+        return None
+
+    closing = "]" * open_brackets + "}" * open_braces
+    return stripped + closing if closing else stripped

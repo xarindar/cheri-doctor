@@ -1,0 +1,5042 @@
+{
+  "1": {
+    "page_num": 1,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0001.png",
+    "content_bbox": [
+      105,
+      95,
+      2751,
+      3767
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3780
+    ]
+  },
+  "2": {
+    "page_num": 2,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0002.png",
+    "content_bbox": [
+      363,
+      392,
+      2504,
+      2892
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2849,
+      3815
+    ]
+  },
+  "3": {
+    "page_num": 3,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0003.png",
+    "content_bbox": [
+      427,
+      158,
+      2662,
+      3630
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "4": {
+    "page_num": 4,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0004.png",
+    "content_bbox": [
+      122,
+      133,
+      2645,
+      1453
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "5": {
+    "page_num": 5,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0005.png",
+    "content_bbox": [
+      230,
+      147,
+      2629,
+      3360
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3815
+    ]
+  },
+  "6": {
+    "page_num": 6,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0006.png",
+    "content_bbox": [
+      195,
+      91,
+      2743,
+      3665
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3801
+    ]
+  },
+  "7": {
+    "page_num": 7,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0007.png",
+    "content_bbox": [
+      126,
+      96,
+      2654,
+      3664
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3801
+    ]
+  },
+  "8": {
+    "page_num": 8,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0008.png",
+    "content_bbox": [
+      218,
+      95,
+      2745,
+      3712
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2877,
+      3857
+    ]
+  },
+  "9": {
+    "page_num": 9,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0009.png",
+    "content_bbox": [
+      116,
+      96,
+      2641,
+      3711
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2877,
+      3857
+    ]
+  },
+  "10": {
+    "page_num": 10,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0010.png",
+    "content_bbox": [
+      224,
+      102,
+      2748,
+      3204
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3822
+    ]
+  },
+  "11": {
+    "page_num": 11,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0011.png",
+    "content_bbox": [
+      115,
+      104,
+      2644,
+      3457
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3822
+    ]
+  },
+  "12": {
+    "page_num": 12,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0012.png",
+    "content_bbox": [
+      248,
+      207,
+      3711,
+      2731
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3801,
+      2877
+    ]
+  },
+  "13": {
+    "page_num": 13,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0013.png",
+    "content_bbox": [
+      126,
+      95,
+      2654,
+      3561
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2877,
+      3801
+    ]
+  },
+  "14": {
+    "page_num": 14,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0014.png",
+    "content_bbox": [
+      221,
+      103,
+      2749,
+      3573
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3589
+    ]
+  },
+  "15": {
+    "page_num": 15,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0015.png",
+    "content_bbox": [
+      113,
+      101,
+      2641,
+      3566
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "16": {
+    "page_num": 16,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0016.png",
+    "content_bbox": [
+      232,
+      84,
+      2754,
+      3546
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3822
+    ]
+  },
+  "17": {
+    "page_num": 17,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0017.png",
+    "content_bbox": [
+      110,
+      83,
+      2638,
+      2917
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3822
+    ]
+  },
+  "18": {
+    "page_num": 18,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0018.png",
+    "content_bbox": [
+      223,
+      69,
+      2754,
+      3684
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3843
+    ]
+  },
+  "19": {
+    "page_num": 19,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0019.png",
+    "content_bbox": [
+      98,
+      83,
+      2625,
+      3691
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3843
+    ]
+  },
+  "20": {
+    "page_num": 20,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0020.png",
+    "content_bbox": [
+      226,
+      82,
+      2748,
+      3656
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3815
+    ]
+  },
+  "21": {
+    "page_num": 21,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0021.png",
+    "content_bbox": [
+      111,
+      78,
+      2636,
+      3649
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3815
+    ]
+  },
+  "22": {
+    "page_num": 22,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0022.png",
+    "content_bbox": [
+      203,
+      79,
+      2773,
+      2371
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3815
+    ]
+  },
+  "23": {
+    "page_num": 23,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0023.png",
+    "content_bbox": [
+      91,
+      80,
+      2645,
+      2686
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3815
+    ]
+  },
+  "24": {
+    "page_num": 24,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0024.png",
+    "content_bbox": [
+      249,
+      73,
+      2773,
+      3494
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3808
+    ]
+  },
+  "25": {
+    "page_num": 25,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0025.png",
+    "content_bbox": [
+      245,
+      75,
+      2786,
+      3652
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "26": {
+    "page_num": 26,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0026.png",
+    "content_bbox": [
+      106,
+      77,
+      2627,
+      3655
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "27": {
+    "page_num": 27,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0027.png",
+    "content_bbox": [
+      222,
+      79,
+      2748,
+      3683
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3836
+    ]
+  },
+  "28": {
+    "page_num": 28,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0028.png",
+    "content_bbox": [
+      94,
+      80,
+      2750,
+      3676
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3836
+    ]
+  },
+  "29": {
+    "page_num": 29,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0029.png",
+    "content_bbox": [
+      100,
+      74,
+      2625,
+      3650
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3815
+    ]
+  },
+  "30": {
+    "page_num": 30,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0030.png",
+    "content_bbox": [
+      244,
+      65,
+      2771,
+      3648
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3815
+    ]
+  },
+  "31": {
+    "page_num": 31,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0031.png",
+    "content_bbox": [
+      97,
+      77,
+      2616,
+      3395
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3829
+    ]
+  },
+  "32": {
+    "page_num": 32,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0032.png",
+    "content_bbox": [
+      239,
+      72,
+      2759,
+      3658
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3829
+    ]
+  },
+  "33": {
+    "page_num": 33,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0033.png",
+    "content_bbox": [
+      236,
+      76,
+      2759,
+      3660
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "34": {
+    "page_num": 34,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0034.png",
+    "content_bbox": [
+      100,
+      68,
+      2631,
+      3651
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "35": {
+    "page_num": 35,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0035.png",
+    "content_bbox": [
+      210,
+      63,
+      2740,
+      3666
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3829
+    ]
+  },
+  "36": {
+    "page_num": 36,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0036.png",
+    "content_bbox": [
+      108,
+      72,
+      2631,
+      3105
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3829
+    ]
+  },
+  "37": {
+    "page_num": 37,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0037.png",
+    "content_bbox": [
+      226,
+      99,
+      2747,
+      3802
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3929
+    ]
+  },
+  "38": {
+    "page_num": 38,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0038.png",
+    "content_bbox": [
+      105,
+      89,
+      2626,
+      3673
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3829
+    ]
+  },
+  "39": {
+    "page_num": 39,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0039.png",
+    "content_bbox": [
+      226,
+      121,
+      2747,
+      3710
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3871
+    ]
+  },
+  "40": {
+    "page_num": 40,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0040.png",
+    "content_bbox": [
+      108,
+      82,
+      2635,
+      3660
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3871
+    ]
+  },
+  "41": {
+    "page_num": 41,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0041.png",
+    "content_bbox": [
+      231,
+      87,
+      2750,
+      3821
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3821
+    ]
+  },
+  "42": {
+    "page_num": 42,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0042.png",
+    "content_bbox": [
+      107,
+      91,
+      2624,
+      3668
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      4011
+    ]
+  },
+  "43": {
+    "page_num": 43,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0043.png",
+    "content_bbox": [
+      224,
+      149,
+      2746,
+      3740
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3888
+    ]
+  },
+  "44": {
+    "page_num": 44,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0044.png",
+    "content_bbox": [
+      127,
+      85,
+      2645,
+      935
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3822
+    ]
+  },
+  "45": {
+    "page_num": 45,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0045.png",
+    "content_bbox": [
+      205,
+      151,
+      2751,
+      3793
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3920
+    ]
+  },
+  "46": {
+    "page_num": 46,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0046.png",
+    "content_bbox": [
+      101,
+      107,
+      2622,
+      3738
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3920
+    ]
+  },
+  "47": {
+    "page_num": 47,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0047.png",
+    "content_bbox": [
+      223,
+      92,
+      2737,
+      3814
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3814
+    ]
+  },
+  "48": {
+    "page_num": 48,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0048.png",
+    "content_bbox": [
+      110,
+      93,
+      2624,
+      1127
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      4011
+    ]
+  },
+  "49": {
+    "page_num": 49,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0049.png",
+    "content_bbox": [
+      206,
+      240,
+      3716,
+      2736
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3848,
+      2863
+    ]
+  },
+  "50": {
+    "page_num": 50,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0050.png",
+    "content_bbox": [
+      200,
+      102,
+      3725,
+      2623
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2849
+    ]
+  },
+  "51": {
+    "page_num": 51,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0051.png",
+    "content_bbox": [
+      174,
+      231,
+      3826,
+      2727
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3910,
+      2863
+    ]
+  },
+  "52": {
+    "page_num": 52,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0052.png",
+    "content_bbox": [
+      215,
+      95,
+      3731,
+      2591
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2849
+    ]
+  },
+  "53": {
+    "page_num": 53,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0053.png",
+    "content_bbox": [
+      192,
+      255,
+      3717,
+      2752
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3835,
+      2870
+    ]
+  },
+  "54": {
+    "page_num": 54,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0054.png",
+    "content_bbox": [
+      216,
+      88,
+      3729,
+      2597
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3829,
+      2856
+    ]
+  },
+  "55": {
+    "page_num": 55,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0055.png",
+    "content_bbox": [
+      204,
+      261,
+      3728,
+      2754
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3862,
+      2863
+    ]
+  },
+  "56": {
+    "page_num": 56,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0056.png",
+    "content_bbox": [
+      215,
+      109,
+      3728,
+      2611
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2856
+    ]
+  },
+  "57": {
+    "page_num": 57,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0057.png",
+    "content_bbox": [
+      207,
+      221,
+      3727,
+      2726
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3939,
+      2863
+    ]
+  },
+  "58": {
+    "page_num": 58,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0058.png",
+    "content_bbox": [
+      205,
+      132,
+      3714,
+      2641
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3815,
+      2856
+    ]
+  },
+  "59": {
+    "page_num": 59,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0059.png",
+    "content_bbox": [
+      213,
+      228,
+      3745,
+      2713
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3871,
+      2863
+    ]
+  },
+  "60": {
+    "page_num": 60,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0060.png",
+    "content_bbox": [
+      260,
+      124,
+      3785,
+      2621
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3871,
+      2863
+    ]
+  },
+  "61": {
+    "page_num": 61,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0061.png",
+    "content_bbox": [
+      201,
+      247,
+      3732,
+      2741
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3810,
+      2863
+    ]
+  },
+  "62": {
+    "page_num": 62,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0062.png",
+    "content_bbox": [
+      399,
+      112,
+      3920,
+      2622
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      4004,
+      2863
+    ]
+  },
+  "63": {
+    "page_num": 63,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0063.png",
+    "content_bbox": [
+      191,
+      253,
+      3728,
+      2744
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3913,
+      2863
+    ]
+  },
+  "64": {
+    "page_num": 64,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0064.png",
+    "content_bbox": [
+      216,
+      124,
+      3740,
+      2640
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "65": {
+    "page_num": 65,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0065.png",
+    "content_bbox": [
+      208,
+      248,
+      3738,
+      2745
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3906,
+      2863
+    ]
+  },
+  "66": {
+    "page_num": 66,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0066.png",
+    "content_bbox": [
+      303,
+      100,
+      3826,
+      2628
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3906,
+      2863
+    ]
+  },
+  "67": {
+    "page_num": 67,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0067.png",
+    "content_bbox": [
+      212,
+      242,
+      3741,
+      2741
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3857,
+      2863
+    ]
+  },
+  "68": {
+    "page_num": 68,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0068.png",
+    "content_bbox": [
+      208,
+      265,
+      3742,
+      2750
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3810,
+      2863
+    ]
+  },
+  "69": {
+    "page_num": 69,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0069.png",
+    "content_bbox": [
+      175,
+      238,
+      3769,
+      2727
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3865,
+      2870
+    ]
+  },
+  "70": {
+    "page_num": 70,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0070.png",
+    "content_bbox": [
+      98,
+      118,
+      3938,
+      2618
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      4025,
+      2870
+    ]
+  },
+  "71": {
+    "page_num": 71,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0071.png",
+    "content_bbox": [
+      206,
+      249,
+      3744,
+      2735
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3829,
+      2870
+    ]
+  },
+  "72": {
+    "page_num": 72,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0072.png",
+    "content_bbox": [
+      209,
+      123,
+      3751,
+      2627
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3829,
+      2870
+    ]
+  },
+  "73": {
+    "page_num": 73,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0073.png",
+    "content_bbox": [
+      218,
+      249,
+      3745,
+      2738
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3829,
+      2863
+    ]
+  },
+  "74": {
+    "page_num": 74,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0074.png",
+    "content_bbox": [
+      220,
+      123,
+      3744,
+      2620
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3829,
+      2863
+    ]
+  },
+  "75": {
+    "page_num": 75,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0075.png",
+    "content_bbox": [
+      244,
+      123,
+      3764,
+      2620
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3857,
+      2863
+    ]
+  },
+  "76": {
+    "page_num": 76,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0076.png",
+    "content_bbox": [
+      198,
+      257,
+      3731,
+      2746
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3857,
+      2863
+    ]
+  },
+  "77": {
+    "page_num": 77,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0077.png",
+    "content_bbox": [
+      231,
+      126,
+      3758,
+      2626
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3857,
+      2863
+    ]
+  },
+  "78": {
+    "page_num": 78,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0078.png",
+    "content_bbox": [
+      189,
+      250,
+      3730,
+      2750
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2870
+    ]
+  },
+  "79": {
+    "page_num": 79,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0079.png",
+    "content_bbox": [
+      196,
+      103,
+      3726,
+      2610
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2870
+    ]
+  },
+  "80": {
+    "page_num": 80,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0080.png",
+    "content_bbox": [
+      211,
+      259,
+      3746,
+      2753
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "81": {
+    "page_num": 81,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0081.png",
+    "content_bbox": [
+      212,
+      113,
+      3736,
+      2615
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "82": {
+    "page_num": 82,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0082.png",
+    "content_bbox": [
+      209,
+      239,
+      3738,
+      2730
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3815,
+      2863
+    ]
+  },
+  "83": {
+    "page_num": 83,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0083.png",
+    "content_bbox": [
+      214,
+      94,
+      3737,
+      2596
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3815,
+      2863
+    ]
+  },
+  "84": {
+    "page_num": 84,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0084.png",
+    "content_bbox": [
+      179,
+      234,
+      3772,
+      2728
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3843,
+      2863
+    ]
+  },
+  "85": {
+    "page_num": 85,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0085.png",
+    "content_bbox": [
+      373,
+      108,
+      3957,
+      2612
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      4046,
+      2863
+    ]
+  },
+  "86": {
+    "page_num": 86,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0086.png",
+    "content_bbox": [
+      208,
+      252,
+      3729,
+      2745
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3857,
+      2863
+    ]
+  },
+  "87": {
+    "page_num": 87,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0087.png",
+    "content_bbox": [
+      257,
+      95,
+      3778,
+      2596
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3857,
+      2863
+    ]
+  },
+  "88": {
+    "page_num": 88,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0088.png",
+    "content_bbox": [
+      196,
+      252,
+      3720,
+      2748
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3781,
+      2863
+    ]
+  },
+  "89": {
+    "page_num": 89,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0089.png",
+    "content_bbox": [
+      403,
+      94,
+      3924,
+      2598
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      4004,
+      2863
+    ]
+  },
+  "90": {
+    "page_num": 90,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0090.png",
+    "content_bbox": [
+      194,
+      269,
+      3734,
+      2763
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3924,
+      2870
+    ]
+  },
+  "91": {
+    "page_num": 91,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0091.png",
+    "content_bbox": [
+      208,
+      86,
+      3737,
+      2592
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2856
+    ]
+  },
+  "92": {
+    "page_num": 92,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0092.png",
+    "content_bbox": [
+      218,
+      86,
+      3745,
+      2589
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3815,
+      2863
+    ]
+  },
+  "93": {
+    "page_num": 93,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0093.png",
+    "content_bbox": [
+      216,
+      272,
+      3752,
+      2772
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3941,
+      2863
+    ]
+  },
+  "94": {
+    "page_num": 94,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0094.png",
+    "content_bbox": [
+      340,
+      94,
+      3863,
+      2593
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3941,
+      2863
+    ]
+  },
+  "95": {
+    "page_num": 95,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0095.png",
+    "content_bbox": [
+      83,
+      250,
+      3874,
+      2742
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3941,
+      2870
+    ]
+  },
+  "96": {
+    "page_num": 96,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0096.png",
+    "content_bbox": [
+      385,
+      109,
+      3872,
+      2610
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3941,
+      2870
+    ]
+  },
+  "97": {
+    "page_num": 97,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0097.png",
+    "content_bbox": [
+      128,
+      48,
+      3920,
+      2716
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      4025,
+      2863
+    ]
+  },
+  "98": {
+    "page_num": 98,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0098.png",
+    "content_bbox": [
+      217,
+      105,
+      3742,
+      2612
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3815,
+      2849
+    ]
+  },
+  "99": {
+    "page_num": 99,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0099.png",
+    "content_bbox": [
+      221,
+      249,
+      3741,
+      2736
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3808,
+      2863
+    ]
+  },
+  "100": {
+    "page_num": 100,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0100.png",
+    "content_bbox": [
+      190,
+      103,
+      3716,
+      2606
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3808,
+      2863
+    ]
+  },
+  "101": {
+    "page_num": 101,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0101.png",
+    "content_bbox": [
+      196,
+      246,
+      3769,
+      2737
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3864,
+      2863
+    ]
+  },
+  "102": {
+    "page_num": 102,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0102.png",
+    "content_bbox": [
+      208,
+      104,
+      3771,
+      2604
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3864,
+      2863
+    ]
+  },
+  "103": {
+    "page_num": 103,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0103.png",
+    "content_bbox": [
+      194,
+      269,
+      3785,
+      2769
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3913,
+      2863
+    ]
+  },
+  "104": {
+    "page_num": 104,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0104.png",
+    "content_bbox": [
+      238,
+      99,
+      3824,
+      2603
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3913,
+      2863
+    ]
+  },
+  "105": {
+    "page_num": 105,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0105.png",
+    "content_bbox": [
+      207,
+      246,
+      3741,
+      2728
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3857,
+      2863
+    ]
+  },
+  "106": {
+    "page_num": 106,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0106.png",
+    "content_bbox": [
+      257,
+      101,
+      3781,
+      2604
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3857,
+      2863
+    ]
+  },
+  "107": {
+    "page_num": 107,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0107.png",
+    "content_bbox": [
+      220,
+      246,
+      3748,
+      2738
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3864,
+      2863
+    ]
+  },
+  "108": {
+    "page_num": 108,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0108.png",
+    "content_bbox": [
+      250,
+      118,
+      3777,
+      2625
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3864,
+      2863
+    ]
+  },
+  "109": {
+    "page_num": 109,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0109.png",
+    "content_bbox": [
+      197,
+      234,
+      3723,
+      2725
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "110": {
+    "page_num": 110,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0110.png",
+    "content_bbox": [
+      186,
+      113,
+      3709,
+      2618
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "111": {
+    "page_num": 111,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0111.png",
+    "content_bbox": [
+      193,
+      255,
+      3718,
+      2746
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "112": {
+    "page_num": 112,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0112.png",
+    "content_bbox": [
+      203,
+      121,
+      3721,
+      2618
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "113": {
+    "page_num": 113,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0113.png",
+    "content_bbox": [
+      226,
+      254,
+      3729,
+      2743
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3829,
+      2863
+    ]
+  },
+  "114": {
+    "page_num": 114,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0114.png",
+    "content_bbox": [
+      212,
+      96,
+      3730,
+      2597
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3829,
+      2863
+    ]
+  },
+  "115": {
+    "page_num": 115,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0115.png",
+    "content_bbox": [
+      209,
+      247,
+      3725,
+      2734
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3815,
+      2863
+    ]
+  },
+  "116": {
+    "page_num": 116,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0116.png",
+    "content_bbox": [
+      217,
+      111,
+      3740,
+      2631
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3815,
+      2863
+    ]
+  },
+  "117": {
+    "page_num": 117,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0117.png",
+    "content_bbox": [
+      142,
+      227,
+      3930,
+      2716
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      4018,
+      2863
+    ]
+  },
+  "118": {
+    "page_num": 118,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0118.png",
+    "content_bbox": [
+      396,
+      121,
+      3933,
+      2619
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      4018,
+      2863
+    ]
+  },
+  "119": {
+    "page_num": 119,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0119.png",
+    "content_bbox": [
+      212,
+      223,
+      3732,
+      2711
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3864,
+      2863
+    ]
+  },
+  "120": {
+    "page_num": 120,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0120.png",
+    "content_bbox": [
+      264,
+      126,
+      3784,
+      2624
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3864,
+      2863
+    ]
+  },
+  "121": {
+    "page_num": 121,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0121.png",
+    "content_bbox": [
+      208,
+      221,
+      3730,
+      2711
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "122": {
+    "page_num": 122,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0122.png",
+    "content_bbox": [
+      202,
+      142,
+      3721,
+      2638
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "123": {
+    "page_num": 123,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0123.png",
+    "content_bbox": [
+      148,
+      221,
+      3922,
+      2709
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      4011,
+      2863
+    ]
+  },
+  "124": {
+    "page_num": 124,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0124.png",
+    "content_bbox": [
+      405,
+      123,
+      3921,
+      2632
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      4011,
+      2863
+    ]
+  },
+  "125": {
+    "page_num": 125,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0125.png",
+    "content_bbox": [
+      224,
+      228,
+      3753,
+      2723
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3871,
+      2863
+    ]
+  },
+  "126": {
+    "page_num": 126,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0126.png",
+    "content_bbox": [
+      272,
+      135,
+      3799,
+      2637
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3871,
+      2863
+    ]
+  },
+  "127": {
+    "page_num": 127,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0127.png",
+    "content_bbox": [
+      216,
+      256,
+      3740,
+      2746
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3864,
+      2863
+    ]
+  },
+  "128": {
+    "page_num": 128,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0128.png",
+    "content_bbox": [
+      270,
+      130,
+      3791,
+      2627
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3864,
+      2863
+    ]
+  },
+  "129": {
+    "page_num": 129,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0129.png",
+    "content_bbox": [
+      217,
+      226,
+      3738,
+      2719
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "130": {
+    "page_num": 130,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0130.png",
+    "content_bbox": [
+      221,
+      122,
+      3744,
+      2630
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "131": {
+    "page_num": 131,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0131.png",
+    "content_bbox": [
+      209,
+      229,
+      3734,
+      2722
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3815,
+      2863
+    ]
+  },
+  "132": {
+    "page_num": 132,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0132.png",
+    "content_bbox": [
+      214,
+      136,
+      3732,
+      2638
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3815,
+      2863
+    ]
+  },
+  "133": {
+    "page_num": 133,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0133.png",
+    "content_bbox": [
+      217,
+      256,
+      3733,
+      2748
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "134": {
+    "page_num": 134,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0134.png",
+    "content_bbox": [
+      221,
+      129,
+      3739,
+      2624
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "135": {
+    "page_num": 135,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0135.png",
+    "content_bbox": [
+      354,
+      249,
+      3800,
+      2740
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3892,
+      2863
+    ]
+  },
+  "136": {
+    "page_num": 136,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0136.png",
+    "content_bbox": [
+      278,
+      108,
+      3794,
+      2611
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3892,
+      2863
+    ]
+  },
+  "137": {
+    "page_num": 137,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0137.png",
+    "content_bbox": [
+      148,
+      47,
+      3924,
+      2752
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      4011,
+      2863
+    ]
+  },
+  "138": {
+    "page_num": 138,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0138.png",
+    "content_bbox": [
+      405,
+      128,
+      3923,
+      2625
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      4011,
+      2863
+    ]
+  },
+  "139": {
+    "page_num": 139,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0139.png",
+    "content_bbox": [
+      72,
+      271,
+      3901,
+      2763
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3990,
+      2863
+    ]
+  },
+  "140": {
+    "page_num": 140,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0140.png",
+    "content_bbox": [
+      327,
+      94,
+      3900,
+      2592
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3990,
+      2863
+    ]
+  },
+  "141": {
+    "page_num": 141,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0141.png",
+    "content_bbox": [
+      210,
+      269,
+      3780,
+      2761
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3871,
+      2863
+    ]
+  },
+  "142": {
+    "page_num": 142,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0142.png",
+    "content_bbox": [
+      219,
+      96,
+      3773,
+      2589
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3871,
+      2863
+    ]
+  },
+  "143": {
+    "page_num": 143,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0143.png",
+    "content_bbox": [
+      209,
+      250,
+      3723,
+      2742
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "144": {
+    "page_num": 144,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0144.png",
+    "content_bbox": [
+      213,
+      98,
+      3728,
+      2595
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3822,
+      2863
+    ]
+  },
+  "145": {
+    "page_num": 145,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0145.png",
+    "content_bbox": [
+      223,
+      268,
+      3738,
+      2761
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3815,
+      2863
+    ]
+  },
+  "146": {
+    "page_num": 146,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0146.png",
+    "content_bbox": [
+      215,
+      107,
+      3735,
+      2611
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3815,
+      2863
+    ]
+  },
+  "147": {
+    "page_num": 147,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0147.png",
+    "content_bbox": [
+      214,
+      252,
+      3750,
+      2743
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3836,
+      2863
+    ]
+  },
+  "148": {
+    "page_num": 148,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0148.png",
+    "content_bbox": [
+      213,
+      106,
+      3755,
+      2630
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3836,
+      2863
+    ]
+  },
+  "149": {
+    "page_num": 149,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0149.png",
+    "content_bbox": [
+      88,
+      244,
+      3864,
+      2752
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3948,
+      2863
+    ]
+  },
+  "150": {
+    "page_num": 150,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0150.png",
+    "content_bbox": [
+      348,
+      101,
+      3863,
+      2625
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3948,
+      2863
+    ]
+  },
+  "151": {
+    "page_num": 151,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0151.png",
+    "content_bbox": [
+      214,
+      258,
+      3742,
+      2770
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3857,
+      2863
+    ]
+  },
+  "152": {
+    "page_num": 152,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0152.png",
+    "content_bbox": [
+      251,
+      111,
+      3772,
+      2634
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3857,
+      2863
+    ]
+  },
+  "153": {
+    "page_num": 153,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0153.png",
+    "content_bbox": [
+      128,
+      48,
+      3896,
+      2757
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      4039,
+      2863
+    ]
+  },
+  "154": {
+    "page_num": 154,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0154.png",
+    "content_bbox": [
+      206,
+      94,
+      3723,
+      2614
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3815,
+      2863
+    ]
+  },
+  "155": {
+    "page_num": 155,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0155.png",
+    "content_bbox": [
+      210,
+      253,
+      3725,
+      2758
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3885,
+      2863
+    ]
+  },
+  "156": {
+    "page_num": 156,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0156.png",
+    "content_bbox": [
+      273,
+      119,
+      3789,
+      2640
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3885,
+      2863
+    ]
+  },
+  "157": {
+    "page_num": 157,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0157.png",
+    "content_bbox": [
+      88,
+      266,
+      3854,
+      2756
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3948,
+      2863
+    ]
+  },
+  "158": {
+    "page_num": 158,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0158.png",
+    "content_bbox": [
+      330,
+      100,
+      3847,
+      2600
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3948,
+      2863
+    ]
+  },
+  "159": {
+    "page_num": 159,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0159.png",
+    "content_bbox": [
+      186,
+      241,
+      3834,
+      2734
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3855,
+      2863
+    ]
+  },
+  "160": {
+    "page_num": 160,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0160.png",
+    "content_bbox": [
+      197,
+      106,
+      3712,
+      2605
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3815,
+      2863
+    ]
+  },
+  "161": {
+    "page_num": 161,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0161.png",
+    "content_bbox": [
+      128,
+      265,
+      3898,
+      2764
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      4039,
+      2863
+    ]
+  },
+  "162": {
+    "page_num": 162,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0162.png",
+    "content_bbox": [
+      231,
+      105,
+      2754,
+      3738
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3847
+    ]
+  },
+  "163": {
+    "page_num": 163,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0163.png",
+    "content_bbox": [
+      95,
+      108,
+      2617,
+      3901
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      4060
+    ]
+  },
+  "164": {
+    "page_num": 164,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0164.png",
+    "content_bbox": [
+      229,
+      109,
+      2747,
+      3900
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3948
+    ]
+  },
+  "165": {
+    "page_num": 165,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0165.png",
+    "content_bbox": [
+      94,
+      116,
+      2621,
+      3724
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3948
+    ]
+  },
+  "166": {
+    "page_num": 166,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0166.png",
+    "content_bbox": [
+      230,
+      145,
+      2754,
+      3521
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3871
+    ]
+  },
+  "167": {
+    "page_num": 167,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0167.png",
+    "content_bbox": [
+      115,
+      101,
+      2661,
+      3610
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3871
+    ]
+  },
+  "168": {
+    "page_num": 168,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0168.png",
+    "content_bbox": [
+      210,
+      112,
+      2733,
+      3814
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3814
+    ]
+  },
+  "169": {
+    "page_num": 169,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0169.png",
+    "content_bbox": [
+      101,
+      106,
+      2628,
+      3681
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3913
+    ]
+  },
+  "170": {
+    "page_num": 170,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0170.png",
+    "content_bbox": [
+      205,
+      110,
+      2726,
+      3671
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "171": {
+    "page_num": 171,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0171.png",
+    "content_bbox": [
+      132,
+      104,
+      2651,
+      3166
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "172": {
+    "page_num": 172,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0172.png",
+    "content_bbox": [
+      209,
+      106,
+      2727,
+      1819
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3795
+    ]
+  },
+  "173": {
+    "page_num": 173,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0173.png",
+    "content_bbox": [
+      214,
+      103,
+      2749,
+      3046
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3788
+    ]
+  },
+  "174": {
+    "page_num": 174,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0174.png",
+    "content_bbox": [
+      126,
+      94,
+      2642,
+      3658
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3983
+    ]
+  },
+  "175": {
+    "page_num": 175,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0175.png",
+    "content_bbox": [
+      214,
+      138,
+      2723,
+      3707
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "176": {
+    "page_num": 176,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0176.png",
+    "content_bbox": [
+      115,
+      105,
+      2652,
+      3553
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3815
+    ]
+  },
+  "177": {
+    "page_num": 177,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0177.png",
+    "content_bbox": [
+      221,
+      107,
+      2735,
+      1874
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3807
+    ]
+  },
+  "178": {
+    "page_num": 178,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0178.png",
+    "content_bbox": [
+      232,
+      161,
+      2757,
+      3755
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3922
+    ]
+  },
+  "179": {
+    "page_num": 179,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0179.png",
+    "content_bbox": [
+      117,
+      104,
+      2639,
+      3463
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3885
+    ]
+  },
+  "180": {
+    "page_num": 180,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0180.png",
+    "content_bbox": [
+      243,
+      190,
+      2769,
+      3723
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3875
+    ]
+  },
+  "181": {
+    "page_num": 181,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0181.png",
+    "content_bbox": [
+      96,
+      104,
+      2622,
+      3606
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      4004
+    ]
+  },
+  "182": {
+    "page_num": 182,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0182.png",
+    "content_bbox": [
+      268,
+      184,
+      2781,
+      3690
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3867
+    ]
+  },
+  "183": {
+    "page_num": 183,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0183.png",
+    "content_bbox": [
+      109,
+      95,
+      2633,
+      3421
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "184": {
+    "page_num": 184,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0184.png",
+    "content_bbox": [
+      255,
+      152,
+      2783,
+      3694
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3814
+    ]
+  },
+  "185": {
+    "page_num": 185,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0185.png",
+    "content_bbox": [
+      100,
+      103,
+      2628,
+      2825
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3836
+    ]
+  },
+  "186": {
+    "page_num": 186,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0186.png",
+    "content_bbox": [
+      254,
+      165,
+      2783,
+      3723
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3895
+    ]
+  },
+  "187": {
+    "page_num": 187,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0187.png",
+    "content_bbox": [
+      95,
+      88,
+      2625,
+      3600
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3850
+    ]
+  },
+  "188": {
+    "page_num": 188,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0188.png",
+    "content_bbox": [
+      251,
+      118,
+      2779,
+      3525
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3814
+    ]
+  },
+  "189": {
+    "page_num": 189,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0189.png",
+    "content_bbox": [
+      82,
+      93,
+      2601,
+      3370
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3822
+    ]
+  },
+  "190": {
+    "page_num": 190,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0190.png",
+    "content_bbox": [
+      258,
+      116,
+      2786,
+      3620
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3841
+    ]
+  },
+  "191": {
+    "page_num": 191,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0191.png",
+    "content_bbox": [
+      101,
+      73,
+      2409,
+      2173
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3822
+    ]
+  },
+  "192": {
+    "page_num": 192,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0192.png",
+    "content_bbox": [
+      305,
+      115,
+      2768,
+      3456
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3814
+    ]
+  },
+  "193": {
+    "page_num": 193,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0193.png",
+    "content_bbox": [
+      100,
+      81,
+      2634,
+      3488
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3822
+    ]
+  },
+  "194": {
+    "page_num": 194,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0194.png",
+    "content_bbox": [
+      243,
+      110,
+      2775,
+      3571
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3848
+    ]
+  },
+  "195": {
+    "page_num": 195,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0195.png",
+    "content_bbox": [
+      100,
+      71,
+      2632,
+      3470
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "196": {
+    "page_num": 196,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0196.png",
+    "content_bbox": [
+      243,
+      73,
+      2775,
+      3571
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3787
+    ]
+  },
+  "197": {
+    "page_num": 197,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0197.png",
+    "content_bbox": [
+      110,
+      72,
+      2638,
+      3458
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      4004
+    ]
+  },
+  "198": {
+    "page_num": 198,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0198.png",
+    "content_bbox": [
+      244,
+      111,
+      2774,
+      3628
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3827
+    ]
+  },
+  "199": {
+    "page_num": 199,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0199.png",
+    "content_bbox": [
+      94,
+      73,
+      2625,
+      3588
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "200": {
+    "page_num": 200,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0200.png",
+    "content_bbox": [
+      246,
+      108,
+      2778,
+      3554
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3827
+    ]
+  },
+  "201": {
+    "page_num": 201,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0201.png",
+    "content_bbox": [
+      239,
+      116,
+      2760,
+      3620
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3841
+    ]
+  },
+  "202": {
+    "page_num": 202,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0202.png",
+    "content_bbox": [
+      107,
+      76,
+      2633,
+      2053
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3822
+    ]
+  },
+  "203": {
+    "page_num": 203,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0203.png",
+    "content_bbox": [
+      109,
+      83,
+      2608,
+      2085
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3822
+    ]
+  },
+  "204": {
+    "page_num": 204,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0204.png",
+    "content_bbox": [
+      251,
+      122,
+      2716,
+      1883
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3855
+    ]
+  },
+  "205": {
+    "page_num": 205,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0205.png",
+    "content_bbox": [
+      98,
+      75,
+      2628,
+      3751
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "206": {
+    "page_num": 206,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0206.png",
+    "content_bbox": [
+      256,
+      118,
+      2783,
+      3855
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3855
+    ]
+  },
+  "207": {
+    "page_num": 207,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0207.png",
+    "content_bbox": [
+      97,
+      78,
+      2623,
+      3596
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3962
+    ]
+  },
+  "208": {
+    "page_num": 208,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0208.png",
+    "content_bbox": [
+      244,
+      125,
+      2762,
+      3570
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3864
+    ]
+  },
+  "209": {
+    "page_num": 209,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0209.png",
+    "content_bbox": [
+      95,
+      80,
+      2620,
+      3562
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3864
+    ]
+  },
+  "210": {
+    "page_num": 210,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0210.png",
+    "content_bbox": [
+      242,
+      90,
+      2762,
+      3542
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3814
+    ]
+  },
+  "211": {
+    "page_num": 211,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0211.png",
+    "content_bbox": [
+      103,
+      86,
+      2627,
+      3493
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3976
+    ]
+  },
+  "212": {
+    "page_num": 212,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0212.png",
+    "content_bbox": [
+      241,
+      111,
+      2761,
+      3561
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3834
+    ]
+  },
+  "213": {
+    "page_num": 213,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0213.png",
+    "content_bbox": [
+      118,
+      73,
+      2644,
+      3405
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "214": {
+    "page_num": 214,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0214.png",
+    "content_bbox": [
+      227,
+      144,
+      2737,
+      3602
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3841
+    ]
+  },
+  "215": {
+    "page_num": 215,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0215.png",
+    "content_bbox": [
+      109,
+      104,
+      2635,
+      3594
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "216": {
+    "page_num": 216,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0216.png",
+    "content_bbox": [
+      227,
+      123,
+      2747,
+      3573
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3841
+    ]
+  },
+  "217": {
+    "page_num": 217,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0217.png",
+    "content_bbox": [
+      118,
+      87,
+      2642,
+      3561
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "218": {
+    "page_num": 218,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0218.png",
+    "content_bbox": [
+      218,
+      155,
+      2736,
+      3610
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3878
+    ]
+  },
+  "219": {
+    "page_num": 219,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0219.png",
+    "content_bbox": [
+      107,
+      108,
+      2636,
+      3603
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3878
+    ]
+  },
+  "220": {
+    "page_num": 220,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0220.png",
+    "content_bbox": [
+      221,
+      136,
+      2743,
+      3579
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3834
+    ]
+  },
+  "221": {
+    "page_num": 221,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0221.png",
+    "content_bbox": [
+      115,
+      90,
+      2645,
+      3489
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "222": {
+    "page_num": 222,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0222.png",
+    "content_bbox": [
+      224,
+      151,
+      2749,
+      3596
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3834
+    ]
+  },
+  "223": {
+    "page_num": 223,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0223.png",
+    "content_bbox": [
+      106,
+      111,
+      2631,
+      3093
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "224": {
+    "page_num": 224,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0224.png",
+    "content_bbox": [
+      241,
+      134,
+      2761,
+      3576
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3841
+    ]
+  },
+  "225": {
+    "page_num": 225,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0225.png",
+    "content_bbox": [
+      97,
+      85,
+      2622,
+      2732
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "226": {
+    "page_num": 226,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0226.png",
+    "content_bbox": [
+      230,
+      156,
+      2751,
+      3599
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3854
+    ]
+  },
+  "227": {
+    "page_num": 227,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0227.png",
+    "content_bbox": [
+      109,
+      102,
+      2635,
+      3085
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "228": {
+    "page_num": 228,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0228.png",
+    "content_bbox": [
+      234,
+      138,
+      2757,
+      3906
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      4046
+    ]
+  },
+  "229": {
+    "page_num": 229,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0229.png",
+    "content_bbox": [
+      92,
+      97,
+      2618,
+      3080
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      3808
+    ]
+  },
+  "230": {
+    "page_num": 230,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0230.png",
+    "content_bbox": [
+      240,
+      83,
+      2748,
+      3525
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3822
+    ]
+  },
+  "231": {
+    "page_num": 231,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0231.png",
+    "content_bbox": [
+      116,
+      78,
+      2632,
+      2958
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3822
+    ]
+  },
+  "232": {
+    "page_num": 232,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0232.png",
+    "content_bbox": [
+      229,
+      134,
+      2754,
+      3862
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3862
+    ]
+  },
+  "233": {
+    "page_num": 233,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0233.png",
+    "content_bbox": [
+      114,
+      91,
+      2644,
+      3083
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3822
+    ]
+  },
+  "234": {
+    "page_num": 234,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0234.png",
+    "content_bbox": [
+      223,
+      91,
+      2747,
+      3538
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3815
+    ]
+  },
+  "235": {
+    "page_num": 235,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0235.png",
+    "content_bbox": [
+      114,
+      88,
+      2630,
+      2728
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3815
+    ]
+  },
+  "236": {
+    "page_num": 236,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0236.png",
+    "content_bbox": [
+      248,
+      128,
+      2764,
+      3575
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3855
+    ]
+  },
+  "237": {
+    "page_num": 237,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0237.png",
+    "content_bbox": [
+      123,
+      81,
+      2651,
+      2895
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "238": {
+    "page_num": 238,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0238.png",
+    "content_bbox": [
+      216,
+      83,
+      2739,
+      3524
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3801
+    ]
+  },
+  "239": {
+    "page_num": 239,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0239.png",
+    "content_bbox": [
+      120,
+      78,
+      2642,
+      2771
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3997
+    ]
+  },
+  "240": {
+    "page_num": 240,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0240.png",
+    "content_bbox": [
+      239,
+      114,
+      2755,
+      3556
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3835
+    ]
+  },
+  "241": {
+    "page_num": 241,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0241.png",
+    "content_bbox": [
+      126,
+      74,
+      2657,
+      3575
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "242": {
+    "page_num": 242,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0242.png",
+    "content_bbox": [
+      251,
+      146,
+      2764,
+      3592
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3860
+    ]
+  },
+  "243": {
+    "page_num": 243,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0243.png",
+    "content_bbox": [
+      122,
+      73,
+      2644,
+      2544
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "244": {
+    "page_num": 244,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0244.png",
+    "content_bbox": [
+      245,
+      132,
+      2760,
+      3593
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3847
+    ]
+  },
+  "245": {
+    "page_num": 245,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0245.png",
+    "content_bbox": [
+      98,
+      88,
+      2620,
+      2742
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3829
+    ]
+  },
+  "246": {
+    "page_num": 246,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0246.png",
+    "content_bbox": [
+      258,
+      125,
+      2765,
+      3584
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3834
+    ]
+  },
+  "247": {
+    "page_num": 247,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0247.png",
+    "content_bbox": [
+      115,
+      94,
+      2642,
+      3541
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "248": {
+    "page_num": 248,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0248.png",
+    "content_bbox": [
+      266,
+      154,
+      2764,
+      3616
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3861
+    ]
+  },
+  "249": {
+    "page_num": 249,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0249.png",
+    "content_bbox": [
+      92,
+      87,
+      2617,
+      3581
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "250": {
+    "page_num": 250,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0250.png",
+    "content_bbox": [
+      249,
+      120,
+      2776,
+      3566
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3827
+    ]
+  },
+  "251": {
+    "page_num": 251,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0251.png",
+    "content_bbox": [
+      88,
+      81,
+      2618,
+      3588
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "252": {
+    "page_num": 252,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0252.png",
+    "content_bbox": [
+      166,
+      132,
+      2666,
+      3587
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2746,
+      3841
+    ]
+  },
+  "253": {
+    "page_num": 253,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0253.png",
+    "content_bbox": [
+      93,
+      82,
+      2621,
+      3586
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "254": {
+    "page_num": 254,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0254.png",
+    "content_bbox": [
+      214,
+      124,
+      2717,
+      3600
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2809,
+      3862
+    ]
+  },
+  "255": {
+    "page_num": 255,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0255.png",
+    "content_bbox": [
+      96,
+      78,
+      2623,
+      3545
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3990
+    ]
+  },
+  "256": {
+    "page_num": 256,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0256.png",
+    "content_bbox": [
+      243,
+      130,
+      2759,
+      3577
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3864
+    ]
+  },
+  "257": {
+    "page_num": 257,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0257.png",
+    "content_bbox": [
+      90,
+      91,
+      2622,
+      3529
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3864
+    ]
+  },
+  "258": {
+    "page_num": 258,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0258.png",
+    "content_bbox": [
+      137,
+      123,
+      2654,
+      3571
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2684,
+      3828
+    ]
+  },
+  "259": {
+    "page_num": 259,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0259.png",
+    "content_bbox": [
+      93,
+      94,
+      2617,
+      3618
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "260": {
+    "page_num": 260,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0260.png",
+    "content_bbox": [
+      143,
+      80,
+      2673,
+      3532
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2699,
+      3801
+    ]
+  },
+  "261": {
+    "page_num": 261,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0261.png",
+    "content_bbox": [
+      114,
+      82,
+      2639,
+      3252
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3997
+    ]
+  },
+  "262": {
+    "page_num": 262,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0262.png",
+    "content_bbox": [
+      250,
+      121,
+      2771,
+      3570
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3828
+    ]
+  },
+  "263": {
+    "page_num": 263,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0263.png",
+    "content_bbox": [
+      84,
+      84,
+      2609,
+      3523
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "264": {
+    "page_num": 264,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0264.png",
+    "content_bbox": [
+      248,
+      138,
+      2765,
+      3587
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3853
+    ]
+  },
+  "265": {
+    "page_num": 265,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0265.png",
+    "content_bbox": [
+      98,
+      76,
+      2626,
+      3299
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "266": {
+    "page_num": 266,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0266.png",
+    "content_bbox": [
+      245,
+      138,
+      2764,
+      3591
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3847
+    ]
+  },
+  "267": {
+    "page_num": 267,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0267.png",
+    "content_bbox": [
+      231,
+      131,
+      2753,
+      3588
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3848
+    ]
+  },
+  "268": {
+    "page_num": 268,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0268.png",
+    "content_bbox": [
+      92,
+      87,
+      2618,
+      3669
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "269": {
+    "page_num": 269,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0269.png",
+    "content_bbox": [
+      158,
+      134,
+      2674,
+      3752
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2695,
+      3887
+    ]
+  },
+  "270": {
+    "page_num": 270,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0270.png",
+    "content_bbox": [
+      95,
+      96,
+      2617,
+      3717
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3864
+    ]
+  },
+  "271": {
+    "page_num": 271,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0271.png",
+    "content_bbox": [
+      170,
+      141,
+      2691,
+      3721
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2794,
+      3841
+    ]
+  },
+  "272": {
+    "page_num": 272,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0272.png",
+    "content_bbox": [
+      95,
+      111,
+      2610,
+      1447
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3822
+    ]
+  },
+  "273": {
+    "page_num": 273,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0273.png",
+    "content_bbox": [
+      170,
+      170,
+      2703,
+      3738
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2815,
+      3854
+    ]
+  },
+  "274": {
+    "page_num": 274,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0274.png",
+    "content_bbox": [
+      89,
+      115,
+      2618,
+      3680
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3815
+    ]
+  },
+  "275": {
+    "page_num": 275,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0275.png",
+    "content_bbox": [
+      229,
+      157,
+      2746,
+      3282
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3878
+    ]
+  },
+  "276": {
+    "page_num": 276,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0276.png",
+    "content_bbox": [
+      115,
+      97,
+      2643,
+      3552
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3878
+    ]
+  },
+  "277": {
+    "page_num": 277,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0277.png",
+    "content_bbox": [
+      215,
+      106,
+      2737,
+      3626
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3854
+    ]
+  },
+  "278": {
+    "page_num": 278,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0278.png",
+    "content_bbox": [
+      98,
+      109,
+      2616,
+      3622
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      4053
+    ]
+  },
+  "279": {
+    "page_num": 279,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0279.png",
+    "content_bbox": [
+      219,
+      152,
+      2753,
+      3727
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3841
+    ]
+  },
+  "280": {
+    "page_num": 280,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0280.png",
+    "content_bbox": [
+      116,
+      103,
+      2635,
+      3681
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3997
+    ]
+  },
+  "281": {
+    "page_num": 281,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0281.png",
+    "content_bbox": [
+      206,
+      105,
+      2725,
+      3618
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3801
+    ]
+  },
+  "282": {
+    "page_num": 282,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0282.png",
+    "content_bbox": [
+      105,
+      104,
+      2630,
+      3841
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3969
+    ]
+  },
+  "283": {
+    "page_num": 283,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0283.png",
+    "content_bbox": [
+      201,
+      131,
+      2722,
+      3711
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2822,
+      3835
+    ]
+  },
+  "284": {
+    "page_num": 284,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0284.png",
+    "content_bbox": [
+      98,
+      104,
+      2617,
+      3667
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      4004
+    ]
+  },
+  "285": {
+    "page_num": 285,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0285.png",
+    "content_bbox": [
+      158,
+      144,
+      2675,
+      3854
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2815,
+      3854
+    ]
+  },
+  "286": {
+    "page_num": 286,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0286.png",
+    "content_bbox": [
+      94,
+      96,
+      2620,
+      3664
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3808
+    ]
+  },
+  "287": {
+    "page_num": 287,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0287.png",
+    "content_bbox": [
+      147,
+      115,
+      2686,
+      2668
+    ],
+    "skew_angle": 0.9955610503081653,
+    "original_size": [
+      2785,
+      3816
+    ]
+  },
+  "288": {
+    "page_num": 288,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0288.png",
+    "content_bbox": [
+      139,
+      122,
+      2677,
+      3700
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2766,
+      3807
+    ]
+  },
+  "289": {
+    "page_num": 289,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0289.png",
+    "content_bbox": [
+      93,
+      73,
+      2627,
+      3410
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3808
+    ]
+  },
+  "290": {
+    "page_num": 290,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0290.png",
+    "content_bbox": [
+      179,
+      138,
+      2701,
+      3721
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2822,
+      3842
+    ]
+  },
+  "291": {
+    "page_num": 291,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0291.png",
+    "content_bbox": [
+      91,
+      83,
+      2616,
+      3472
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "292": {
+    "page_num": 292,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0292.png",
+    "content_bbox": [
+      222,
+      90,
+      2746,
+      3666
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3801
+    ]
+  },
+  "293": {
+    "page_num": 293,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0293.png",
+    "content_bbox": [
+      121,
+      96,
+      2651,
+      3667
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3948
+    ]
+  },
+  "294": {
+    "page_num": 294,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0294.png",
+    "content_bbox": [
+      224,
+      130,
+      2743,
+      3744
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3860
+    ]
+  },
+  "295": {
+    "page_num": 295,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0295.png",
+    "content_bbox": [
+      108,
+      84,
+      2634,
+      3177
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3850
+    ]
+  },
+  "296": {
+    "page_num": 296,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0296.png",
+    "content_bbox": [
+      217,
+      229,
+      2733,
+      943
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3921
+    ]
+  },
+  "297": {
+    "page_num": 297,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0297.png",
+    "content_bbox": [
+      221,
+      226,
+      2745,
+      3907
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3907
+    ]
+  },
+  "298": {
+    "page_num": 298,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0298.png",
+    "content_bbox": [
+      95,
+      87,
+      2622,
+      3660
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3808
+    ]
+  },
+  "299": {
+    "page_num": 299,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0299.png",
+    "content_bbox": [
+      219,
+      100,
+      2741,
+      3561
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3787
+    ]
+  },
+  "300": {
+    "page_num": 300,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0300.png",
+    "content_bbox": [
+      137,
+      93,
+      2667,
+      3393
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3969
+    ]
+  },
+  "301": {
+    "page_num": 301,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0301.png",
+    "content_bbox": [
+      238,
+      182,
+      2765,
+      2950
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3860
+    ]
+  },
+  "302": {
+    "page_num": 302,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0302.png",
+    "content_bbox": [
+      219,
+      241,
+      2755,
+      3806
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3912
+    ]
+  },
+  "303": {
+    "page_num": 303,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0303.png",
+    "content_bbox": [
+      107,
+      93,
+      2640,
+      3656
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "304": {
+    "page_num": 304,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0304.png",
+    "content_bbox": [
+      221,
+      128,
+      2742,
+      3702
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2849,
+      3827
+    ]
+  },
+  "305": {
+    "page_num": 305,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0305.png",
+    "content_bbox": [
+      98,
+      94,
+      2630,
+      3669
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2849,
+      3808
+    ]
+  },
+  "306": {
+    "page_num": 306,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0306.png",
+    "content_bbox": [
+      237,
+      148,
+      2758,
+      3948
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3948
+    ]
+  },
+  "307": {
+    "page_num": 307,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0307.png",
+    "content_bbox": [
+      103,
+      80,
+      2617,
+      595
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3871
+    ]
+  },
+  "308": {
+    "page_num": 308,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0308.png",
+    "content_bbox": [
+      154,
+      122,
+      2703,
+      3694
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2766,
+      3834
+    ]
+  },
+  "309": {
+    "page_num": 309,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0309.png",
+    "content_bbox": [
+      92,
+      79,
+      2619,
+      3654
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3808
+    ]
+  },
+  "310": {
+    "page_num": 310,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0310.png",
+    "content_bbox": [
+      227,
+      105,
+      2753,
+      3683
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3834
+    ]
+  },
+  "311": {
+    "page_num": 311,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0311.png",
+    "content_bbox": [
+      77,
+      71,
+      2610,
+      3650
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3808
+    ]
+  },
+  "312": {
+    "page_num": 312,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0312.png",
+    "content_bbox": [
+      164,
+      72,
+      2685,
+      3648
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2788,
+      3780
+    ]
+  },
+  "313": {
+    "page_num": 313,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0313.png",
+    "content_bbox": [
+      91,
+      68,
+      2621,
+      3636
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3990
+    ]
+  },
+  "314": {
+    "page_num": 314,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0314.png",
+    "content_bbox": [
+      189,
+      158,
+      2712,
+      3734
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2794,
+      3862
+    ]
+  },
+  "315": {
+    "page_num": 315,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0315.png",
+    "content_bbox": [
+      88,
+      69,
+      2611,
+      3642
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3801
+    ]
+  },
+  "316": {
+    "page_num": 316,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0316.png",
+    "content_bbox": [
+      164,
+      148,
+      2688,
+      3718
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2779,
+      3874
+    ]
+  },
+  "317": {
+    "page_num": 317,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0317.png",
+    "content_bbox": [
+      97,
+      68,
+      2618,
+      3436
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "318": {
+    "page_num": 318,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0318.png",
+    "content_bbox": [
+      245,
+      97,
+      2758,
+      3402
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3814
+    ]
+  },
+  "319": {
+    "page_num": 319,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0319.png",
+    "content_bbox": [
+      83,
+      71,
+      2612,
+      3639
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3815
+    ]
+  },
+  "320": {
+    "page_num": 320,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0320.png",
+    "content_bbox": [
+      239,
+      128,
+      2756,
+      2763
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3841
+    ]
+  },
+  "321": {
+    "page_num": 321,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0321.png",
+    "content_bbox": [
+      48,
+      112,
+      2768,
+      3891
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2870,
+      4004
+    ]
+  },
+  "322": {
+    "page_num": 322,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0322.png",
+    "content_bbox": [
+      72,
+      87,
+      2594,
+      3651
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3808
+    ]
+  },
+  "323": {
+    "page_num": 323,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0323.png",
+    "content_bbox": [
+      223,
+      104,
+      2746,
+      2687
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3841
+    ]
+  },
+  "324": {
+    "page_num": 324,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0324.png",
+    "content_bbox": [
+      167,
+      131,
+      2685,
+      3694
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2746,
+      3841
+    ]
+  },
+  "325": {
+    "page_num": 325,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0325.png",
+    "content_bbox": [
+      96,
+      89,
+      2623,
+      3658
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "326": {
+    "page_num": 326,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0326.png",
+    "content_bbox": [
+      147,
+      220,
+      2667,
+      3791
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2778,
+      3914
+    ]
+  },
+  "327": {
+    "page_num": 327,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0327.png",
+    "content_bbox": [
+      107,
+      92,
+      2628,
+      3657
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "328": {
+    "page_num": 328,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0328.png",
+    "content_bbox": [
+      225,
+      94,
+      2748,
+      3672
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3794
+    ]
+  },
+  "329": {
+    "page_num": 329,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0329.png",
+    "content_bbox": [
+      82,
+      93,
+      2609,
+      3864
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3990
+    ]
+  },
+  "330": {
+    "page_num": 330,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0330.png",
+    "content_bbox": [
+      155,
+      142,
+      2729,
+      3712
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2787,
+      3834
+    ]
+  },
+  "331": {
+    "page_num": 331,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0331.png",
+    "content_bbox": [
+      67,
+      93,
+      2602,
+      3659
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2733,
+      3808
+    ]
+  },
+  "332": {
+    "page_num": 332,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0332.png",
+    "content_bbox": [
+      131,
+      244,
+      3696,
+      2762
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      3829,
+      2863
+    ]
+  },
+  "333": {
+    "page_num": 333,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0333.png",
+    "content_bbox": [
+      124,
+      103,
+      1380,
+      1311
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  },
+  "334": {
+    "page_num": 334,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0334.png",
+    "content_bbox": [
+      410,
+      114,
+      2755,
+      3566
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3828
+    ]
+  },
+  "335": {
+    "page_num": 335,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0335.png",
+    "content_bbox": [
+      102,
+      83,
+      2437,
+      3521
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2856,
+      3808
+    ]
+  },
+  "336": {
+    "page_num": 336,
+    "preprocessed_path": "/home/abe/metro-project/build_supplement/pages_pre/page_0336.png",
+    "content_bbox": [
+      398,
+      93,
+      2743,
+      3005
+    ],
+    "skew_angle": 0.0,
+    "original_size": [
+      2863,
+      3808
+    ]
+  }
+}

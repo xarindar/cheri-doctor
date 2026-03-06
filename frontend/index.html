@@ -302,7 +302,7 @@
       flex-shrink: 0;
     }
 
-    #clear-btn, #pdf-worksheet-btn {
+    #clear-btn {
       background: none;
       border: 1px solid var(--border);
       color: var(--text-3);
@@ -315,8 +315,7 @@
       flex-shrink: 0;
     }
 
-    #clear-btn:hover, #pdf-worksheet-btn:hover { border-color: var(--surface-3); color: var(--text-1); }
-    #pdf-worksheet-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    #clear-btn:hover { border-color: var(--surface-3); color: var(--text-1); }
 
     /* ── MESSAGES ──────────────────────────────────────────────────── */
     #messages {
@@ -548,6 +547,190 @@
       background: var(--surface-2);
       font-weight: 600;
       color: var(--text-1);
+    }
+
+    /* ── DIAGNOSTIC CHECKLIST STYLES ──────────────────────────────────── */
+    .checklist {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 12px 0;
+      font-family: inherit;
+    }
+
+    .checklist-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .checklist-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-1);
+      margin-bottom: 4px;
+    }
+
+    .checklist-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-2);
+    }
+
+    .checklist-step {
+      display: flex;
+      align-items: flex-start;
+      margin: 12px 0;
+      gap: 10px;
+    }
+
+    .checklist-checkbox {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-radius: 3px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .checklist-checkbox:hover {
+      border-color: var(--accent);
+    }
+
+    .checklist-checkbox.checked {
+      background: var(--accent);
+      border-color: var(--accent);
+      position: relative;
+    }
+
+    .checklist-checkbox.checked::after {
+      content: '✓';
+      position: absolute;
+      top: -2px;
+      left: 2px;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .checklist-step-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .checklist-instruction {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--text-1);
+      margin-bottom: 6px;
+    }
+
+    .checklist-details {
+      font-size: 0.8rem;
+      color: var(--text-2);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    .checklist-input-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .checklist-input-label {
+      font-size: 0.8rem;
+      color: var(--text-2);
+      min-width: fit-content;
+    }
+
+    .checklist-input {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-1);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      min-width: 80px;
+    }
+
+    .checklist-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .checklist-section {
+      margin: 20px 0;
+    }
+
+    .checklist-section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-1);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 4px;
+      margin-bottom: 12px;
+    }
+
+    .checklist-figure {
+      margin: 12px 0;
+      text-align: center;
+    }
+
+    .checklist-figure img {
+      max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+
+    .checklist-figure-caption {
+      font-size: 0.75rem;
+      color: var(--text-3);
+      margin-top: 4px;
+    }
+
+    .checklist-print-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.2s;
+    }
+
+    .checklist-print-btn:hover {
+      background: var(--surface-2);
+      color: var(--text-1);
+    }
+
+    /* Print styles for checklists */
+    @media print {
+      .checklist {
+        background: white !important;
+        border: 1px solid #000 !important;
+        page-break-inside: avoid;
+      }
+      
+      .checklist-checkbox {
+        border: 2px solid #000 !important;
+        background: white !important;
+      }
+      
+      .checklist-input {
+        border: 1px solid #000 !important;
+        background: white !important;
+        color: #000 !important;
+      }
+      
+      .checklist-print-btn {
+        display: none;
+      }
     }
 
     .bubble td { color: var(--text-2); }
@@ -949,7 +1132,6 @@
       </div>
 
       <div class="badge">RAG + Vision</div>
-      <button id="pdf-worksheet-btn" title="Generate PDF worksheet from topic below">📄 PDF Worksheet</button>
       <button id="clear-btn" style="margin-right: 8px;">Clear</button>
       
       <button id="toggle-pane-btn" title="Toggle Reference Pane">
@@ -972,8 +1154,8 @@
           <button class="chip">Idle speed spec</button>
           <button class="chip">Valve clearance adjustment</button>
           <button class="chip">Coolant system flush</button>
-          <button class="chip chip-worksheet" data-prompt="alternator diagnostic tests">📄 Alternator worksheet</button>
-          <button class="chip chip-worksheet" data-prompt="cooling system diagnostic tests">📄 Cooling system worksheet</button>
+          <button class="chip chip-worksheet" data-prompt="alternator diagnostic tests">☑️ Alternator checklist</button>
+          <button class="chip chip-worksheet" data-prompt="cooling system diagnostic tests">☑️ Cooling system checklist</button>
         </div>
       </div>
     </div>
@@ -1403,6 +1585,10 @@ viewport.onwheel = (e) => {
 // ── Utilities ──────────────────────────────────────────────────────────────
 function parseMarkdown(text) {
   if (typeof marked === 'undefined') return escHtml(text);
+  
+  // Handle checklist format before general markdown parsing
+  text = parseChecklist(text);
+  
   // Replace figure citations BEFORE markdown parsing so marked doesn't mangle them.
   // Use a placeholder that marked won't touch, then swap back after.
   const figPlaceholders = [];
@@ -1417,6 +1603,126 @@ function parseMarkdown(text) {
     html = html.replace(`%%FIG_${i}%%`, link);
   });
   return html;
+}
+
+function parseChecklist(text) {
+  // Look for checklist format markers
+  const checklistRegex = /\[CHECKLIST:([^\]]+)\]([\s\S]*?)\[\/CHECKLIST\]/g;
+  
+  return text.replace(checklistRegex, (match, title, content) => {
+    const steps = content.trim().split('\n').filter(line => line.trim());
+    const checklistId = 'checklist-' + Math.random().toString(36).substr(2, 9);
+    
+    let html = `<div class="checklist" id="${checklistId}">`;
+    html += `<div class="checklist-header">`;
+    html += `<div class="checklist-title">${title.trim()}</div>`;
+    html += `<div class="checklist-subtitle">1990 Geo Metro Diagnostic Procedure</div>`;
+    html += `</div>`;
+    
+    let stepNumber = 1;
+    let currentSection = '';
+    
+    for (const line of steps) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+      
+      // Section headers
+      if (trimmed.startsWith('## ')) {
+        currentSection = trimmed.substring(3);
+        html += `<div class="checklist-section">`;
+        html += `<div class="checklist-section-title">${currentSection}</div>`;
+        continue;
+      }
+      
+      // Figure references
+      if (trimmed.match(/\[p\d+\s*\|\s*fig:/)) {
+        const figMatch = trimmed.match(/\[p(\d+)\s*\|\s*fig:\s*([^\]]+)\]/);
+        if (figMatch) {
+          html += `<div class="checklist-figure">`;
+          html += `<img src="/api/figures/${figMatch[2].trim()}" alt="Figure ${figMatch[2]}" onerror="this.style.display='none'">`;
+          html += `<div class="checklist-figure-caption">Figure ${figMatch[2]} (Page ${figMatch[1]})</div>`;
+          html += `</div>`;
+        }
+        continue;
+      }
+      
+      // Step format: "STEP: instruction | details | measurement:unit"
+      const stepMatch = trimmed.match(/^STEP:\s*([^|]+)(?:\s*\|\s*([^|]+))?(?:\s*\|\s*([^:]+):([^|]+))?/);
+      if (stepMatch) {
+        const [, instruction, details, measurement, unit] = stepMatch;
+        
+        html += `<div class="checklist-step">`;
+        html += `<div class="checklist-checkbox" onclick="toggleCheckbox(this)"></div>`;
+        html += `<div class="checklist-step-content">`;
+        html += `<div class="checklist-instruction">${stepNumber}. ${instruction.trim()}</div>`;
+        
+        if (details && details.trim()) {
+          html += `<div class="checklist-details">${details.trim()}</div>`;
+        }
+        
+        if (measurement && measurement.trim()) {
+          html += `<div class="checklist-input-group">`;
+          html += `<span class="checklist-input-label">${measurement.trim()}:</span>`;
+          html += `<input type="text" class="checklist-input" placeholder="___">`;
+          if (unit && unit.trim()) {
+            html += `<span class="checklist-input-label">${unit.trim()}</span>`;
+          }
+          html += `</div>`;
+        }
+        
+        html += `</div></div>`;
+        stepNumber++;
+      }
+    }
+    
+    if (currentSection) {
+      html += `</div>`; // Close section
+    }
+    
+    html += `<button class="checklist-print-btn" onclick="printChecklist('${checklistId}')">🖨️ Print Checklist</button>`;
+    html += `</div>`;
+    
+    return html;
+  });
+}
+
+function toggleCheckbox(checkbox) {
+  checkbox.classList.toggle('checked');
+}
+
+function printChecklist(checklistId) {
+  const checklist = document.getElementById(checklistId);
+  if (checklist) {
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Diagnostic Checklist</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .checklist { border: 1px solid #000; padding: 16px; }
+            .checklist-header { border-bottom: 1px solid #000; padding-bottom: 12px; margin-bottom: 16px; }
+            .checklist-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 4px; }
+            .checklist-subtitle { font-size: 0.9rem; color: #666; }
+            .checklist-step { display: flex; margin: 12px 0; }
+            .checklist-checkbox { width: 16px; height: 16px; border: 2px solid #000; margin-right: 10px; margin-top: 2px; }
+            .checklist-instruction { font-size: 0.9rem; margin-bottom: 6px; }
+            .checklist-details { font-size: 0.8rem; color: #666; font-style: italic; margin-bottom: 8px; }
+            .checklist-input-group { margin-top: 6px; }
+            .checklist-input { border: 1px solid #000; padding: 4px 8px; min-width: 80px; margin: 0 4px; }
+            .checklist-section-title { font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin: 16px 0 12px 0; }
+            .checklist-figure img { max-width: 100%; border: 1px solid #000; }
+            .checklist-figure-caption { font-size: 0.75rem; color: #666; margin-top: 4px; text-align: center; }
+          </style>
+        </head>
+        <body>
+          ${checklist.outerHTML}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  }
 }
 
 function jumpToFig(figId) {
@@ -1476,98 +1782,15 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape') lightbox.c
 document.getElementById('chips').onclick = (e) => {
   if (e.target.classList.contains('chip')) {
     if (e.target.classList.contains('chip-worksheet')) {
-      const prompt = e.target.dataset.prompt || e.target.textContent.replace(/^📄\s*/, '');
-      generateWorksheetPdf(prompt);
+      // Generate checklist in chat instead of PDF
+      const topic = e.target.dataset.prompt || e.target.textContent.replace(/^📄\s*/, '');
+      queryEl.value = `Generate a detailed diagnostic checklist for: ${topic}`;
+      sendMessage();
     } else {
       queryEl.value = e.target.textContent;
       sendMessage();
     }
   }
-};
-
-async function generateWorksheetPdf(topicPrompt) {
-  console.log('generateWorksheetPdf called with prompt:', topicPrompt); // Debug log
-  let effectivePrompt = topicPrompt || queryEl.value.trim();
-  
-  // If no prompt provided, try to infer from conversation or ask user
-  if (!effectivePrompt) {
-    // Check if we have conversation history to work with
-    if (conversation.length > 0) {
-      // Get the last few user messages to suggest worksheet topics
-      const recentUserMessages = conversation
-        .filter(msg => msg.role === 'user')
-        .slice(-3)
-        .map(msg => msg.content)
-        .join(' ')
-        .toLowerCase();
-      
-      // Try to extract diagnostic topics from conversation
-      const diagnosticKeywords = [
-        'alternator', 'starter', 'battery', 'charging', 'cooling', 'radiator', 'thermostat',
-        'engine', 'idle', 'carburetor', 'fuel', 'pump', 'filter', 'spark', 'ignition',
-        'transmission', 'brakes', 'clutch', 'suspension', 'steering', 'electrical',
-        'lights', 'wiring', 'fuses', 'relays', 'sensors', 'vacuum', 'emissions'
-      ];
-      
-      const foundTopics = diagnosticKeywords.filter(keyword => 
-        recentUserMessages.includes(keyword)
-      );
-      
-      if (foundTopics.length > 0) {
-        const suggestedTopic = foundTopics[0] + ' diagnostic tests';
-        const userConfirmed = confirm(
-          `Generate diagnostic worksheet for "${suggestedTopic}" based on your recent conversation?\n\n` +
-          'Click OK to generate, or Cancel to enter a custom topic.'
-        );
-        
-        if (userConfirmed) {
-          effectivePrompt = suggestedTopic;
-        } else {
-          // Show custom input dialog
-          effectivePrompt = prompt('Enter diagnostic topic for worksheet:', 'alternator diagnostic tests');
-          if (!effectivePrompt) return; // User cancelled
-        }
-      } else {
-        // No diagnostic topics found, ask user
-        effectivePrompt = prompt('Enter diagnostic topic for worksheet:', 'alternator diagnostic tests');
-        if (!effectivePrompt) return; // User cancelled
-      }
-    } else {
-      // No conversation history, ask user directly
-      effectivePrompt = prompt('Enter diagnostic topic for worksheet:', 'alternator diagnostic tests');
-      if (!effectivePrompt) return; // User cancelled
-    }
-  }
-  
-  const btn = document.getElementById('pdf-worksheet-btn');
-  const origText = btn.textContent;
-  btn.textContent = 'Generating…';
-  btn.disabled = true;
-  try {
-    const res = await fetch('/api/generate-worksheet', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: effectivePrompt }),
-    });
-    if (!res.ok) throw new Error(await res.text() || `Error ${res.status}`);
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = (effectivePrompt.slice(0, 40).replace(/[^a-z0-9-]/gi, '_') || 'worksheet') + '.pdf';
-    a.click();
-    URL.revokeObjectURL(url);
-  } catch (err) {
-    alert('Failed to generate PDF: ' + (err.message || err));
-  } finally {
-    btn.textContent = origText;
-    btn.disabled = false;
-  }
-}
-
-document.getElementById('pdf-worksheet-btn').onclick = () => {
-  console.log('PDF worksheet button clicked!'); // Debug log
-  generateWorksheetPdf();
 };
 
 modelSelect.onchange = (e) => localStorage.setItem(MODEL_KEY, e.target.value);

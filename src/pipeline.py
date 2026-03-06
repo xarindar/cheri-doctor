@@ -80,7 +80,8 @@ def run_pipeline(config_path: str = "configs/default.yaml",
                  page_range: tuple[int, int] | None = None,
                  stages: set[str] | None = None,
                  skip_vision: bool = False,
-                 reprocess: bool = False):
+                 reprocess: bool = False,
+                 force_all_gemini: bool = False):
     """Run the extraction pipeline."""
 
     config = load_config(PROJECT_ROOT / config_path)
@@ -100,7 +101,13 @@ def run_pipeline(config_path: str = "configs/default.yaml",
     if page_range:
         print(f"  Pages:      {page_range[0]}-{page_range[1]}")
     print(f"  Vision AI:  {'Disabled' if skip_vision else 'Enabled'}")
+    if force_all_gemini:
+        print("  Mode:       ALL PAGES → Gemini Vision (no GPU/OCR)")
     print("=" * 60)
+
+    # Resolve force_all_gemini from config if not set by CLI flag
+    if not force_all_gemini:
+        force_all_gemini = config.get("vision", {}).get("force_all_gemini", False)
 
     document = {"doc_id": config["pipeline"]["doc_id"], "pages": []}
 
@@ -202,16 +209,108 @@ def run_pipeline(config_path: str = "configs/default.yaml",
     # ── Stage C: Layout Segmentation ─────────────────────────────
     if "C" in stages:
         layout_results_path = build_dir / "layout_results.json"
-        from layout_analysis import Region
-        
-        if layout_results_path.exists() and not reprocess:
-            print(f"\n[Stage C] Loading existing layout results from {layout_results_path.name}...")
+
+        if force_all_gemini:
+            # Every page goes to Gemini vision — no GPU layout classifier needed.
+            # Stub minimal layout results so Stage D has something to read.
+            print("\n[Stage C] force_all_gemini=True — skipping Surya, stubbing layout results.")
+            layout_results = {}
+            layout_data = {}
+            for pm in page_metas:
+                pn = pm["page_num"]
+                stub = {
+                    "page_type": "mixed",
+                    "columns": [],
+                    "has_multiple_columns": False,
+                    "is_complex": True,
+                    "complexity_reasons": ["force_all_gemini"],
+                    "regions": [],
+                }
+                layout_results[pn] = stub
+                layout_data[str(pn)] = stub
+            save_json(layout_data, layout_results_path)
+            print(f"    Stubbed layout for {len(layout_results)} pages.")
+        else:
+            from layout_analysis import Region
+
+            if layout_results_path.exists() and not reprocess:
+                print(f"\n[Stage C] Loading existing layout results from {layout_results_path.name}...")
+                layout_data = load_json(layout_results_path)
+                layout_results = {}
+                for k, v in layout_data.items():
+                    regions = [Region(label=r["label"], bbox=r["bbox"],
+                                      confidence=r["confidence"])
+                               for r in v["regions"]]
+                    layout_results[int(k)] = {
+                        "page_type": v["page_type"],
+                        "columns": v["columns"],
+                        "has_multiple_columns": v["has_multiple_columns"],
+                        "is_complex": v.get("is_complex", False),
+                        "complexity_reasons": v.get("complexity_reasons", []),
+                        "regions": regions,
+                    }
+                print(f"    Loaded {len(layout_results)} pages.")
+            else:
+                layout_results = {}
+                layout_data = {}
+
+            pages_to_process = [pm for pm in page_metas if pm["page_num"] not in layout_results]
+
+            if not pages_to_process:
+                print("\n[Stage C] All requested pages already have layout results. Skipping.")
+            else:
+                print(f"\n[Stage C] Analyzing layout for {len(pages_to_process)} pages...")
+                from src.layout import analyze_page_layout
+                with Timer("Layout"):
+                    for i, pm in enumerate(pages_to_process):
+                        pn = pm["page_num"]
+                        pre = preprocess_results[pn]
+                        lr = analyze_page_layout(pre, config)
+                        layout_results[pn] = lr
+
+                        layout_data[str(pn)] = {
+                            "page_type": lr["page_type"],
+                            "columns": lr["columns"],
+                            "has_multiple_columns": lr["has_multiple_columns"],
+                            "is_complex": lr.get("is_complex", False),
+                            "complexity_reasons": lr.get("complexity_reasons", []),
+                            "regions": [
+                                {"label": r.label, "bbox": r.bbox,
+                                 "confidence": r.confidence}
+                                for r in lr["regions"]
+                            ],
+                        }
+
+                        if (i + 1) % 50 == 0 or pm == pages_to_process[-1]:
+                            print(f"    Layout {pn}/{pages_to_process[-1]['page_num']} ({i+1}/{len(pages_to_process)})")
+                            save_json(layout_data, layout_results_path)
+
+                save_json(layout_data, layout_results_path)
+    else:
+        layout_results_path = build_dir / "layout_results.json"
+        if force_all_gemini and not layout_results_path.exists():
+            # Stage C was skipped and no saved layout file — stub in-memory
+            layout_results = {
+                pm["page_num"]: {
+                    "page_type": "mixed",
+                    "columns": [],
+                    "has_multiple_columns": False,
+                    "is_complex": True,
+                    "complexity_reasons": ["force_all_gemini"],
+                    "regions": [],
+                }
+                for pm in page_metas
+            }
+        else:
             layout_data = load_json(layout_results_path)
             layout_results = {}
+            from layout_analysis import Region
             for k, v in layout_data.items():
-                regions = [Region(label=r["label"], bbox=r["bbox"],
-                                  confidence=r["confidence"])
-                           for r in v["regions"]]
+                regions = [] if force_all_gemini else [
+                    Region(label=r["label"], bbox=r["bbox"],
+                           confidence=r["confidence"])
+                    for r in v["regions"]
+                ]
                 layout_results[int(k)] = {
                     "page_type": v["page_type"],
                     "columns": v["columns"],
@@ -220,76 +319,30 @@ def run_pipeline(config_path: str = "configs/default.yaml",
                     "complexity_reasons": v.get("complexity_reasons", []),
                     "regions": regions,
                 }
-            print(f"    Loaded {len(layout_results)} pages.")
-        else:
-            layout_results = {}
-            layout_data = {}
-
-        pages_to_process = [pm for pm in page_metas if pm["page_num"] not in layout_results]
-        
-        if not pages_to_process:
-            print("\n[Stage C] All requested pages already have layout results. Skipping.")
-        else:
-            print(f"\n[Stage C] Analyzing layout for {len(pages_to_process)} pages...")
-            from src.layout import analyze_page_layout
-            with Timer("Layout"):
-                for i, pm in enumerate(pages_to_process):
-                    pn = pm["page_num"]
-                    pre = preprocess_results[pn]
-                    lr = analyze_page_layout(pre, config)
-                    layout_results[pn] = lr
-                    
-                    # Update layout_data for saving
-                    layout_data[str(pn)] = {
-                        "page_type": lr["page_type"],
-                        "columns": lr["columns"],
-                        "has_multiple_columns": lr["has_multiple_columns"],
-                        "is_complex": lr.get("is_complex", False),
-                        "complexity_reasons": lr.get("complexity_reasons", []),
-                        "regions": [
-                            {"label": r.label, "bbox": r.bbox,
-                             "confidence": r.confidence}
-                            for r in lr["regions"]
-                        ],
-                    }
-
-                    if (i + 1) % 50 == 0 or pm == pages_to_process[-1]:
-                        print(f"    Layout {pn}/{pages_to_process[-1]['page_num']} ({i+1}/{len(pages_to_process)})")
-                        # Periodic save
-                        save_json(layout_data, layout_results_path)
-            
-            # Final save
-            save_json(layout_data, layout_results_path)
-    else:
-        layout_data = load_json(build_dir / "layout_results.json")
-        layout_results = {}
-        from layout_analysis import Region
-        for k, v in layout_data.items():
-            regions = [Region(label=r["label"], bbox=r["bbox"],
-                              confidence=r["confidence"])
-                       for r in v["regions"]]
-            layout_results[int(k)] = {
-                "page_type": v["page_type"],
-                "columns": v["columns"],
-                "has_multiple_columns": v["has_multiple_columns"],
-                "is_complex": v.get("is_complex", False),
-                "complexity_reasons": v.get("complexity_reasons", []),
-                "regions": regions,
-            }
 
     # ── Stage D: Region-Specific Extraction ──────────────────────
     if "D" in stages:
         print("\n[Stage D] Extracting content from regions...")
-        from src.ocr_text import ocr_text_region, classify_blocks, clean_and_correct
-        from src.figure_extract import extract_figure
-        from src.table_extract import extract_table_structured
-        from src.vision_classify import (
-            classify_region,
-            extract_table_rows,
-            is_vision_classifier_available,
-        )
-        from vision_describe import load_description_cache, save_description_cache
         from PIL import Image as PILImage
+
+        # OCR/layout imports are only needed when NOT using force_all_gemini.
+        # Importing them unconditionally pulls in symspellpy and EasyOCR which
+        # may not be installed on GPU-less machines.
+        if not force_all_gemini:
+            from src.ocr_text import ocr_text_region, classify_blocks, clean_and_correct
+            from src.figure_extract import extract_figure
+            from src.table_extract import extract_table_structured
+            from src.vision_classify import (
+                classify_region,
+                extract_table_rows,
+                is_vision_classifier_available,
+            )
+            from vision_describe import load_description_cache, save_description_cache
+        else:
+            # Stubs so the cache-save calls below don't fail
+            def is_vision_classifier_available(): return False
+            def load_description_cache(_): pass
+            def save_description_cache(_): pass
 
         # Cache for describe_diagram (legacy vision_describe module)
         vision_cache_file = build_dir / "vision_cache.json"
@@ -327,8 +380,20 @@ def run_pipeline(config_path: str = "configs/default.yaml",
             print("  [vision] Box classifier unavailable (missing anthropic/openai package or API key); boxes will be treated as figures.")
 
         with Timer("Extraction"):
-            from src.vision_extract import extract_full_page_vision
-            
+            from src.vision_extract import (
+                extract_full_page_vision,
+                extract_full_page_vision_gemini,
+                is_gemini_available,
+            )
+
+            if force_all_gemini:
+                if not is_gemini_available():
+                    raise RuntimeError(
+                        "force_all_gemini=True but GEMINI_API_KEY is not set. "
+                        "Add it to your .env file."
+                    )
+                print("  [gemini] force_all_gemini mode: all pages → Gemini Vision")
+
             for i, pm in enumerate(page_metas):
                 pn = pm["page_num"]
                 pre = preprocess_results[pn]
@@ -355,12 +420,67 @@ def run_pipeline(config_path: str = "configs/default.yaml",
                 }
 
                 # ROUTING: Vision (full-page) vs OCR (per-region)
-                # Use vision path when:
-                #   1. Page is already in the full-page cache (pre-extracted), OR
-                #   2. Page is complex/mixed/text and vision API is available
                 _page_type = lr.get("page_type", "")
                 _cache_key = str(pn)
                 _has_cache = _cache_key in _full_page_cache
+
+                if force_all_gemini:
+                    # All pages → Gemini Vision; no OCR fallback
+                    v_res = None
+                    if _has_cache:
+                        print(f"    [gemini-full] p{pn:04d} (cached)")
+                        v_res = _full_page_cache[_cache_key]
+                    else:
+                        print(f"    [gemini-full] p{pn:04d} ...", end=" ", flush=True)
+                        gemini_model = config["vision"].get("gemini_model", "gemini-2.5-flash")
+                        v_res = extract_full_page_vision_gemini(pre_img, pn, model=gemini_model)
+                        if v_res:
+                            _full_page_cache[_cache_key] = v_res
+                            print(f"OK ({len(v_res.get('blocks', []))} blocks)")
+                        else:
+                            print("FAILED — page skipped")
+                            document["pages"].append(page_data)
+                            continue
+
+                    if v_res:
+                        page_data["page_label"] = v_res.get("page_label", page_data["page_label"])
+                        v_fig_idx = 0
+                        for j, vb in enumerate(v_res.get("blocks", [])):
+                            b_id = vb.get("block_id", f"p{pn}_b{j:03d}")
+                            block_dict = {
+                                "block_id": b_id,
+                                "type": vb.get("type", "paragraph"),
+                                "order_index": j,
+                                "text": vb.get("text") or vb.get("title") or None,
+                                "steps": vb.get("steps"),
+                                "rows": vb.get("rows"),
+                                "caption_text": vb.get("caption"),
+                                "legend_items": vb.get("legend"),
+                                "procedure_type": vb.get("procedure_type"),
+                                "continues_from_previous_page": vb.get("continues_from_previous_page", False),
+                                "continues_to_next_page": vb.get("continues_to_next_page", False),
+                                "associated_figure_ids": vb.get("associated_figure_ids", []),
+                                "bbox": list(pre.content_bbox),
+                            }
+                            if block_dict["type"] == "figure":
+                                fig_id = f"fig_p{pn:04d}_{v_fig_idx:03d}"
+                                asset_name = f"page_{pn:04d}_fig_{v_fig_idx:03d}.webp"
+                                assets_dir = build_dir / "assets"
+                                assets_dir.mkdir(parents=True, exist_ok=True)
+                                asset_path = assets_dir / asset_name
+                                if not asset_path.exists():
+                                    page_img.save(str(asset_path), "WEBP", quality=85)
+                                block_dict["figure_id"] = fig_id
+                                block_dict["asset_path"] = str(asset_path.relative_to(PROJECT_ROOT)).replace("\\", "/")
+                                v_fig_idx += 1
+                            page_data["blocks"].append(block_dict)
+                        document["pages"].append(page_data)
+                        print(f"      Extracted {len(page_data['blocks'])} blocks via Gemini")
+
+                        save_json(_full_page_cache, full_page_cache_file)
+                        continue
+
+                # Standard routing (Claude or OCR) — only reached when force_all_gemini=False
                 _use_vision = (
                     _has_cache
                     or lr.get("is_complex", False)
@@ -679,8 +799,9 @@ def run_pipeline(config_path: str = "configs/default.yaml",
         from src.chunker import build_chunks, build_toc_chunks, build_csv_table_chunks
         if "D" not in stages and "E" not in stages:
             document = load_json(build_dir / "document.json")
+        _source_doc = config.get("pipeline", {}).get("source_doc", "main")
         with Timer("Chunking"):
-            chunks, figures = build_chunks(document, config)
+            chunks, figures = build_chunks(document, config, source_doc=_source_doc)
 
         # Inject manually-written TOC as additional chunks
         toc_md = config.get("pipeline", {}).get("toc_markdown")
@@ -718,8 +839,18 @@ def run_pipeline(config_path: str = "configs/default.yaml",
         print("\n[Stage G] Building search indices...")
         from src.index_build import build_indices
         index_dir = resolve_path("tools/rag_index", PROJECT_ROOT)
+
+        chunks_paths = [build_dir / "chunks.jsonl"]
+        for sup_path_str in config.get("pipeline", {}).get("supplemental_chunks", []):
+            sup_path = resolve_path(sup_path_str, PROJECT_ROOT)
+            if sup_path.exists():
+                chunks_paths.append(sup_path)
+                print(f"  Including supplemental chunks: {sup_path.name}")
+            else:
+                print(f"  WARNING: supplemental chunks not found: {sup_path}")
+
         with Timer("Indexing"):
-            build_indices(build_dir / "chunks.jsonl", config, index_dir)
+            build_indices(chunks_paths, config, index_dir)
         print(f"  Indices saved to {index_dir}")
 
     # Update manifest
@@ -823,6 +954,8 @@ def main():
     parser.add_argument("--stages", help="Comma-separated stages, e.g. A,B,C")
     parser.add_argument("--skip-vision", action="store_true")
     parser.add_argument("--reprocess", action="store_true")
+    parser.add_argument("--force-all-gemini", action="store_true",
+                        help="Route every page through Gemini Vision (no GPU/OCR needed)")
     args = parser.parse_args()
 
     page_range = None
@@ -843,6 +976,7 @@ def main():
         stages=stages,
         skip_vision=args.skip_vision,
         reprocess=args.reprocess,
+        force_all_gemini=args.force_all_gemini,
     )
 
 

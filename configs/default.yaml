@@ -4,9 +4,12 @@ pipeline:
   doc_id: "geo_metro_1990"
   source_pdf: "Reference Manuals/1990 Geo Metro Manual.pdf"
   build_dir: "build"
+  source_doc: "main"
   front_matter_pages: 4        # skip cover/foreword/comment pages (1-4)
   toc_markdown: "Reference Manuals/TABLE OF CONTENTS.md"  # manually converted TOC
   skip_pages: [11, 12, 15, 16] # pages to exclude entirely (metric/conversion tables, schedule pages)
+  supplemental_chunks:         # merged into the index at Stage G (supplement wins on conflict)
+    - "build_supplement/chunks.jsonl"
   manual_tables:               # hand-curated CSVs to inject as table chunks
     - path: "Reference Manuals/maintenance-schedule.csv"
       section_code: "0B"

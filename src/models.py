@@ -84,6 +84,7 @@ class ChunkRecord:
     figure_refs: list[str] = field(default_factory=list)
     asset_refs: list[str] = field(default_factory=list)
     token_count: int = 0
+    source_doc: str = "main"           # "main" or "supplement" — supplement wins on conflict
 
 
 @dataclass

@@ -1,0 +1,152 @@
+# Geo Metro Convertible Supplement Manual Pipeline Configuration
+# Processes "Vert Sup.pdf" via Gemini Vision on every page (no GPU required).
+# Run: python -m src.pipeline --config configs/supplement.yaml --force-all-gemini
+# Then re-run main index: python -m src.pipeline --config configs/default.yaml --stages G
+
+pipeline:
+  doc_id: "geo_metro_vert_sup"
+  source_pdf: "Reference Manuals/Vert Sup.pdf"
+  build_dir: "build_supplement"
+  source_doc: "supplement"       # stamps every chunk — supplement beats main on conflict
+  front_matter_pages: 0
+  skip_pages: []
+
+rasterize:
+  dpi: 350
+  format: "png"
+
+preprocess:
+  content_crop:
+    row_threshold_pct: 0.005
+    col_threshold_pct: 0.005
+    margin_px: 40
+  deskew:
+    min_angle: 0.3
+    hough_threshold: 100
+  normalize:
+    clahe_clip: 2.0
+    clahe_tile: [8, 8]
+    denoise_h: 10
+    adaptive_block: 25
+    adaptive_c: 12
+  border_removal:
+    margin_pct: 0.03
+    dark_threshold: 80
+
+layout:
+  engine: "surya"       # not used when force_all_gemini=True
+  min_confidence: 0.3
+  overlap_iou_threshold: 0.50
+
+column_detection:
+  search_band: [0.30, 0.70]
+  min_gutter_width_px: 10
+  density_ratio: 0.33
+  smoothing_fraction: 0.25
+  header_skip_frac: 0.10
+  footer_skip_frac: 0.03
+
+ocr:
+  tesseract_cmd: "tesseract"    # not used when force_all_gemini=True
+  upscale_factor: 2
+  upscale_tiny_threshold: 20
+  use_consensus: false          # EasyOCR GPU disabled on this machine
+  psm_modes:
+    text_column: 4
+    single_block: 6
+    single_line: 7
+    sparse: 11
+  easyocr:
+    gpu: false
+    languages: ["en"]
+
+text_correction:
+  automotive_dict: "legacy/automotive_dictionary.txt"
+  symspell_max_edit: 2
+  symspell_prefix_length: 7
+  confidence_threshold: 80
+
+table_extraction:
+  primary: "img2table"
+  fallback: "opencv"
+  min_rows: 2
+  min_cols: 2
+  cell_psm: 7
+  debug: false
+  infer_symptom_cause_cure_header: true
+
+figure_extraction:
+  export_format: "webp"
+  webp_quality: 85
+  caption_search_distance_px: 100
+  caption_pattern: "(?:Figure|Fig\\.?)\\s*\\d+"
+  legend_search_distance_px: 300
+  legend_min_items: 3
+
+vision:
+  enabled: true
+  force_all_gemini: true        # every page goes to Gemini — no Surya/OCR/GPU needed
+  gemini_model: "gemini-2.5-flash"
+  primary: "gemini"
+  max_image_dim: 1600
+  rate_limit_delay: 1.0
+  max_retries: 3
+  classify_boxes: false         # skip per-box classifier (Gemini handles full page)
+
+structure:
+  heading_patterns:
+    all_caps_min_length: 4
+    section_code_re: "\\b([0-9]+[A-Z]\\d*)-([0-9]+)\\b"
+  section_names:
+    "0A": "General Information"
+    "0B": "Maintenance and Lubrication"
+    "1A": "Heater and Ventilation"
+    "1B": "Air Conditioner"
+    "2A": "Suspension Front"
+    "2B": "Suspension Rear"
+    "3A": "Manual Steering"
+    "3B": "Power Steering"
+    "4A": "Drive Axle"
+    "5A": "Brakes"
+    "5B": "Brakes Hydraulic"
+    "6A": "Engine Mechanical"
+    "6B": "Engine Cooling"
+    "6C": "Engine Fuel"
+    "6D": "Engine Electrical"
+    "6E": "Emission Controls"
+    "7A": "Automatic Transaxle"
+    "7B": "Manual Transaxle"
+    "8A": "Electrical"
+    "8B": "Electrical Wiring"
+    "10": "Convertible Body"
+
+chunking:
+  min_tokens: 200
+  max_tokens: 600
+  chars_per_token: 4
+  procedure_whole: true
+  caution_whole: true
+
+indexing:
+  bm25:
+    k1: 1.5
+    b: 0.75
+  embeddings:
+    model: "all-MiniLM-L6-v2"
+    dimension: 384
+    batch_size: 64
+
+providers:
+  gemini:
+    api_base: "https://generativelanguage.googleapis.com"
+    api_version: "v1beta"
+    api_key_env: "GEMINI_API_KEY"
+    default_model: "gemini-2.5-flash"
+
+chat:
+  model: "gemini-2.5-flash"
+  provider: "gemini"
+  max_tokens: 4096
+  top_k_retrieve: 20
+  top_n_rerank: 10
+  temperature: 0.1

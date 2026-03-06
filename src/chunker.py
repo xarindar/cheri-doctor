@@ -123,7 +123,7 @@ def _get_engine_variant(section_code: str | None, section_path: str) -> str:
     # Default for this manual is G10 unless specified
     return "both"
 
-def build_chunks(document: dict, config: dict) -> tuple[list[dict], list[dict]]:
+def build_chunks(document: dict, config: dict, source_doc: str = "main") -> tuple[list[dict], list[dict]]:
     """Produce chunks.jsonl and figures.jsonl records from document.json.
 
     Returns:
@@ -453,6 +453,10 @@ def build_chunks(document: dict, config: dict) -> tuple[list[dict], list[dict]]:
     dropped = before - len(chunks)
     if dropped:
         print(f"    Dropped {dropped} chunks with < {MIN_CHUNK_TEXT} chars of text")
+
+    # Stamp every chunk with the source document identifier
+    for c in chunks:
+        c["source_doc"] = source_doc
 
     return chunks, figures
 

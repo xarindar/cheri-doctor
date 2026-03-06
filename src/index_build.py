@@ -19,8 +19,14 @@ from sentence_transformers import SentenceTransformer
 from src.utils import load_jsonl, save_json
 
 
-def build_indices(chunks_path: Path, config: dict, index_dir: Path):
-    """Build BM25 and embedding indices from chunks.jsonl.
+def build_indices(chunks_path: "Path | list[Path]", config: dict, index_dir: Path):
+    """Build BM25 and embedding indices from one or more chunks.jsonl files.
+
+    Args:
+        chunks_path: A single Path or list of Paths to chunks.jsonl files.
+                     When multiple files are provided they are merged in order
+                     (supplement files should come last so their chunk_ids are
+                     distinct and the lookup contains both corpora).
 
     Saves to:
       index_dir/bm25_index.pkl       — BM25Okapi object
@@ -30,7 +36,16 @@ def build_indices(chunks_path: Path, config: dict, index_dir: Path):
     """
     index_dir.mkdir(parents=True, exist_ok=True)
 
-    chunks = load_jsonl(chunks_path)
+    if isinstance(chunks_path, Path):
+        chunks_paths = [chunks_path]
+    else:
+        chunks_paths = list(chunks_path)
+
+    chunks = []
+    for cp in chunks_paths:
+        batch = load_jsonl(cp)
+        chunks.extend(batch)
+        print(f"  Loaded {len(batch)} chunks from {cp.name}")
     if not chunks:
         print("  No chunks found, skipping index build.")
         return
@@ -121,7 +136,8 @@ def _embed_text(chunk: dict) -> str:
 class RetrievalIndex:
     """Unified BM25 + embedding retrieval with RRF merge."""
 
-    RRF_K = 60  # Standard RRF constant
+    RRF_K = 60          # Standard RRF constant
+    SUPPLEMENT_BOOST = 0.15  # Added to RRF score for supplement chunks (source_doc="supplement")
 
     def __init__(self, index_dir: Path, config: dict | None = None):
         self.index_dir = index_dir
@@ -176,9 +192,21 @@ class RetrievalIndex:
         bm25_ranked = self._bm25_search(query, top_k * 2, valid_ids)
         emb_ranked  = self._embedding_search(query, top_k * 2, valid_ids)
         merged      = self._rrf_merge(bm25_ranked, emb_ranked, top_k)
-        
-        return [{"chunk": self.lookup[cid], "score": score}
-                for cid, score in merged if cid in self.lookup]
+
+        # Boost supplement chunks so they surface above main-manual chunks
+        # when both cover the same topic — supplement is source of truth.
+        results = []
+        for cid, score in merged:
+            if cid not in self.lookup:
+                continue
+            chunk = self.lookup[cid]
+            if chunk.get("source_doc") == "supplement":
+                score += self.SUPPLEMENT_BOOST
+            results.append({"chunk": chunk, "score": score})
+
+        # Re-sort after boost
+        results.sort(key=lambda r: r["score"], reverse=True)
+        return results[:top_k]
 
     def get(self, chunk_id: str) -> dict | None:
         return self.lookup.get(chunk_id)

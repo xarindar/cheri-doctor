@@ -1,0 +1,14 @@
+{
+  "doc_id": "geo_metro_vert_sup",
+  "source_pdf": "Vert Sup.pdf",
+  "source_hash": "sha256:3c6251e79c698a35cdd5245c0704b8521c3db39540a8e26455a1b1a7b61f0f2b",
+  "dpi": 350,
+  "page_count": 336,
+  "run_id": "20260306_202225_47cf16",
+  "config_hash": "sha256:e9f4fdcb56ef9b33",
+  "timestamps": {
+    "rasterize_start": "2026-03-06T20:22:27.850359+00:00",
+    "rasterize_end": "2026-03-06T20:27:45.830812+00:00"
+  },
+  "stats": {}
+}
