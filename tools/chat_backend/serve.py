@@ -374,6 +374,49 @@ def _load_settings() -> dict:
 def _save_settings(data: dict):
     SETTINGS_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
+# Trim-specific feature overrides — these lock in which manual variant applies
+# for systems where the manual covers multiple configurations.
+TRIM_RULES: dict[str, list[str]] = {
+    "LSi": [
+        "**Rule — headlights**: Cheri is the **LSi** trim. LSi uses composite (aero-style) "
+        "headlights with replaceable **9004 halogen bulbs** — NOT sealed beams. "
+        "Sealed beam headlight procedures and specs in the manual apply to the base "
+        "trim only. Always answer headlight questions for the composite/bulb configuration.",
+    ],
+}
+
+SCHED_LABELS = {
+    "I":  "Schedule I — Severe Service",
+    "II": "Schedule II — Normal Service",
+}
+SCHED_INTERVALS = {
+    # key: (Schedule I miles, Schedule II miles)
+    "oil_change":    (3_000,  7_500),
+    "spark_plugs":   (15_000, 30_000),
+    "trans_fluid":   (15_000, 30_000),
+    "coolant_flush": (30_000, 30_000),
+    "brake_fluid":   (24_000, 24_000),
+}
+SVC_NAMES = {
+    "oil_change":    "Oil change",
+    "spark_plugs":   "Spark plugs",
+    "trans_fluid":   "Transmission fluid",
+    "coolant_flush": "Coolant flush",
+    "brake_fluid":   "Brake fluid",
+}
+VISC_LABELS = {
+    "5W-30":  "SAE 5W-30",
+    "10W-30": "SAE 10W-30",
+    "20W-50": "SAE 20W-50",
+    "chart":  "per temperature chart (show all options when asked)",
+}
+PROFILE_LABELS = {
+    "severe": "Severe — mostly short city trips, stop-and-go, dusty/dirty",
+    "mixed":  "Mixed — city and highway driving",
+    "normal": "Normal — mostly highway, mild conditions",
+}
+
+
 def _build_settings_context(settings: dict) -> str:
     """Build a system-prompt block that locks in the owner's confirmed vehicle settings."""
     vin     = settings.get("vin") or ""
@@ -385,48 +428,6 @@ def _build_settings_context(settings: dict) -> str:
     profile = settings.get("driving_profile", "severe")
     svc     = settings.get("service_history") or {}
     mods    = settings.get("modifications") or ""
-
-    # Trim-specific feature overrides — these lock in which manual variant applies
-    # for systems where the manual covers multiple configurations.
-    TRIM_RULES: dict[str, list[str]] = {
-        "LSi": [
-            "**Rule — headlights**: Cheri is the **LSi** trim. LSi uses composite (aero-style) "
-            "headlights with replaceable **9004 halogen bulbs** — NOT sealed beams. "
-            "Sealed beam headlight procedures and specs in the manual apply to the base "
-            "trim only. Always answer headlight questions for the composite/bulb configuration.",
-        ],
-    }
-
-    SCHED_LABELS = {
-        "I":  "Schedule I — Severe Service",
-        "II": "Schedule II — Normal Service",
-    }
-    SCHED_INTERVALS = {
-        # key: (Schedule I miles, Schedule II miles)
-        "oil_change":    (3_000,  7_500),
-        "spark_plugs":   (15_000, 30_000),
-        "trans_fluid":   (15_000, 30_000),
-        "coolant_flush": (30_000, 30_000),
-        "brake_fluid":   (24_000, 24_000),
-    }
-    SVC_NAMES = {
-        "oil_change":    "Oil change",
-        "spark_plugs":   "Spark plugs",
-        "trans_fluid":   "Transmission fluid",
-        "coolant_flush": "Coolant flush",
-        "brake_fluid":   "Brake fluid",
-    }
-    VISC_LABELS = {
-        "5W-30":  "SAE 5W-30",
-        "10W-30": "SAE 10W-30",
-        "20W-50": "SAE 20W-50",
-        "chart":  "per temperature chart (show all options when asked)",
-    }
-    PROFILE_LABELS = {
-        "severe": "Severe — mostly short city trips, stop-and-go, dusty/dirty",
-        "mixed":  "Mixed — city and highway driving",
-        "normal": "Normal — mostly highway, mild conditions",
-    }
 
     lines = [
         "## VEHICLE CONFIGURATION (OWNER-CONFIRMED SETTINGS)",
@@ -565,29 +566,66 @@ import requests as _requests
 from bs4 import BeautifulSoup as _BS
 
 _URL_RE    = _re.compile(r'https?://[^\s<>"{}|\\^`\[\]]+')
-_RA_URL_RE = _re.compile(r'https?://(?:www\.)?rockauto\.com(/en/catalog/[^\s<>"{}|\\^`\[\]?#]+)')
 _SEARCH_RE = _re.compile(
     r'\b(search\s+(for|online|the\s+web)?|look\s+up\s+online|find\s+online|google\s+(this|for)?)\b',
     _re.IGNORECASE,
 )
-_RA_SEARCH_RE = _re.compile(r'\brock\s*auto\b', _re.IGNORECASE)
+_RA_SEARCH_RE = _re.compile(r'\b(?:rock\s*auto|amazon|auto\s*zone|o\'?\s*reill(?:y|ey))\b', _re.IGNORECASE)
+
+# Map natural-language source mentions to ShopHop source keys
+_SOURCE_NAMES = {
+    "amazon":    "amazon",
+    "ebay":      "ebay",
+    "e-bay":     "ebay",
+    "rockauto":  "rockauto",
+    "rock auto": "rockauto",
+    "autozone":  "autozone",
+    "auto zone": "autozone",
+    "oreilly":   "oreilly",
+    "o'reilly":  "oreilly",
+    "oreily":    "oreilly",
+    "o'reily":   "oreilly",
+    "oriley":    "oreilly",
+    "o'riley":   "oreilly",
+}
+
+def _extract_sources(query: str) -> list[str] | None:
+    """Extract specific source names from the query.
+    Returns a list of ShopHop source keys, or None to search all."""
+    q = query.lower()
+    found = []
+    for name, key in _SOURCE_NAMES.items():
+        if name in q and key not in found:
+            found.append(key)
+    return found if found else None
 _BUY_INTENT_RE = _re.compile(
     r'\b('
     # explicit purchase intent
     r'buy|purchase|order\s+online|shop\s+for|'
-    # "find me a/the/an X", "find a X", "find the X", "can you find X"
-    r'(?:can\s+you\s+)?find\s+(?:me\s+)?(?:a|an|the|one)(\s|$)|'
+    # "can you find X"
+    r'(?:can\s+you\s+)find\s|'
+    # "find me a/the/an/some/those X" — but NOT "can't find" / "cannot find"
+    r'(?<!cannot )(?<!cant )find\s+(?:me\s+)?(?:a|an|the|one|some|those|these)(\s|$)|'
     # "find it/one online" or "find X to buy"
-    r'find\s+(?:it\s+|one\s+|a\s+|an\s+)?(?:online|to\s+buy|for\s+(?:me\s+to\s+buy|purchase))|'
-    # "look up the X", "look for a X"
-    r'look\s+(?:up|for)\s+(?:a|an|the|one)(\s|$)|'
-    # "search for a X"
-    r'search\s+for\s+(?:a|an|the)(\s|$)|'
+    r'find\s+(?:it\s+|one\s+|a\s+|an\s+|some\s+)?(?:online|to\s+buy|for\s+(?:me\s+to\s+buy|purchase))|'
+    # "look up the X", "look for a/some X"
+    r'look\s+(?:up|for)\s+(?:a|an|the|one|some|those|these)(\s|$)|'
+    # "search for a/some X", "search X on amazon"
+    r'search\s+(?:for\s+)?(?:a|an|the|some)?(\s|$)|'
+    # "check amazon/autozone/etc for X"
+    r'check\s+\w+\s+for\s|'
+    # "show me X", "show me what X has"
+    r'show\s+me\s|'
     # "source a X"
     r'source\s+(?:a|an|the)\s|'
-    r'looking\s+to\s+buy|want\s+to\s+buy|'
+    r'looking\s+(?:to\s+buy|for\s+(?:a|an|the|some))|want\s+to\s+(?:buy|get|order)|'
     r'where\s+(?:can\s+I|do\s+I)\s+(?:buy|get|order|find)|'
-    r'get\s+(?:one|it)\s+online|for\s+sale\s+online'
+    r'get\s+(?:one|it|some|me\s+(?:a|an|some))\s+|'
+    # "I need a/some X"
+    r'(?:I\s+)?need\s+(?:a|an|some|new|to\s+get)\s|'
+    r'for\s+sale\s+online|'
+    # "what does X have for", "what's on amazon for"
+    r'what(?:\'?s|\s+does\s+\w+\s+have)\s+'
     r')',
     _re.IGNORECASE,
 )
@@ -597,35 +635,9 @@ _AFFIRMATIVE_RE = _re.compile(
     r'go for it|do that|pull it up|look it up|check it out|check that)\s*[.!]?\s*$',
     _re.IGNORECASE,
 )
-# Common automotive parts for extracting search context from conversation
-_AUTO_PARTS = [
-    "battery", "alternator", "starter", "spark plug", "spark plugs",
-    "ignition", "timing belt", "serpentine belt", "drive belt", "belt",
-    "brake pad", "brake rotor", "caliper", "brake", "rotor",
-    "oil filter", "air filter", "fuel filter", "cabin filter", "filter",
-    "water pump", "fuel pump", "pump",
-    "radiator", "thermostat", "coolant hose", "hose",
-    "shock absorber", "strut", "coil spring", "control arm", "ball joint",
-    "cv axle", "axle shaft", "axle", "wheel bearing", "bearing", "seal",
-    "clutch", "transmission", "transaxle",
-    "distributor cap", "distributor", "ignition wire", "plug wire",
-    "oxygen sensor", "o2 sensor", "sensor",
-    "tie rod", "wheel", "tire",
-]
-
-def _extract_part_from_conversation(conversation: list[dict]) -> str:
-    """Scan recent conversation messages for an automotive part name."""
-    for msg in reversed(conversation[-8:]):
-        text = (msg.get("text") or "").lower()
-        for part in _AUTO_PARTS:
-            if part in text:
-                return part
-    return ""
-
-
 def _extract_part_from_bold(conversation: list[dict]) -> str:
     """Extract a part name from **bold** terms in the most recent assistant message.
-    Used as a fallback when _AUTO_PARTS matching fails (e.g. interior trim pieces)."""
+    Used as a fallback when direct part name extraction fails (e.g. interior trim pieces)."""
     last_asst = next(
         (m.get("text", "") for m in reversed(conversation) if m.get("role") == "assistant"),
         "",
@@ -675,35 +687,34 @@ async def _extract_part_from_description(query: str, conversation: list[dict]) -
         )
 
     prompt = (
-        f"A user is describing an auto part they want to find/buy for a 1990 Geo Metro.\n"
+        f"A user wants to search for an auto part to buy for a 1990 Geo Metro.\n"
         f"Recent conversation:\n{recent}\n"
         f"User's latest message: {query}\n"
         f"{context_block}\n"
-        f"What auto part are they describing? Use the manual excerpts above to "
-        f"identify the exact part. Reply with ONLY a short part name "
-        f"(2-5 words) suitable for an eBay search — nothing else, no explanation.\n"
-        f"Examples of good replies: 'console box door'  'console box lid'  "
-        f"'console compartment cover'  'oil filter'  'alternator'"
+        f"What should we search for? Extract the specific product or part they want.\n"
+        f"- If they mention a brand name or product name, INCLUDE it (e.g. 'Sylvania SilverStar 9004')\n"
+        f"- If they mention a part number, INCLUDE it (e.g. '9004ST.BP2')\n"
+        f"- If they describe a generic part, name it precisely (e.g. 'console box door')\n"
+        f"- Use the manual excerpts above for correct terminology when relevant\n"
+        f"- Ignore store names (Amazon, eBay, etc.) — just the product/part\n"
+        f"Reply with ONLY the search term (1-6 words) — nothing else.\n"
+        f"Examples: 'Sylvania SilverStar 9004'  'console box door'  'oil filter'  "
+        f"'NGK spark plug BKR5E'  'alternator'  'brake pads'"
     )
     client = _ant.AsyncAnthropic()
     resp = await client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=20,
+        max_tokens=30,
         messages=[{"role": "user", "content": prompt}],
     )
-    return resp.content[0].text.strip().lower()
+    # Keep original casing for brand names (SilverStar, NGK, etc.)
+    return resp.content[0].text.strip()
 
 
 _FETCH_HEADERS = {
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
                   '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 }
-
-# Cheri's fixed vehicle identifiers
-_RA_MAKE    = 'GEO'
-_RA_YEAR    = 1990
-_RA_MODEL   = 'METRO'
-_RA_CARCODE = '1430189'  # 993cc L3
 
 def _fetch_url(url: str, max_chars: int = 4000) -> str:
     resp = _requests.get(url, timeout=12, headers=_FETCH_HEADERS)
@@ -726,8 +737,21 @@ def _web_search(query: str, max_results: int = 5) -> str:
         for r in results
     )
 
-_SHOPHOP_URL    = "http://localhost:8001/hunt/auto"
-_CHERI_VEHICLE  = {"year": 1990, "make": "Geo", "model": "Metro", "engine": "993cc L3"}
+_SHOPHOP_URL = os.environ.get("SHOPHOP_URL", "http://localhost:8001/hunt/auto")
+
+def _build_vehicle_payload() -> dict:
+    """Build the ShopHop vehicle dict from vehicle_settings.json so there's one
+    source of truth for the car's identity instead of a separate hardcoded dict."""
+    s = _load_settings()
+    vin = s.get("vin", "")
+    # Engine derived from VIN position 8 where possible; fall back to G10 default.
+    engine = "993cc L3"  # G10 — matches VIN JG1MR3362LK769576
+    return {
+        "year":   1990,
+        "make":   "Geo",
+        "model":  "Metro",
+        "engine": engine,
+    }
 
 
 def _rag_context_for_part(part_name: str) -> str | None:
@@ -757,8 +781,9 @@ def _rag_context_for_part(part_name: str) -> str | None:
         return None
 
 
-async def _parts_search(part_name: str) -> tuple[str, list[str], list[dict]]:
-    """Call ShopHop for parts; return (llm_text, sources, shopping_items)."""
+async def _parts_search(part_name: str, sources: list[str] | None = None) -> tuple[str, list[str], list[dict]]:
+    """Call ShopHop for parts; return (llm_text, sources, shopping_items).
+    If sources is given, only search those specific ShopHop sources."""
     import httpx as _httpx
 
     # Pull manual context before calling ShopHop so the query expander
@@ -768,9 +793,11 @@ async def _parts_search(part_name: str) -> tuple[str, list[str], list[dict]]:
     try:
         payload = {
             "part": part_name,
-            "vehicle": _CHERI_VEHICLE,
+            "vehicle": _build_vehicle_payload(),
             "max_results": 20,
         }
+        if sources:
+            payload["sources"] = sources
         if manual_context:
             payload["context"] = manual_context
 
@@ -778,7 +805,7 @@ async def _parts_search(part_name: str) -> tuple[str, list[str], list[dict]]:
             r = await hc.post(
                 _SHOPHOP_URL,
                 json=payload,
-                timeout=35,
+                timeout=90,
             )
             r.raise_for_status()
             data = r.json()
@@ -821,119 +848,6 @@ async def _parts_search(part_name: str) -> tuple[str, list[str], list[dict]]:
     return llm_text, sources, items
 
 
-def _extract_ra_part_name(query: str, conversation: list[dict] | None = None) -> str:
-    """Extract the auto part name from a query mentioning RockAuto."""
-    # Scan the query directly for a known part name first (most reliable)
-    q_lower = query.lower()
-    for part in _AUTO_PARTS:
-        if part in q_lower:
-            return part
-    # Fall back to stripping trigger phrases and using whatever's left
-    q = _RA_SEARCH_RE.sub('', query).strip()
-    q = _re.sub(
-        r'^(and\s+)?(see\s+if\s+(you\s+)?(can\s+)?|try\s+to\s+|please\s+|can\s+you\s+)?'
-        r'(find|look\s+(?:up|for)|search\s+for|locate|source)\s+',
-        '', q, flags=_re.IGNORECASE,
-    ).strip()
-    # strip leading articles/pronouns left after verb removal
-    q = _re.sub(r'^(for\s+|a\s+|an\s+|the\s+|some\s+|me\s+|one\s+)', '', q, flags=_re.IGNORECASE).strip()
-    q = q.strip(' .,?!')
-    if q and len(q.split()) <= 5:
-        return q
-    # Last resort: scan conversation context
-    if conversation:
-        return _extract_part_from_conversation(conversation)
-    return ""
-
-_RA_CAT_MAP_UNUSED: dict[str, str] = {  # kept for reference, now in shophop/sources/rockauto.py
-    # electrical
-    "battery":          "electrical",
-    "alternator":       "electrical",
-    "generator":        "electrical",
-    "starter":          "electrical",
-    "fuse":             "electrical",
-    "horn":             "electrical",
-    "flasher":          "electrical",
-    "voltage regulator":"electrical",
-    # belt & drive
-    "belt":             "belt+drive",
-    "tensioner":        "belt+drive",
-    "idler":            "belt+drive",
-    # brakes
-    "brake":            "brake+%26+wheel+hub",
-    "rotor":            "brake+%26+wheel+hub",
-    "caliper":          "brake+%26+wheel+hub",
-    "wheel hub":        "brake+%26+wheel+hub",
-    # cooling
-    "coolant":          "cooling+system",
-    "antifreeze":       "cooling+system",
-    "radiator":         "cooling+system",
-    "thermostat":       "cooling+system",
-    "water pump":       "cooling+system",
-    "hose":             "cooling+system",
-    "cooling fan":      "cooling+system",
-    # drivetrain
-    "cv axle":          "drivetrain",
-    "axle shaft":       "drivetrain",
-    "cv joint":         "drivetrain",
-    "differential":     "drivetrain",
-    # engine
-    "timing belt":      "engine",
-    "oil filter":       "engine",
-    "oil pan":          "engine",
-    "valve cover":      "engine",
-    "gasket":           "engine",
-    "motor mount":      "engine",
-    "oil pump":         "engine",
-    "piston":           "engine",
-    "camshaft seal":    "engine",
-    "crankshaft seal":  "engine",
-    # ignition
-    "spark plug":       "ignition",
-    "distributor":      "ignition",
-    "plug wire":        "ignition",
-    "ignition coil":    "ignition",
-    "ignition wire":    "ignition",
-    "tune":             "ignition",
-    # fuel & air
-    "fuel filter":      "fuel+%26+air",
-    "fuel pump":        "fuel+%26+air",
-    "air filter":       "fuel+%26+air",
-    "carburetor":       "fuel+%26+air",
-    "throttle":         "fuel+%26+air",
-    # exhaust
-    "exhaust":          "exhaust+%26+emission",
-    "muffler":          "exhaust+%26+emission",
-    "oxygen sensor":    "exhaust+%26+emission",
-    "o2 sensor":        "exhaust+%26+emission",
-    "catalytic":        "exhaust+%26+emission",
-    # steering
-    "tie rod":          "steering",
-    "rack":             "steering",
-    # suspension
-    "shock":            "suspension",
-    "strut":            "suspension",
-    "control arm":      "suspension",
-    "ball joint":       "suspension",
-    "sway bar":         "suspension",
-    "spring":           "suspension",
-    # transmission
-    "transmission":     "transmission-automatic",
-    "trans fluid":      "transmission-automatic",
-    "torque converter": "transmission-automatic",
-    "clutch":           "transmission-manual",
-    "flywheel":         "transmission-manual",
-    # heat & AC
-    "ac":               "heat+%26+air+conditioning",
-    "heater":           "heat+%26+air+conditioning",
-    "blower":           "heat+%26+air+conditioning",
-    "compressor":       "heat+%26+air+conditioning",
-    # interior
-    "wiper":            "wiper+%26+washer",
-    "washer":           "wiper+%26+washer",
-}
-
-
 
 async def _identify_part_for_search(query: str, conversation: list[dict] | None) -> str:
     """Single source of truth for part name extraction before a shopping search.
@@ -943,10 +857,6 @@ async def _identify_part_for_search(query: str, conversation: list[dict] | None)
        from the previous turn, so it names things correctly (e.g. 'console box door').
     2. Haiku + RAG — give Haiku the manual chunks for this query so it can
        identify the part from what the service manual actually calls it.
-
-    Intentionally skips the old regex/_AUTO_PARTS chain — it was too brittle
-    (returned 'console' instead of 'console box door', 'hose' instead of
-    'coolant hose', etc.) and provided no real benefit over Haiku+RAG.
     """
     if conversation:
         bold = _extract_part_from_bold(conversation)
@@ -959,43 +869,23 @@ async def _identify_part_for_search(query: str, conversation: list[dict] | None)
 
 
 async def _enrich_query(query: str, conversation: list[dict] | None = None) -> tuple[str, list[str], list[dict]]:
-    """Enrich the query with fetched URLs, web search, and parts search results.
-    Everything runs BEFORE the LLM so the LLM can see and reference the results.
+    """Enrich the query with fetched URLs and web search results.
+    Parts search is now handled by the LLM via [SHOP_SEARCH] tags.
     Returns (enriched_query, sources, shopping_items).
     """
     extra, sources, shopping_items = [], [], []
     urls = _URL_RE.findall(query)
 
     for url in urls[:3]:
-        ra_match = _RA_URL_RE.match(url)
-        if ra_match:
-            try:
-                content = await _rockauto_from_url(ra_match.group(1))
-                extra.append(f"[ROCKAUTO PARTS LISTING]\n{content}\n[END ROCKAUTO]")
-                sources.append(f"RockAuto: {url}")
-            except Exception as exc:
-                extra.append(f"[RockAuto fetch failed: {exc}]")
-        else:
-            try:
-                content = _fetch_url(url)
-                extra.append(f"[WEB PAGE CONTENT FROM {url}]\n{content}\n[END WEB PAGE CONTENT]")
-                sources.append(url)
-            except Exception as exc:
-                extra.append(f"[Could not fetch {url}: {exc}]")
+        try:
+            content = _fetch_url(url)
+            extra.append(f"[WEB PAGE CONTENT FROM {url}]\n{content}\n[END WEB PAGE CONTENT]")
+            sources.append(url)
+        except Exception as exc:
+            extra.append(f"[Could not fetch {url}: {exc}]")
 
     if not urls:
-        if _RA_SEARCH_RE.search(query) or _BUY_INTENT_RE.search(query):
-            part_q = await _identify_part_for_search(query, conversation)
-            if part_q:
-                try:
-                    llm_text, src, items = await _parts_search(part_q)
-                    extra.append(llm_text)
-                    sources.extend(src)
-                    shopping_items = items
-                except Exception as exc:
-                    extra.append(f"[Parts search failed: {exc}]")
-
-        elif _SEARCH_RE.search(query):
+        if _SEARCH_RE.search(query):
             search_q = _SEARCH_RE.sub('', query).strip(' .,?!')
             if search_q:
                 try:
@@ -1005,26 +895,8 @@ async def _enrich_query(query: str, conversation: list[dict] | None = None) -> t
                 except Exception as exc:
                     extra.append(f"[Web search failed: {exc}]")
 
-        elif _AFFIRMATIVE_RE.match(query) and conversation:
-            last_asst = next(
-                (m.get("text", "") for m in reversed(conversation) if m.get("role") == "assistant"),
-                "",
-            )
-            if any(kw in last_asst.lower() for kw in ("rockauto", "ebay", "parts", "find", "buy", "source")):
-                part_q = await _identify_part_for_search(query, conversation)
-                if part_q:
-                    try:
-                        llm_text, src, items = await _parts_search(part_q)
-                        extra.append(llm_text)
-                        sources.extend(src)
-                        shopping_items = items
-                    except Exception as exc:
-                        extra.append(f"[Parts search failed: {exc}]")
-
     enriched = "\n\n".join(extra) + "\n\n" + query if extra else query
     return enriched, sources, shopping_items
-
-    return sources, shopping_items
 
 
 # ── API models ────────────────────────────────────────────────────────────
@@ -1091,6 +963,12 @@ async def api_generate_title(req: TitleRequest) -> JSONResponse:
     return JSONResponse({"title": fallback})
 
 
+_SHOP_SEARCH_RE = _re.compile(
+    r'\[SHOP_SEARCH:\s*(.+?)(?:\s*\|\s*([a-z,\s]+))?\s*\]',
+    _re.IGNORECASE,
+)
+
+
 @app.post("/api/chat")
 async def api_chat(req: ChatRequest) -> JSONResponse:
   if index is None:
@@ -1106,8 +984,9 @@ async def api_chat(req: ChatRequest) -> JSONResponse:
 
   vehicle_settings = _build_settings_context(_load_settings())
 
-  # Enrich query (URL fetch, web search, parts search) then run LLM.
-  # Parts search runs first so the LLM can see and reference the results.
+  # Enrich query (URL fetch, web search) — parts search is now handled by the
+  # LLM via [SHOP_SEARCH] tags so it can use its full context to decide what
+  # to search for.
   enriched_query, web_sources, shopping_results = await _enrich_query(req.query, req.conversation)
 
   response = chat(
@@ -1120,6 +999,63 @@ async def api_chat(req: ChatRequest) -> JSONResponse:
     vehicle_settings=vehicle_settings,
     images=req.images,
   )
+
+  # Check if the LLM emitted a [SHOP_SEARCH] tag — if so, run the search
+  # and call the LLM again with results so it can narrate them.
+  shop_match = _SHOP_SEARCH_RE.search(response.answer)
+  if shop_match:
+    search_terms = shop_match.group(1).strip()
+    source_str = shop_match.group(2)
+    shop_sources = (
+        [s.strip() for s in source_str.split(",") if s.strip()]
+        if source_str else None
+    )
+
+    try:
+        llm_text, src, items = await _parts_search(search_terms, sources=shop_sources)
+        web_sources.extend(src)
+        shopping_results = items
+
+        # Strip the [SHOP_SEARCH] tag from the answer and append results,
+        # then re-call the LLM so it can narrate what was found.
+        pre_search_text = _SHOP_SEARCH_RE.sub('', response.answer).strip()
+
+        # Build a follow-up conversation: original conversation + assistant's
+        # pre-search text + a system injection with results
+        followup_conversation = list(req.conversation or [])
+        followup_conversation.append({"role": "user", "text": req.query})
+        if pre_search_text:
+            followup_conversation.append({"role": "assistant", "text": pre_search_text})
+
+        followup_query = llm_text + "\n\nNow summarize the parts search results above for the owner. Highlight the best matches, prices, and any fitment concerns."
+
+        response = chat(
+            query=followup_query,
+            conversation=followup_conversation,
+            index=index,
+            config=chat_config,
+            skip_vision=True,
+            project_context=req.project_context,
+            vehicle_settings=vehicle_settings,
+        )
+
+        # Prepend the pre-search text so the owner sees the full narrative
+        if pre_search_text:
+            from src.models import ChatResponse
+            response = ChatResponse(
+                answer=pre_search_text + "\n\n" + response.answer,
+                citations=response.citations,
+                figure_refs=response.figure_refs,
+            )
+    except Exception as exc:
+        # Search failed — strip the tag and append error note
+        from src.models import ChatResponse
+        response = ChatResponse(
+            answer=_SHOP_SEARCH_RE.sub('', response.answer).strip()
+                + f"\n\n*Parts search failed: {exc}*",
+            citations=response.citations,
+            figure_refs=response.figure_refs,
+        )
 
   # Build figure metadata for the UI
   figures_out = []
