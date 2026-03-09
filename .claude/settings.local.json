@@ -8,7 +8,12 @@
       "Bash(curl:*)",
       "Bash(tasklist:*)",
       "Bash(grep:*)",
-      "Bash(source:*)"
+      "Bash(source:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(.venv/bin/python:*)",
+      "Bash(python3:*)",
+      "Bash(ln:*)",
+      "Bash(pm2 restart:*)"
     ]
   }
 }

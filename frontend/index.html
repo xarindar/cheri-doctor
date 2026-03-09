@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Geo Metro — Service Manual Chat</title>
+  <title>Cheri Doctor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
@@ -47,6 +47,7 @@
     #app {
       display: flex;
       height: 100vh;
+      height: 100dvh; /* dynamic viewport height — handles mobile URL bar */
       overflow: hidden;
     }
 
@@ -73,73 +74,108 @@
 
     /* Brand header */
     .sidebar-top {
-      padding: 18px 14px 14px;
+      padding: 14px 14px 10px;
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 2px 4px;
+      padding: 4px 10px;
     }
 
     .brand-logo {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
-      background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
+      width: 30%;
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 17px;
       flex-shrink: 0;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.08);
     }
 
     .brand-info { flex: 1; min-width: 0; }
 
     .brand-name {
-      font-size: 0.83rem;
+      font-size: 1rem;
       font-weight: 600;
       color: var(--text-1);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .brand-sub {
-      font-size: 0.69rem;
-      color: var(--text-3);
-      margin-top: 1px;
+      display: none;
     }
 
-    #new-chat-btn {
+    .brand-logo img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    #new-chat-btn, #new-project-btn {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 7px;
+      gap: 10px;
       width: 100%;
-      padding: 8px 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
+      padding: 8px 10px;
+      background: none;
+      border: none;
       border-radius: 8px;
       color: var(--text-2);
       font-size: 0.8rem;
       font-weight: 500;
       cursor: pointer;
       font-family: inherit;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      transition: background 0.12s, color 0.12s;
     }
 
-    #new-chat-btn:hover {
-      background: var(--surface-2);
+    #new-chat-btn:hover, #new-project-btn:hover {
+      background: var(--surface);
       color: var(--text-1);
-      border-color: var(--surface-3);
     }
+
+    #new-chat-btn svg, #new-project-btn svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+      color: var(--text-3);
+    }
+
+    /* Sidebar action buttons + search (static, above session list) */
+    .sidebar-actions {
+      padding: 6px 8px 2px;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    #chat-search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 6px 2px 4px;
+      padding: 6px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color 0.15s;
+    }
+    #chat-search-wrap:focus-within { border-color: var(--accent); }
+    #chat-search-wrap svg { color: var(--text-3); flex-shrink: 0; }
+    #chat-search {
+      flex: 1; background: none; border: none; outline: none;
+      color: var(--text-1); font-size: 0.8rem; font-family: inherit;
+    }
+    #chat-search::placeholder { color: var(--text-3); }
+    #chat-search-clear {
+      background: none; border: none; padding: 0;
+      color: var(--text-3); cursor: pointer; font-size: 14px; line-height: 1;
+      display: none;
+    }
+    #chat-search-clear.visible { display: block; }
+    #chat-search-clear:hover { color: var(--text-1); }
 
     /* History list */
     #history-list {
@@ -174,9 +210,15 @@
     }
 
     .history-icon {
-      font-size: 12px;
       color: var(--text-3);
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .history-icon svg {
+      width: 14px;
+      height: 14px;
     }
 
     .history-item-text {
@@ -208,6 +250,373 @@
     .history-item:hover .history-delete { opacity: 1; }
     .history-delete:hover { color: var(--red); }
 
+    /* Blinking cursor for generating titles */
+    .title-cursor {
+      display: inline-block;
+      width: 1px;
+      height: 0.85em;
+      background: var(--text-3);
+      animation: blink-cursor 0.8s step-end infinite;
+      vertical-align: text-bottom;
+    }
+    @keyframes blink-cursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Title sweep-in animation */
+    @keyframes title-sweep {
+      from { max-width: 0; opacity: 0; }
+      to { max-width: 200px; opacity: 1; }
+    }
+    .history-item-text.title-sweep-in {
+      animation: title-sweep 0.4s ease-out forwards;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    /* Project items in sidebar */
+    .project-folder {
+      margin-bottom: 0;
+    }
+    .project-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.12s;
+      position: relative;
+    }
+    .project-header:hover { background: var(--surface); }
+    .project-header.active { background: var(--surface-2); }
+    .project-icon {
+      flex-shrink: 0;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+    }
+    .project-icon svg {
+      width: 15px;
+      height: 15px;
+    }
+    .project-header.active .project-icon { color: var(--text-2); }
+    .project-name {
+      flex: 1;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .project-header.active .project-name { color: var(--text-1); }
+    .project-actions {
+      opacity: 0;
+      display: flex;
+      gap: 2px;
+      transition: opacity 0.1s;
+    }
+    .project-header:hover .project-actions { opacity: 1; }
+    .project-action-btn {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      padding: 3px 5px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.1s;
+    }
+    .project-action-btn svg {
+      width: 13px;
+      height: 13px;
+    }
+    .project-action-btn:hover { color: var(--text-1); background: var(--surface-2); }
+    .project-action-btn.delete:hover { color: var(--red); }
+    .project-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 8px 8px;
+    }
+
+    /* Project workspace view (main area) */
+    .project-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 24px 40px;
+      min-height: 100%;
+    }
+    .project-view-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .project-view-header svg {
+      width: 28px;
+      height: 28px;
+      color: var(--text-3);
+    }
+    .project-view-header h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+    .project-view-edit-btn {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.12s, background 0.12s;
+    }
+    .project-view-edit-btn:hover {
+      color: var(--text-1);
+      background: var(--surface);
+    }
+    .project-view-edit-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    .project-view-input {
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+    .project-view-input input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: var(--text-1);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .project-view-input input:focus {
+      border-color: var(--accent);
+    }
+    .project-view-input input::placeholder {
+      color: var(--text-3);
+    }
+    .project-view-input button {
+      padding: 0 22px;
+      background: var(--accent);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .project-view-input button:hover {
+      background: var(--accent-hover);
+    }
+    .project-view-chats {
+      width: 100%;
+      max-width: 680px;
+    }
+    .project-view-chats-label {
+      font-size: 0.73rem;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+      padding-left: 4px;
+    }
+    .project-chat-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .project-chat-item:hover { background: var(--surface); }
+    .project-chat-item svg {
+      width: 17px;
+      height: 17px;
+      color: var(--text-3);
+      flex-shrink: 0;
+    }
+    .project-chat-item .chat-title {
+      flex: 1;
+      font-size: 0.92rem;
+      color: var(--text-2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .project-chat-item .chat-time {
+      font-size: 0.75rem;
+      color: var(--text-3);
+      flex-shrink: 0;
+    }
+    .project-chat-item .chat-delete {
+      opacity: 0;
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      transition: opacity 0.1s, color 0.1s;
+    }
+    .project-chat-item:hover .chat-delete { opacity: 1; }
+    .project-chat-item .chat-delete:hover { color: var(--red); }
+    .project-view-empty {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.9rem;
+      color: var(--text-3);
+    }
+
+    /* Project modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .modal h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-1);
+    }
+    .modal-field {
+      margin-bottom: 14px;
+    }
+    .modal-field label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-2);
+      margin-bottom: 5px;
+    }
+    .modal-field input,
+    .modal-field textarea {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--text-1);
+      font-family: inherit;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .modal-field input:focus,
+    .modal-field textarea:focus,
+    .modal-field select:focus {
+      border-color: var(--accent);
+    }
+    .modal-field textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .modal-field select {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--text-1);
+      font-family: inherit;
+      font-size: 0.85rem;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px;
+      transition: border-color 0.15s;
+    }
+    .modal-field select option { background: var(--surface-3); }
+    .settings-saved-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      color: var(--green);
+      font-size: 0.8rem;
+      padding: 8px 18px;
+      border-radius: 8px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 9999;
+    }
+    .settings-saved-toast.show { opacity: 1; }
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .modal-btn {
+      padding: 7px 16px;
+      border-radius: 7px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      border: 1px solid var(--border);
+      transition: all 0.15s;
+    }
+    .modal-btn.cancel {
+      background: var(--surface-2);
+      color: var(--text-2);
+    }
+    .modal-btn.cancel:hover {
+      background: var(--surface-3);
+      color: var(--text-1);
+    }
+    .modal-btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .modal-btn.primary:hover {
+      background: var(--accent-hover);
+    }
+
     /* Sidebar footer */
     .sidebar-footer {
       padding: 12px 14px;
@@ -216,20 +625,123 @@
       color: var(--text-3);
     }
 
-    .status-row {
+    /* ── Settings Workspace ────────────────────────────────────── */
+    .settings-view {
+      display: flex;
+      flex-direction: column;
+      padding: 32px 32px 64px;
+      max-width: 780px;
+      margin: 0 auto;
+      width: 100%;
+      gap: 20px;
+    }
+    .settings-view-header {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 14px;
+      margin-bottom: 4px;
     }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--green);
+    .settings-view-header svg { color: var(--text-3); flex-shrink: 0; }
+    .settings-view-header h2 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--text-1);
+      flex: 1;
+    }
+    .sv-back-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      font-size: 0.78rem;
+      padding: 6px 13px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.12s;
       flex-shrink: 0;
-      box-shadow: 0 0 5px var(--green);
     }
+    .sv-back-btn:hover { color: var(--text-1); border-color: var(--surface-3); background: var(--surface); }
+    .settings-card {
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px 22px;
+    }
+    .settings-card-title {
+      font-size: 0.67rem;
+      font-weight: 700;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+    }
+    .sf-hint {
+      font-size: 0.75rem;
+      color: var(--text-3);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .settings-fields-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .settings-fields-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .settings-fields-grid.cols-1 { grid-template-columns: 1fr; }
+    .sf-group { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+    .sf-group.full { grid-column: 1 / -1; }
+    .sf-group label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-2);
+    }
+    .sf-group input,
+    .sf-group select,
+    .sf-group textarea {
+      width: 100%;
+      min-width: 0;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 11px;
+      color: var(--text-1);
+      font-family: inherit;
+      font-size: 0.84rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .sf-group input:focus,
+    .sf-group select:focus,
+    .sf-group textarea:focus { border-color: var(--accent); }
+    .sf-group select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px;
+    }
+    .sf-group select option { background: var(--surface-3); }
+    .sf-group textarea { resize: vertical; min-height: 90px; }
+    .sv-save-row {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 4px;
+    }
+    .sv-save-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      padding: 10px 30px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .sv-save-btn:hover { background: var(--accent-hover); }
+    .sv-save-btn:disabled { background: var(--surface-3); color: var(--text-3); cursor: default; }
 
     /* ── MAIN ──────────────────────────────────────────────────────── */
     #main {
@@ -289,33 +801,25 @@
       margin-top: 1px;
     }
 
-    .badge {
-      background: var(--green-dim);
-      border: 1px solid var(--green-border);
-      color: var(--green);
-      font-size: 0.66rem;
-      font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 20px;
-      letter-spacing: 0.04em;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    #clear-btn {
-      background: none;
+    #model-select {
+      background: var(--surface);
       border: 1px solid var(--border);
-      color: var(--text-3);
-      cursor: pointer;
-      padding: 5px 11px;
       border-radius: 7px;
-      font-size: 0.75rem;
+      padding: 5px 26px 5px 10px;
+      color: var(--text-2);
       font-family: inherit;
-      transition: all 0.15s;
+      font-size: 0.78rem;
+      outline: none;
+      cursor: pointer;
       flex-shrink: 0;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      transition: border-color 0.15s, color 0.15s;
     }
-
-    #clear-btn:hover { border-color: var(--surface-3); color: var(--text-1); }
+    #model-select:focus { border-color: var(--accent); color: var(--text-1); }
+    #model-select option { background: var(--surface-3); }
 
     /* ── MESSAGES ──────────────────────────────────────────────────── */
     #messages {
@@ -337,15 +841,17 @@
     }
 
     .empty-logo {
-      width: 60px;
-      height: 60px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
+      width: 120px;
+      height: 120px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 26px;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 8px 24px rgba(59,130,246,0.25);
+    }
+
+    .empty-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     #empty-state h2 {
@@ -388,68 +894,110 @@
       color: var(--text-1);
     }
 
-    /* Tech Mode toggle in input bar */
-    #tech-mode-btn {
-      width: 36px;
-      height: 36px;
+    /* Input bar icon buttons */
+    .input-icon-btn {
+      width: 30px;
+      height: 30px;
       flex-shrink: 0;
-      border-radius: 9px;
-      border: 1px solid var(--border);
-      background: var(--surface-2);
+      border-radius: 6px;
+      border: none;
+      background: none;
       color: var(--text-3);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
-      font-size: 16px;
+      transition: color 0.15s;
       position: relative;
+      padding: 0;
     }
-    #tech-mode-btn:hover {
-      border-color: var(--text-3);
-      color: var(--text-2);
-      background: var(--surface);
-    }
-    #tech-mode-btn.active {
-      background: rgba(234, 88, 12, 0.15);
-      border-color: rgba(234, 88, 12, 0.5);
-      color: #f97316;
-    }
-    #tech-mode-btn.active:hover {
-      background: rgba(234, 88, 12, 0.25);
-    }
-    #tech-mode-btn .tech-label {
+    .input-icon-btn:hover { color: var(--text-1); }
+    .input-icon-btn.active { color: #f97316; }
+    .input-icon-btn.active:hover { color: #fb923c; }
+
+    /* Plus dropdown */
+    #plus-wrap { position: relative; flex-shrink: 0; }
+    #plus-dropdown {
       display: none;
       position: absolute;
-      top: -28px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      white-space: nowrap;
-      padding: 2px 8px;
-      border-radius: 6px;
+      bottom: calc(100% + 10px);
+      left: 0;
+      min-width: 190px;
       background: var(--surface-2);
       border: 1px solid var(--border);
-      color: var(--text-3);
-      pointer-events: none;
+      border-radius: 10px;
+      padding: 6px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      z-index: 200;
     }
-    #tech-mode-btn.active .tech-label {
-      display: block;
-      background: rgba(234, 88, 12, 0.15);
-      border-color: rgba(234, 88, 12, 0.4);
-      color: #fb923c;
+    #plus-dropdown.open { display: block; }
+    .plus-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      width: 100%;
+      padding: 8px 10px;
+      border: none;
+      background: none;
+      color: var(--text-2);
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      border-radius: 7px;
+      text-align: left;
     }
-    body.tech-mode-active #input-shell {
-      border-color: rgba(234, 88, 12, 0.3);
+    .plus-menu-item:hover { background: var(--surface); color: var(--text-1); }
+    .plus-menu-item.active { color: #f97316; }
+    .plus-menu-item .item-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #f97316; flex-shrink: 0; display: none;
     }
+    .plus-menu-item.active .item-dot { display: block; }
+    .plus-menu-divider {
+      height: 1px; background: var(--border); margin: 4px 6px;
+    }
+
+    /* Tech mode active state */
+    body.tech-mode-active #input-shell { border-color: rgba(234, 88, 12, 0.3); }
     body.tech-mode-active #input-shell:focus-within {
       border-color: #f97316;
       box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
     }
     body.tech-mode-active .avatar.asst {
       background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
+    }
+
+    /* Image previews strip */
+    #image-previews {
+      display: none;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-bottom: 10px;
+      width: 100%;
+    }
+    #image-previews.has-images { display: flex; }
+    .img-preview-thumb {
+      position: relative;
+      width: 56px; height: 56px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .img-preview-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .img-preview-thumb .remove-img {
+      position: absolute; top: 2px; right: 2px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: rgba(0,0,0,0.7); color: white;
+      border: none; cursor: pointer; font-size: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* User-sent images in chat bubble */
+    .user-images { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .user-img-thumb {
+      width: 80px; height: 80px; border-radius: 8px;
+      object-fit: cover; border: 1px solid var(--border); cursor: pointer;
     }
 
     /* Message rows */
@@ -513,6 +1061,8 @@
       font-size: 0.93rem;
       line-height: 1.75;
       color: var(--text-1);
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     .msg-row.user .msg-body {
@@ -882,6 +1432,13 @@
     }
 
     .cite-tag:hover { background: #064e3b; }
+    .cite-tag.web-tag {
+      background: #1e1b4b;
+      border-color: #3730a3;
+      color: #818cf8;
+      font-family: inherit;
+    }
+    .cite-tag.web-tag:hover { background: #312e81; }
 
     /* ── REFERENCE PANE ───────────────────────────────────────────── */
     #reference-pane {
@@ -1066,6 +1623,131 @@
       30%            { transform: translateY(-6px); opacity: 1; }
     }
 
+    /* Parts searching indicator */
+    .parts-searching {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 28px;
+    }
+    .parts-searching svg { flex-shrink: 0; opacity: 0.75; color: var(--text-2); }
+    .parts-searching-text {
+      font-size: 0.84rem;
+      font-weight: 500;
+      background: linear-gradient(
+        90deg,
+        var(--text-3) 0%,
+        var(--text-2) 30%,
+        var(--text-1) 50%,
+        var(--text-2) 70%,
+        var(--text-3) 100%
+      );
+      background-size: 250% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: parts-shimmer 2.4s ease-in-out infinite;
+    }
+    @keyframes parts-shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Shopping sidebar cards */
+    .shop-card {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+      margin-bottom: 6px;
+    }
+    .shop-card:hover { background: var(--surface-2); border-color: var(--accent); }
+    .shop-card-img {
+      width: 72px;
+      height: 72px;
+      flex-shrink: 0;
+      object-fit: contain;
+      border-radius: 4px;
+      background: var(--surface-2);
+    }
+    .shop-card-img-placeholder {
+      width: 72px;
+      height: 72px;
+      flex-shrink: 0;
+      background: var(--surface-2);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-3);
+      font-size: 1.4rem;
+    }
+    .shop-card-body {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .shop-card-title {
+      font-size: 0.78rem;
+      color: var(--text-1);
+      font-weight: 500;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .shop-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .shop-card-price {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--green);
+    }
+    .shop-badge {
+      font-size: 0.62rem;
+      font-weight: 600;
+      padding: 2px 5px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .shop-badge-ra       { background:#0f2a0f; color:#4ade80; border:1px solid #14532d; }
+    .shop-badge-ebay     { background:#16163a; color:#818cf8; border:1px solid #312e81; }
+    .shop-badge-autozone { background:#2e1010; color:#f87171; border:1px solid #991b1b; }
+    .shop-badge-oreilly  { background:#2a1a0a; color:#fb923c; border:1px solid #9a3412; }
+    .shop-badge-cond     { background:var(--surface-3); color:var(--text-2); }
+    .shop-card-sub {
+      font-size: 0.7rem;
+      color: var(--text-3);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .shop-pane-source-header {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-3);
+      padding: 8px 2px 6px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 4px;
+    }
+
     /* ── INPUT ─────────────────────────────────────────────────────── */
     #input-area {
       padding: 14px 24px 18px;
@@ -1078,8 +1760,8 @@
 
     #input-shell {
       display: flex;
-      align-items: flex-end;
-      gap: 10px;
+      flex-direction: column;
+      gap: 0;
       width: 100%;
       max-width: 780px;
       background: var(--surface);
@@ -1087,6 +1769,13 @@
       border-radius: 13px;
       padding: 11px 11px 11px 16px;
       transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
     }
 
     #input-shell:focus-within {
@@ -1128,6 +1817,37 @@
 
     #send-btn:hover:not(:disabled) { background: var(--accent-hover); transform: scale(1.05); }
     #send-btn:disabled { background: var(--surface-2); opacity: 0.45; cursor: default; }
+    body.tech-mode-active #send-btn { background: #ea580c; }
+    body.tech-mode-active #send-btn:hover:not(:disabled) { background: #c2410c; }
+
+    /* Tech mode chip in header */
+    #tech-mode-chip {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: rgba(234, 88, 12, 0.15);
+      border: 1px solid rgba(234, 88, 12, 0.4);
+      color: #f97316;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    #tech-mode-chip::before {
+      content: '';
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #f97316;
+      flex-shrink: 0;
+      animation: chipPulse 1.8s ease-in-out infinite;
+    }
+    @keyframes chipPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+    body.tech-mode-active #tech-mode-chip { display: flex; }
 
     .input-hint {
       font-size: 0.68rem;
@@ -1146,6 +1866,53 @@
     @media (max-width: 1024px) {
       #reference-pane { position: fixed; right: 0; top: 0; bottom: 0; z-index: 100; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
     }
+
+    .mobile-only { display: none; }
+    @media (max-width: 768px) {
+      .mobile-only { display: flex; }
+      /* Sidebar: fixed overlay on top of content, not a layout column */
+      #sidebar {
+        position: fixed;
+        top: 0; left: 0; bottom: 0;
+        z-index: 50;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+      }
+
+      /* Dim backdrop behind open sidebar */
+      #sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.55);
+        z-index: 49;
+      }
+      #sidebar-backdrop.show { display: block; }
+
+      /* Header */
+      #header { padding: 10px 14px; height: 50px; }
+
+      /* Messages */
+      .msg-inner { padding: 0 14px; }
+
+      /* Input area */
+      #input-area { padding: 10px 12px 14px; }
+      .input-hint { display: none; }
+
+      /* Model select in header — compact on mobile */
+      #model-select { font-size: 0.72rem; padding: 4px 22px 4px 8px; }
+
+      /* Empty / welcome state */
+      #empty-state { padding: 28px 16px; gap: 14px; }
+      .empty-logo { width: 80px; height: 80px; }
+      #empty-state h2 { font-size: 1.1rem; }
+      #empty-state p { font-size: 0.82rem; }
+      .chip { font-size: 0.75rem; padding: 7px 12px; }
+
+      /* Settings view */
+      .settings-view { padding: 16px 16px 48px; }
+      .settings-fields-grid,
+      .settings-fields-grid.cols-3 { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -1155,27 +1922,40 @@
   <nav id="sidebar">
     <div class="sidebar-top">
       <div class="brand">
-        <div class="brand-logo">🔧</div>
+        <div class="brand-logo"><img src="/assets/logowhite.svg" alt="Cheri Doctor"></div>
         <div class="brand-info">
-          <div class="brand-name">Geo Metro Manual</div>
-          <div class="brand-sub">1990 Factory Service</div>
+          <div class="brand-name">Cheri Doctor</div>
+          <div class="brand-sub">1990 Geo Metro</div>
         </div>
       </div>
+    </div>
+
+    <div class="sidebar-actions">
       <button id="new-chat-btn">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         New Chat
       </button>
+      <button id="new-project-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+        New Project
+      </button>
+      <div id="chat-search-wrap">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="chat-search" type="text" placeholder="Search chats…" autocomplete="off">
+        <button id="chat-search-clear" title="Clear">×</button>
+      </div>
     </div>
 
     <div id="history-list"></div>
 
     <div class="sidebar-footer">
-      <div class="status-row">
-        <div class="status-dot"></div>
-        RAG · Claude Vision · Port 8000
-      </div>
+      <button id="settings-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;background:none;border:none;border-radius:8px;color:var(--text-2);font-size:0.8rem;font-weight:500;cursor:pointer;font-family:inherit;transition:background 0.12s,color 0.12s;" onmouseover="this.style.background='var(--surface)';this.style.color='var(--text-1)'" onmouseout="this.style.background='none';this.style.color='var(--text-2)'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Vehicle Settings
+      </button>
     </div>
   </nav>
+  <div id="sidebar-backdrop"></div>
 
   <!-- ── MAIN ──────────────────────────────────────────────────────── -->
   <div id="main">
@@ -1192,12 +1972,16 @@
 
       <div class="header-title">
         <h1 id="header-title-text">Cheri Doctor</h1>
-        <p>1990 Geo Metro · G10 3-cyl · Automatic · Schedule I</p>
       </div>
 
-      <div class="badge">RAG + Vision</div>
-      <button id="clear-btn" style="margin-right: 8px;">Clear</button>
-      
+      <div id="tech-mode-chip">TECH MODE</div>
+
+      <select id="model-select">
+        <option value="claude-sonnet-4-6">Claude Sonnet</option>
+        <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+        <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+      </select>
+
       <button id="toggle-pane-btn" title="Toggle Reference Pane">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -1209,44 +1993,58 @@
     <!-- Messages -->
     <div id="messages">
       <div id="empty-state">
-        <div class="empty-logo">🔧</div>
-        <h2>Ask the Manual</h2>
-        <p>Troubleshooting, torque values, or wiring. Every answer is cited directly from the factory service manual.</p>
+        <div class="empty-logo"><img src="/assets/logowhite.svg" alt="Cheri Doctor"></div>
+        <h2>Cheri Doctor</h2>
+        <p>Troubleshoot, diagnose, and repair. Every answer is cited from your factory service manual.</p>
         <div class="chips" id="chips">
           <button class="chip">Oil change procedure</button>
           <button class="chip">AC filter drier replacement</button>
           <button class="chip">Idle speed spec</button>
           <button class="chip">Valve clearance adjustment</button>
           <button class="chip">Coolant system flush</button>
-          <button class="chip chip-worksheet" data-prompt="alternator diagnostic tests">☑️ Alternator checklist</button>
-          <button class="chip chip-worksheet" data-prompt="cooling system diagnostic tests">☑️ Cooling system checklist</button>
+          <button class="chip chip-worksheet" data-prompt="alternator diagnostic tests">Alternator checklist</button>
+          <button class="chip chip-worksheet" data-prompt="cooling system diagnostic tests">Cooling system checklist</button>
         </div>
       </div>
     </div>
 
 
     <!-- Input -->
+    <input type="file" id="image-input"  accept="image/*" multiple style="display:none">
+    <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none">
     <div id="input-area">
-      <div style="width:100%;max-width:780px;margin-bottom:8px;display:flex;justify-content:flex-end;">
-        <label for="model-select" style="font-size:0.82rem;color:var(--text-3);margin-right:7px;">Model:</label>
-        <select id="model-select" style="font-size:0.85rem;padding:2px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-1);">
-          <option value="claude-sonnet-4-6">Claude Sonnet</option>
-          <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-          <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
-        </select>
-      </div>
       <div id="input-shell">
-        <button id="tech-mode-btn" title="Toggle Tech Mode">
-          🔧
-          <span class="tech-label">TECH MODE</span>
-        </button>
-        <textarea id="query" placeholder="Ask about your Geo Metro…" rows="1" spellcheck="true"></textarea>
-        <button id="send-btn" title="Send (Enter)">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="22" y1="2" x2="11" y2="13"/>
-            <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"/>
-          </svg>
-        </button>
+        <div id="image-previews"></div>
+        <div class="input-row">
+          <div id="plus-wrap">
+            <button id="plus-btn" class="input-icon-btn" title="More options">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <div id="plus-dropdown">
+              <button class="plus-menu-item mobile-only" id="camera-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                Take Photo
+              </button>
+              <button class="plus-menu-item" id="photo-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                Upload Photo or File
+              </button>
+              <div class="plus-menu-divider"></div>
+              <button class="plus-menu-item" id="techmode-item">
+                <span class="item-dot"></span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                Tech Mode
+              </button>
+            </div>
+          </div>
+          <textarea id="query" placeholder="Ask about your Geo Metro…" rows="1" spellcheck="true" autocomplete="off"></textarea>
+          <button id="send-btn" title="Send (Enter)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"/>
+            </svg>
+          </button>
+        </div>
       </div>
       <div class="input-hint">Enter to send &nbsp;·&nbsp; Shift+Enter for new line</div>
     </div>
@@ -1256,7 +2054,10 @@
   <!-- ── REFERENCE PANE ───────────────────────────────────────────── -->
   <aside id="reference-pane" class="collapsed">
     <div class="pane-header">
-      <h2>Diagrams &amp; Figures</h2>
+      <div>
+        <h2 id="pane-title">Diagrams &amp; Figures</h2>
+        <div id="pane-subtitle" style="font-size:0.7rem;color:var(--text-3);margin-top:2px;display:none;"></div>
+      </div>
       <button id="close-pane-btn" class="lb-btn" style="color:var(--text-3); font-size:14px;">×</button>
     </div>
     <div id="pane-content">
@@ -1267,6 +2068,27 @@
   </aside>
 
 </div><!-- /app -->
+
+<!-- Project Modal -->
+<div class="modal-overlay" id="project-modal">
+  <div class="modal">
+    <h3 id="project-modal-title">New Project</h3>
+    <div class="modal-field">
+      <label for="project-name-input">Project Name</label>
+      <input type="text" id="project-name-input" placeholder="e.g. Alternator Not Charging" autocomplete="off">
+    </div>
+    <div class="modal-field">
+      <label for="project-desc-input">Description — what are you working on?</label>
+      <textarea id="project-desc-input" placeholder="Cheri's alternator isn't charging. Battery dies after a few hours. Need to diagnose whether it's the alternator, voltage regulator, wiring, or belt."></textarea>
+    </div>
+    <div class="modal-buttons">
+      <button class="modal-btn cancel" id="project-modal-cancel">Cancel</button>
+      <button class="modal-btn primary" id="project-modal-save">Create Project</button>
+    </div>
+  </div>
+</div>
+
+<div class="settings-saved-toast" id="settings-toast">Settings saved</div>
 
 <!-- Lightbox -->
 <div id="lightbox">
@@ -1287,12 +2109,16 @@
 <script>
 // ── Config ─────────────────────────────────────────────────────────────────
 const API_URL    = '/api/chat';
-const STORE_KEY  = 'geo_metro_sessions_v2';
-const MODEL_KEY  = 'geo_metro_selected_model';
+const STORE_KEY    = 'geo_metro_sessions_v2';
+const MODEL_KEY    = 'geo_metro_selected_model';
+const PROJECTS_KEY = 'geo_metro_projects';
+const TAB_KEY      = 'geo_metro_tab_session'; // sessionStorage — tab-specific active chat
 
 // ── State ──────────────────────────────────────────────────────────────────
-let sessions     = loadSessions();
+let sessions     = {};
+let projects     = {};
 let activeId     = null;
+let activeProjectId = null;
 let conversation = [];
 let isLoading    = false;
 let techModeActive = false;
@@ -1323,62 +2149,184 @@ const refPane         = document.getElementById('reference-pane');
 const paneContent     = document.getElementById('pane-content');
 const togglePaneBtn   = document.getElementById('toggle-pane-btn');
 
-// ── Session persistence ────────────────────────────────────────────────────
-function loadSessions() {
-  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
-  catch { return {}; }
+// ── Session / Project sync (server-side) ──────────────────────────────────
+function syncSession(id) {
+  if (!sessions[id]) return;
+  fetch(`/api/sessions/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(sessions[id]),
+  }).catch(() => {});
 }
 
-function saveSessions() {
-  localStorage.setItem(STORE_KEY, JSON.stringify(sessions));
+function syncProject(id) {
+  if (!projects[id]) return;
+  fetch(`/api/projects/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(projects[id]),
+  }).catch(() => {});
 }
 
-function createSession() {
+function removeSessionRemote(id) {
+  fetch(`/api/sessions/${id}`, { method: 'DELETE' }).catch(() => {});
+}
+
+function removeProjectRemote(id) {
+  fetch(`/api/projects/${id}`, { method: 'DELETE' }).catch(() => {});
+}
+
+function createProject(name, description) {
+  const id = Date.now().toString();
+  projects[id] = { id, name, description, created: Date.now() };
+  syncProject(id);
+  renderSidebar();
+  return id;
+}
+
+function deleteProject(id) {
+  // Unassign all chats from this project
+  for (const sess of Object.values(sessions)) {
+    if (sess.projectId === id) { delete sess.projectId; syncSession(sess.id); }
+  }
+  delete projects[id];
+  removeProjectRemote(id);
+  if (activeProjectId === id) activeProjectId = null;
+  renderSidebar();
+}
+
+function editProject(id, name, description) {
+  if (!projects[id]) return;
+  projects[id].name = name;
+  projects[id].description = description;
+  syncProject(id);
+  renderSidebar();
+}
+
+function createSession(projectId) {
   const id = Date.now().toString();
   const now = Date.now();
   sessions[id] = { id, title: 'New Chat', messages: [], created: now, updated: now };
-  saveSessions();
+  if (projectId) sessions[id].projectId = projectId;
+  syncSession(id);
   return id;
 }
 
 function deleteSession(id) {
+  const wasProjectId = sessions[id]?.projectId;
   delete sessions[id];
-  saveSessions();
+  removeSessionRemote(id);
+  if (wasProjectId && activeProjectId === wasProjectId) {
+    showProjectView(wasProjectId);
+    return;
+  }
   const remaining = Object.values(sessions).sort((a, b) => (b.updated || b.created) - (a.updated || a.created));
   if (remaining.length) loadSession(remaining[0].id);
   else startNewChat();
   renderSidebar();
 }
 
-function setSessionTitle(id, firstMessage) {
-  sessions[id].title = firstMessage.length > 42 ? firstMessage.slice(0, 42) + '…' : firstMessage;
-  saveSessions();
+function setSessionTitle(id, title) {
+  sessions[id].title = title;
+  syncSession(id);
   renderSidebar();
 }
 
 function updateSessionTimestamp(id) {
   if (sessions[id]) {
     sessions[id].updated = Date.now();
-    saveSessions();
+    syncSession(id);
     renderSidebar();
   }
 }
 
 // ── Sidebar rendering ──────────────────────────────────────────────────────
+const ICON_CHAT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
+const ICON_FOLDER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>';
+const ICON_EDIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+const ICON_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+
 function renderSidebar() {
   historyList.innerHTML = '';
-  const sorted = Object.values(sessions).sort((a, b) => (b.updated || b.created) - (a.updated || a.created));
-  if (!sorted.length) {
-    historyList.innerHTML = `<div style="padding:24px 10px;font-size:0.77rem;color:var(--text-3);text-align:center">No conversations yet</div>`;
+  const q = chatSearchQuery;
+  const allSessions = Object.values(sessions)
+    .sort((a, b) => (b.updated || b.created) - (a.updated || a.created))
+    .filter(s => !q || (s.title || '').toLowerCase().includes(q) ||
+      (s.messages || []).some(m => (m.text || '').toLowerCase().includes(q)));
+  // When searching, suppress project folders — show only matching chats
+  const projectList = q ? [] : Object.values(projects).sort((a, b) => b.created - a.created);
+  const allContent = projectList.length || allSessions.length;
+  if (allContent) {
+    const divider = document.createElement('div');
+    divider.style.cssText = 'height:1px;background:var(--border);margin:8px 12px;';
+    historyList.appendChild(divider);
+  }
+
+  // ── Project items (flat, no expand) ──
+  if (projectList.length) {
+    const label = document.createElement('div');
+    label.className = 'history-group-label';
+    label.textContent = 'Projects';
+    historyList.appendChild(label);
+  }
+  for (const proj of projectList) {
+    const item = document.createElement('div');
+    item.className = 'project-folder';
+
+    const header = document.createElement('div');
+    header.className = 'project-header' + (activeProjectId === proj.id ? ' active' : '');
+    header.innerHTML = `
+      <span class="project-icon">${ICON_FOLDER}</span>
+      <span class="project-name">${escHtml(proj.name)}</span>
+      <span class="project-actions">
+        <button class="project-action-btn edit" title="Edit project">${ICON_EDIT}</button>
+        <button class="project-action-btn delete" title="Delete project">${ICON_TRASH}</button>
+      </span>`;
+
+    header.addEventListener('click', (e) => {
+      if (e.target.closest('.project-action-btn')) return;
+      showProjectView(proj.id);
+    });
+
+    header.querySelector('.edit').addEventListener('click', (e) => {
+      e.stopPropagation();
+      openProjectModal(proj.id);
+    });
+
+    header.querySelector('.delete').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (confirm(`Delete project "${proj.name}"? Chats will be kept but unassigned.`)) {
+        deleteProject(proj.id);
+      }
+    });
+
+    item.appendChild(header);
+    historyList.appendChild(item);
+  }
+
+  // ── Unassigned chats (time-grouped) ──
+  const unassigned = allSessions.filter(s => !s.projectId);
+  if (projectList.length && unassigned.length) {
+    const divider = document.createElement('div');
+    divider.style.cssText = 'height:1px;background:var(--border);margin:8px 12px;';
+    historyList.appendChild(divider);
+  }
+
+  if (!allSessions.length && !projectList.length) {
+    const emptyMsg = document.createElement('div');
+    emptyMsg.style.cssText = 'padding:24px 10px;font-size:0.77rem;color:var(--text-3);text-align:center';
+    emptyMsg.textContent = 'No conversations yet';
+    historyList.appendChild(emptyMsg);
     return;
   }
+
   const DAY = 86400000;
   const now = Date.now();
   const groups = [
-    { label: 'Today',     items: sorted.filter(s => now - (s.updated || s.created) < DAY) },
-    { label: 'Yesterday', items: sorted.filter(s => now - (s.updated || s.created) >= DAY && now - (s.updated || s.created) < 2*DAY) },
-    { label: 'This Week', items: sorted.filter(s => now - (s.updated || s.created) >= 2*DAY && now - (s.updated || s.created) < 7*DAY) },
-    { label: 'Older',     items: sorted.filter(s => now - (s.updated || s.created) >= 7*DAY) },
+    { label: 'Today',     items: unassigned.filter(s => now - (s.updated || s.created) < DAY) },
+    { label: 'Yesterday', items: unassigned.filter(s => now - (s.updated || s.created) >= DAY && now - (s.updated || s.created) < 2*DAY) },
+    { label: 'This Week', items: unassigned.filter(s => now - (s.updated || s.created) >= 2*DAY && now - (s.updated || s.created) < 7*DAY) },
+    { label: 'Older',     items: unassigned.filter(s => now - (s.updated || s.created) >= 7*DAY) },
   ];
   for (const group of groups) {
     if (!group.items.length) continue;
@@ -1389,7 +2337,10 @@ function renderSidebar() {
     for (const sess of group.items) {
       const el = document.createElement('div');
       el.className = 'history-item' + (sess.id === activeId ? ' active' : '');
-      el.innerHTML = `<span class="history-icon">💬</span><span class="history-item-text">${escHtml(sess.title)}</span><button class="history-delete" title="Delete">×</button>`;
+      const isGenerating = sess.title === '\u2026';
+      el.innerHTML = isGenerating
+        ? `<span class="history-icon">${ICON_CHAT}</span><span class="history-item-text"><span class="title-cursor"></span></span><button class="history-delete" title="Delete">×</button>`
+        : `<span class="history-icon">${ICON_CHAT}</span><span class="history-item-text">${escHtml(sess.title)}</span><button class="history-delete" title="Delete">×</button>`;
       el.querySelector('.history-delete').addEventListener('click', (e) => { e.stopPropagation(); deleteSession(sess.id); });
       el.addEventListener('click', () => loadSession(sess.id));
       historyList.appendChild(el);
@@ -1397,16 +2348,129 @@ function renderSidebar() {
   }
 }
 
+// ── Project workspace view ─────────────────────────────────────────────────
+function showProjectView(projectId) {
+  const proj = projects[projectId];
+  if (!proj) return;
+  if (window.innerWidth <= 768) closeSidebarMobile();
+  activeProjectId = projectId;
+  activeId = null;
+  sessionStorage.removeItem(TAB_KEY);
+  conversation = [];
+  msgFiguresMap = {};
+  currentlyViewingMsgId = null;
+
+  // Hide input bar and show project view in messages area
+  document.getElementById('input-area').style.display = 'none';
+  emptyState.style.display = 'none';
+  messagesEl.innerHTML = '';
+
+  const projectSessions = Object.values(sessions)
+    .filter(s => s.projectId === projectId)
+    .sort((a, b) => (b.updated || b.created) - (a.updated || a.created));
+
+  function formatTime(ts) {
+    const d = new Date(ts);
+    const now = new Date();
+    const diff = now - d;
+    if (diff < 86400000) return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    if (diff < 604800000) return d.toLocaleDateString([], { weekday: 'short' });
+    return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+  }
+
+  let chatListHtml = '';
+  if (projectSessions.length) {
+    chatListHtml = `<div class="project-view-chats-label">Chats</div>`;
+    for (const sess of projectSessions) {
+      const titleContent = sess.title === '\u2026'
+        ? `<span class="title-cursor"></span>`
+        : escHtml(sess.title);
+      chatListHtml += `<div class="project-chat-item" data-id="${sess.id}">
+        ${ICON_CHAT}
+        <span class="chat-title">${titleContent}</span>
+        <span class="chat-time">${formatTime(sess.updated || sess.created)}</span>
+        <button class="chat-delete" title="Delete">×</button>
+      </div>`;
+    }
+  } else {
+    chatListHtml = `<div class="project-view-empty">Start a conversation to get going on this project.</div>`;
+  }
+
+  const view = document.createElement('div');
+  view.className = 'project-view';
+  view.innerHTML = `
+    <div class="project-view-header">
+      ${ICON_FOLDER}
+      <h2>${escHtml(proj.name)}</h2>
+      <button class="project-view-edit-btn" title="Edit project">${ICON_EDIT}</button>
+    </div>
+    <div class="project-view-input">
+      <input type="text" placeholder="Start a new chat in this project…" autocomplete="off">
+      <button>New Chat</button>
+    </div>
+    <div class="project-view-chats">${chatListHtml}</div>`;
+
+  messagesEl.appendChild(view);
+
+  // Wire up edit button
+  view.querySelector('.project-view-edit-btn').addEventListener('click', () => {
+    openProjectModal(projectId);
+  });
+
+  // Wire up new chat from project view
+  const pvInput = view.querySelector('.project-view-input input');
+  const pvBtn = view.querySelector('.project-view-input button');
+  function startProjectChat() {
+    const q = pvInput.value.trim();
+    activeId = createSession(projectId);
+    document.getElementById('input-area').style.display = '';
+    if (q) {
+      queryEl.value = q;
+      loadSession(activeId);
+      sendMessage();
+    } else {
+      loadSession(activeId);
+    }
+  }
+  pvBtn.onclick = startProjectChat;
+  pvInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); startProjectChat(); }
+  });
+  pvInput.focus();
+
+  // Wire up chat items
+  view.querySelectorAll('.project-chat-item').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('.chat-delete')) return;
+      document.getElementById('input-area').style.display = '';
+      loadSession(el.dataset.id);
+    });
+    el.querySelector('.chat-delete').addEventListener('click', (e) => {
+      e.stopPropagation();
+      deleteSession(el.dataset.id);
+    });
+  });
+
+  headerTitleText.textContent = proj.name;
+  renderSidebar();
+}
+
 // ── Session load / new ─────────────────────────────────────────────────────
 function startNewChat() {
-  activeId = createSession();
+  if (window.innerWidth <= 768) closeSidebarMobile();
+  activeId = null;
+  sessionStorage.removeItem(TAB_KEY);
   conversation = [];
   msgFiguresMap = {};
   currentlyViewingMsgId = null;
   techModeActive = false;
   document.body.classList.remove('tech-mode-active');
-  techModeBtn.classList.remove('active');
+  plusBtn.classList.remove('active');
+  techmodeItem.classList.remove('active');
+  pendingImages = [];
+  renderImagePreviews();
   queryEl.placeholder = 'Ask about your Geo Metro…';
+  document.getElementById('input-area').style.display = '';
   clearMessages();
   paneContent.innerHTML = '<div style="padding:40px 20px; text-align:center; color:var(--text-3); font-size:0.85rem;">Figures mentioned in the chat will appear here for easy reference.</div>';
   renderSidebar();
@@ -1416,7 +2480,11 @@ function startNewChat() {
 
 function loadSession(id) {
   if (!sessions[id]) return;
+  if (window.innerWidth <= 768) closeSidebarMobile();
   activeId = id;
+  sessionStorage.setItem(TAB_KEY, id);
+  activeProjectId = sessions[id].projectId || null;
+  document.getElementById('input-area').style.display = '';
   conversation = sessions[id].messages.map(m => ({ role: m.role, text: m.text }));
   msgFiguresMap = {};
   currentlyViewingMsgId = null;
@@ -1426,7 +2494,7 @@ function loadSession(id) {
   if (sessions[id].messages.length) {
     for (const msg of sessions[id].messages) {
       if (msg.role === 'user') renderUserMessage(msg.text);
-      else renderAssistantMessage(msg.text, msg.citations || [], msg.figures || []);
+      else renderAssistantMessage(msg.text, msg.citations || [], msg.figures || [], msg.web_sources || []);
     }
     scrollToBottom();
   }
@@ -1440,8 +2508,16 @@ function loadSession(id) {
   }
   techModeActive = wasTechMode;
   document.body.classList.toggle('tech-mode-active', wasTechMode);
-  techModeBtn.classList.toggle('active', wasTechMode);
+  plusBtn.classList.toggle('active', wasTechMode);
+  techmodeItem.classList.toggle('active', wasTechMode);
   queryEl.placeholder = wasTechMode ? 'Tech Mode \u2014 describe what you see or enter readings\u2026' : 'Ask about your Geo Metro\u2026';
+
+  // Restore shopping pane data if this session had a parts search,
+  // but don't open the pane — user opens it themselves.
+  if (sessions[id].shopping_results?.length) {
+    showShoppingPane(sessions[id].shopping_results, sessions[id].shopping_part_name || 'parts', { silent: true });
+  }
+
   renderSidebar();
 }
 
@@ -1453,23 +2529,26 @@ function clearMessages() {
 }
 
 // ── Message rendering ──────────────────────────────────────────────────────
-function renderUserMessage(text) {
+function renderUserMessage(text, images = []) {
   emptyState.style.display = 'none';
   const row = document.createElement('div');
   row.className = 'msg-row user';
+  const imagesHtml = images.length
+    ? `<div class="user-images">${images.map(src => `<img class="user-img-thumb" src="${src}" alt="attached image" onclick="openLightbox('${src}', 'Attached image')">`).join('')}</div>`
+    : '';
   row.innerHTML = `
     <div class="msg-inner">
       <div class="avatar user">U</div>
       <div class="msg-body">
         <div class="msg-label">You</div>
-        <div class="bubble">${escHtml(text)}</div>
+        <div class="bubble">${escHtml(text)}${imagesHtml}</div>
       </div>
     </div>`;
   messagesEl.appendChild(row);
   return row;
 }
 
-function renderAssistantMessage(text, citations = [], figures = []) {
+function renderAssistantMessage(text, citations = [], figures = [], webSources = []) {
   emptyState.style.display = 'none';
   const row = document.createElement('div');
   row.className = 'msg-row assistant';
@@ -1483,9 +2562,10 @@ function renderAssistantMessage(text, citations = [], figures = []) {
   const bubbleHtml = parseMarkdown(text);
 
   let citeHtml = '';
-  if (citations.length) {
-    const tags = citations.map(c => `<span class="cite-tag" title="${escHtml(c.section_path)}">p${c.page}${c.source_label ? ' ' + escHtml(c.source_label) : ''} · ${escHtml(c.chunk_id)}</span>`).join('');
-    citeHtml = `<div class="citations"><div class="citations-label">Sources</div><div class="citation-tags">${tags}</div></div>`;
+  if (citations.length || webSources.length) {
+    const manualTags = citations.map(c => `<span class="cite-tag" title="${escHtml(c.section_path)}">p${c.page}${c.source_label ? ' ' + escHtml(c.source_label) : ''} · ${escHtml(c.chunk_id)}</span>`).join('');
+    const webTags = webSources.map(s => `<span class="cite-tag web-tag" title="${escHtml(s)}">🌐 ${escHtml(s.length > 50 ? s.slice(0,50)+'…' : s)}</span>`).join('');
+    citeHtml = `<div class="citations"><div class="citations-label">Sources</div><div class="citation-tags">${manualTags}${webTags}</div></div>`;
   }
 
   row.innerHTML = `
@@ -1551,73 +2631,297 @@ function addFigureToPane(f) {
   paneContent.appendChild(card);
 }
 
-function appendTypingRow() {
+// ── Parts search detection ──────────────────────────────────────────────────
+const _RA_PARTS = [
+  'battery', 'alternator', 'starter', 'spark plug', 'spark plugs',
+  'ignition', 'timing belt', 'serpentine belt', 'drive belt', 'belt',
+  'brake pad', 'brake rotor', 'caliper', 'brake', 'rotor',
+  'oil filter', 'air filter', 'fuel filter', 'cabin filter', 'filter',
+  'water pump', 'fuel pump', 'pump',
+  'radiator', 'thermostat', 'coolant hose', 'hose',
+  'shock absorber', 'strut', 'coil spring', 'control arm', 'ball joint',
+  'cv axle', 'axle shaft', 'axle', 'wheel bearing', 'bearing', 'seal',
+  'clutch', 'transmission', 'transaxle',
+  'distributor cap', 'distributor', 'ignition wire', 'plug wire',
+  'oxygen sensor', 'o2 sensor', 'sensor',
+  'tie rod', 'wheel', 'tire',
+];
+const _RA_TRIGGER_RE = /\brock\s*auto\b/i;
+const _BUY_INTENT_RE = /\b(?:buy|purchase|order\s+online|shop\s+for|(?:can\s+you\s+)?find\s+(?:me\s+)?(?:a|an|the|one)(?:\s|$)|find\s+(?:it\s+|one\s+|a\s+|an\s+)?(?:online|to\s+buy|for\s+(?:me\s+to\s+buy|purchase))|look\s+(?:up|for)\s+(?:a|an|the|one)(?:\s|$)|search\s+for\s+(?:a|an|the)(?:\s|$)|source\s+(?:a|an|the)\s|looking\s+to\s+buy|want\s+to\s+buy|where\s+(?:can\s+I|do\s+I)\s+(?:buy|get|order|find)|get\s+(?:one|it)\s+online|for\s+sale\s+online)\b/i;
+const _AFFIRMATIVE_RE = /^\s*(yes|yeah|yep|yup|sure|please|go ahead|do it|please do|ok|okay|sounds good|let'?s (?:do it|go)|why not|absolutely|of course|definitely|go for it|do that|pull it up|look it up|check it out|check that)\s*[.!]?\s*$/i;
+
+function _detectPartsSearch(query) {
+  // Direct trigger — mentions rockauto or ebay
+  if (_RA_TRIGGER_RE.test(query) || /\bebay\b/i.test(query)) {
+    return _extractPartFromQuery(query) || 'parts';
+  }
+  // Buy intent — user wants to find/buy a part online
+  if (_BUY_INTENT_RE.test(query)) {
+    return _extractPartFromQuery(query) || _extractPartFromConversation() || 'parts';
+  }
+  // Short affirmative + last assistant message mentioned parts/rockauto/ebay
+  if (_AFFIRMATIVE_RE.test(query)) {
+    const lastAsst = [...conversation].reverse().find(m => m.role === 'assistant');
+    if (lastAsst && /rockauto|ebay|parts/i.test(lastAsst.text)) {
+      return _extractPartFromConversation() || 'parts';
+    }
+  }
+  return null;
+}
+
+function _extractPartFromQuery(query) {
+  const q = query.toLowerCase();
+  return _RA_PARTS.find(p => q.includes(p)) || '';
+}
+
+function _extractPartFromConversation() {
+  const recent = conversation.slice(-8).map(m => (m.text || '').toLowerCase()).reverse();
+  for (const text of recent) {
+    for (const part of _RA_PARTS) {
+      if (text.includes(part)) return part;
+    }
+  }
+  return '';
+}
+
+const _BAG_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`;
+
+function appendTypingRow(partName = null) {
   const row = document.createElement('div');
   row.className = 'msg-row assistant';
   row.id = 'typing-row';
+  const innerContent = partName
+    ? `<div class="parts-searching">${_BAG_SVG}<span class="parts-searching-text">Searching for parts&hellip;</span></div>`
+    : `<div class="typing-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
   row.innerHTML = `
     <div class="msg-inner"><div class="avatar asst">CD</div><div class="msg-body">
       <div class="msg-label">Cheri Doctor</div>
-      <div class="bubble"><div class="typing-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      <div class="bubble">${innerContent}</div>
     </div></div>`;
   messagesEl.appendChild(row);
   scrollToBottom();
   return row;
 }
 
+// ── Shopping pane ────────────────────────────────────────────────────────────
+const _SOURCE_LABELS = {
+  rockauto: 'RockAuto', ebay: 'eBay',
+  autozone: 'AutoZone', oreilly: "O'Reilly", amazon: 'Amazon',
+};
+const _SOURCE_ORDER = ['rockauto', 'ebay', 'autozone', 'oreilly', 'amazon'];
+
+function showShoppingPane(items, partName, { silent = false } = {}) {
+  const paneTitle    = document.getElementById('pane-title');
+  const paneSubtitle = document.getElementById('pane-subtitle');
+  if (paneTitle) paneTitle.textContent = 'Parts Results';
+  if (paneSubtitle) {
+    paneSubtitle.textContent = `1990 Geo Metro — ${partName}`;
+    paneSubtitle.style.display = 'block';
+  }
+  paneContent.innerHTML = '';
+  if (!items || !items.length) {
+    paneContent.innerHTML = '<div style="padding:40px 20px;text-align:center;color:var(--text-3);font-size:0.85rem;">No parts found.</div>';
+    if (!silent) openRefPane();
+    return;
+  }
+  // Group by source
+  const bySource = {};
+  for (const item of items) {
+    (bySource[item.source] = bySource[item.source] || []).push(item);
+  }
+  // Render in preferred order, then any remaining sources
+  const sources = [...new Set([..._SOURCE_ORDER, ...Object.keys(bySource)])].filter(s => bySource[s]?.length);
+  for (const src of sources) {
+    const label = _SOURCE_LABELS[src] || src;
+    const hdr = document.createElement('div');
+    hdr.className = 'shop-pane-source-header';
+    hdr.textContent = `${label} (${bySource[src].length})`;
+    paneContent.appendChild(hdr);
+    bySource[src].forEach(item => paneContent.appendChild(buildShopCard(item)));
+  }
+  if (!silent) openRefPane();
+}
+
+function makePlaceholder() {
+  const el = document.createElement('div');
+  el.className = 'shop-card-img-placeholder';
+  el.textContent = '🔧';
+  return el;
+}
+
+function buildShopCard(item) {
+  // Entire card is an anchor — clicking anywhere opens the listing
+  const card = document.createElement('a');
+  card.className = 'shop-card';
+  card.href = item.item_url || '#';
+  card.target = '_blank';
+  card.rel = 'noopener noreferrer';
+
+  // Thumbnail
+  if (item.image_url) {
+    const img = document.createElement('img');
+    img.className = 'shop-card-img';
+    img.src = item.image_url;
+    img.alt = '';
+    img.onerror = () => { img.replaceWith(makePlaceholder()); };
+    card.appendChild(img);
+  } else {
+    card.appendChild(makePlaceholder());
+  }
+
+  // Body
+  const body = document.createElement('div');
+  body.className = 'shop-card-body';
+
+  // Title (clamped to 2 lines)
+  const title = document.createElement('div');
+  title.className = 'shop-card-title';
+  title.textContent = item.title;
+  body.appendChild(title);
+
+  // Price + source badge + condition
+  const meta = document.createElement('div');
+  meta.className = 'shop-card-meta';
+  if (item.price) {
+    const price = document.createElement('span');
+    price.className = 'shop-card-price';
+    price.textContent = item.price;
+    meta.appendChild(price);
+  }
+  const srcKey = item.source === 'rockauto' ? 'ra' : item.source;
+  const badge = document.createElement('span');
+  badge.className = `shop-badge shop-badge-${srcKey}`;
+  badge.textContent = _SOURCE_LABELS[item.source] || item.source;
+  meta.appendChild(badge);
+  if (item.condition) {
+    const cond = document.createElement('span');
+    cond.className = 'shop-badge shop-badge-cond';
+    cond.textContent = item.condition;
+    meta.appendChild(cond);
+  }
+  body.appendChild(meta);
+
+  // Sub-line: part number or brand
+  const sub = item.part_number ? `Part# ${item.part_number}` : (item.brand || '');
+  if (sub) {
+    const subEl = document.createElement('div');
+    subEl.className = 'shop-card-sub';
+    subEl.textContent = sub;
+    body.appendChild(subEl);
+  }
+
+  card.appendChild(body);
+  return card;
+}
+
 // ── Send ───────────────────────────────────────────────────────────────────
 async function sendMessage() {
   if (isLoading) return;
   const q = queryEl.value.trim();
-  if (!q) return;
+  if (!q && !pendingImages.length) return;
 
   queryEl.value = '';
   queryEl.style.height = 'auto';
   sendBtn.disabled = true;
   isLoading = true;
 
+  // Lazy session creation — only persist to history once the user actually sends a message
+  if (!activeId) {
+    activeId = createSession(activeProjectId || undefined);
+    sessionStorage.setItem(TAB_KEY, activeId);
+    renderSidebar();
+  }
+
   // Auto-detect Tech Mode activation/deactivation from natural language
   if (/\[tech_mode:\s*on\]|tech mode|let'?s (do this|get to work|start)|ready to (start|work)|heading to the garage/i.test(q)) {
     techModeActive = true;
     document.body.classList.add('tech-mode-active');
-    techModeBtn.classList.add('active');
+    plusBtn.classList.add('active');
+    techmodeItem.classList.add('active');
     queryEl.placeholder = 'Tech Mode — describe what you see or enter readings…';
   } else if (/\[tech_mode:\s*off\]|i'?m done|that'?s enough|back inside|exit tech mode|stop tech mode/i.test(q)) {
     techModeActive = false;
     document.body.classList.remove('tech-mode-active');
-    techModeBtn.classList.remove('active');
+    plusBtn.classList.remove('active');
+    techmodeItem.classList.remove('active');
     queryEl.placeholder = 'Ask about your Geo Metro…';
   }
 
-  if (activeId && !sessions[activeId].messages.length) {
-    setSessionTitle(activeId, q);
+  const isFirstMessage = activeId && !sessions[activeId].messages.length;
+  if (isFirstMessage) {
+    setSessionTitle(activeId, '\u2026');
   }
   updateSessionTimestamp(activeId);
-  renderUserMessage(q);
+  // Snapshot and clear pending images
+  const imagesToSend = pendingImages.map(i => i.dataUrl);
+  pendingImages = [];
+  renderImagePreviews();
+  renderUserMessage(q, imagesToSend);
   conversation.push({ role: "user", text: q });
   if (activeId) sessions[activeId].messages.push({ role: "user", text: q });
 
-  const typingRow = appendTypingRow();
+  const partsPartName = _detectPartsSearch(q);
+  const typingRow = appendTypingRow(partsPartName);
 
   try {
     const model = modelSelect?.value || 'claude-sonnet-4-6';
+    // Build project context if chat belongs to a project
+    let projectContext = null;
+    const sess = sessions[activeId];
+    if (sess && sess.projectId && projects[sess.projectId]) {
+      const proj = projects[sess.projectId];
+      projectContext = `Project: ${proj.name}\n${proj.description}`;
+    }
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: q, conversation, model }),
+      body: JSON.stringify({ query: q, conversation, model, project_context: projectContext, images: imagesToSend }),
     });
     if (!res.ok) throw new Error(`Server error ${res.status}`);
     const data = await res.json();
     typingRow.remove();
 
-    renderAssistantMessage(data.answer, data.citations || [], data.figures || []);
+    renderAssistantMessage(data.answer, data.citations || [], data.figures || [], data.web_sources || []);
+    if (partsPartName) {
+      showShoppingPane(data.shopping_results || [], partsPartName);
+      // Persist results on the session so they survive refresh
+      if (activeId) {
+        sessions[activeId].shopping_results  = data.shopping_results || [];
+        sessions[activeId].shopping_part_name = partsPartName;
+      }
+    }
     conversation.push({ role: "assistant", text: data.answer });
     if (activeId) {
       sessions[activeId].messages.push({
         role: "assistant", text: data.answer,
-        citations: data.citations || [], figures: data.figures || []
+        citations: data.citations || [], figures: data.figures || [],
+        web_sources: data.web_sources || [],
       });
-      saveSessions();
+      syncSession(activeId);
+    }
+    // Generate a smart title for new chats
+    if (isFirstMessage && activeId) {
+      const titleSessionId = activeId;
+      fetch('/api/generate-title', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: q }),
+      }).then(r => r.json()).then(d => {
+        if (d.title && sessions[titleSessionId]) {
+          sessions[titleSessionId].title = d.title;
+          syncSession(titleSessionId);
+          renderSidebar();
+          // Add sweep animation to the newly titled item
+          const el = document.querySelector(`.history-item.active .history-item-text`);
+          if (el) el.classList.add('title-sweep-in');
+        }
+      }).catch(() => {
+        if (sessions[titleSessionId]) {
+          sessions[titleSessionId].title = q.length > 42 ? q.slice(0, 42) + '…' : q;
+          syncSession(titleSessionId);
+          renderSidebar();
+        }
+      });
     }
   } catch (err) {
     typingRow.remove();
@@ -1701,6 +3005,8 @@ function parseMarkdown(text) {
     return `%%FIG_${idx}%%`;
   });
   let html = marked.parse(text, { breaks: true, gfm: true });
+  // Open all external links in a new tab
+  html = html.replace(/<a href="(https?:\/\/[^"]+)"/g, '<a href="$1" target="_blank" rel="noopener noreferrer"');
   // Restore figure links
   figPlaceholders.forEach((link, i) => {
     html = html.replace(`%%FIG_${i}%%`, link);
@@ -1839,7 +3145,7 @@ function jumpToFig(figId) {
 
   if (targetFig) {
     refreshPaneContent(targetFig); // refreshPaneContent handles single or array
-    refPane.classList.remove('collapsed');
+    openRefPane();
     // Since it's the only figure, it will be at the top
     paneContent.scrollTop = 0;
   } else {
@@ -1861,6 +3167,357 @@ function copyText(btn, text) {
   });
 }
 
+// ── Vehicle Settings ───────────────────────────────────────────────────────
+let vehicleSettings = null;
+let _settingsPrevState = null; // {activeId, activeProjectId} before opening settings
+
+async function loadVehicleSettings() {
+  try {
+    const res = await fetch('/api/settings');
+    if (res.ok) {
+      vehicleSettings = await res.json();
+    }
+  } catch (e) { /* silent — server may not be ready */ }
+}
+
+
+function showSettingsView() {
+  _settingsPrevState = { id: activeId, projectId: activeProjectId };
+
+  document.getElementById('input-area').style.display = 'none';
+  emptyState.style.display = 'none';
+  messagesEl.innerHTML = '';
+  headerTitleText.textContent = 'Vehicle Settings';
+
+  const s = vehicleSettings || {};
+  const sh = s.service_history || {};
+
+  const GEAR_ICON = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`;
+
+  const view = document.createElement('div');
+  view.className = 'settings-view';
+  view.id = 'settings-view-container';
+  view.innerHTML = `
+    <div class="settings-view-header">
+      ${GEAR_ICON}
+      <h2>Vehicle Settings</h2>
+      <button class="sv-back-btn" id="sv-back-btn">← Back to Chat</button>
+    </div>
+
+    <div class="settings-card">
+      <div class="settings-card-title">Vehicle Identity</div>
+      <div class="settings-fields-grid cols-3">
+        <div class="sf-group">
+          <label>VIN</label>
+          <input id="sv-vin" type="text" placeholder="JG1MR3362LK769576" autocomplete="off" spellcheck="false" value="${escHtml(s.vin || '')}">
+        </div>
+        <div class="sf-group">
+          <label>Current Odometer (miles)</label>
+          <input id="sv-odometer" type="number" placeholder="e.g. 82500" min="0" step="100" value="${s.odometer || ''}">
+        </div>
+        <div class="sf-group">
+          <label>Tire Size</label>
+          <input id="sv-tire" type="text" placeholder="e.g. 155/80SR13" value="${escHtml(s.tire_size || '')}">
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-card">
+      <div class="settings-card-title">Maintenance Preferences</div>
+      <div class="settings-fields-grid cols-3">
+        <div class="sf-group">
+          <label>Maintenance Schedule</label>
+          <select id="sv-schedule">
+            <option value="I" ${s.maintenance_schedule !== 'II' ? 'selected' : ''}>Schedule I — Severe (3,000 mi / 3 mo)</option>
+            <option value="II" ${s.maintenance_schedule === 'II' ? 'selected' : ''}>Schedule II — Normal (7,500 mi / 12 mo)</option>
+          </select>
+        </div>
+        <div class="sf-group">
+          <label>Engine Oil Viscosity</label>
+          <select id="sv-viscosity">
+            <option value="5W-30" ${(s.oil_viscosity||'5W-30')==='5W-30'?'selected':''}>SAE 5W-30 — most conditions</option>
+            <option value="10W-30" ${s.oil_viscosity==='10W-30'?'selected':''}>SAE 10W-30 — warm climates</option>
+            <option value="20W-50" ${s.oil_viscosity==='20W-50'?'selected':''}>SAE 20W-50 — very hot only</option>
+            <option value="chart" ${s.oil_viscosity==='chart'?'selected':''}>Show temperature chart</option>
+          </select>
+        </div>
+        <div class="sf-group">
+          <label>Driving Profile</label>
+          <select id="sv-driving">
+            <option value="severe" ${(s.driving_profile||'severe')==='severe'?'selected':''}>Severe — city, short trips, stop-and-go</option>
+            <option value="mixed" ${s.driving_profile==='mixed'?'selected':''}>Mixed — city and highway</option>
+            <option value="normal" ${s.driving_profile==='normal'?'selected':''}>Normal — mostly highway</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-card">
+      <div class="settings-card-title">Service History</div>
+      <p class="sf-hint">Enter the odometer reading at which each service was last performed. Cheri Doctor will calculate what's overdue and tell you exactly how many miles you have left on each item.</p>
+      <div class="settings-fields-grid">
+        <div class="sf-group">
+          <label>Last Oil Change (miles)</label>
+          <input id="sv-svc-oil" type="number" placeholder="e.g. 79000" min="0" step="100" value="${sh.oil_change?.mileage || ''}">
+        </div>
+        <div class="sf-group">
+          <label>Last Spark Plugs (miles)</label>
+          <input id="sv-svc-plugs" type="number" placeholder="e.g. 75000" min="0" step="100" value="${sh.spark_plugs?.mileage || ''}">
+        </div>
+        <div class="sf-group">
+          <label>Last Transmission Fluid (miles)</label>
+          <input id="sv-svc-trans" type="number" placeholder="e.g. 60000" min="0" step="100" value="${sh.trans_fluid?.mileage || ''}">
+        </div>
+        <div class="sf-group">
+          <label>Last Coolant Flush (miles)</label>
+          <input id="sv-svc-coolant" type="number" placeholder="e.g. 60000" min="0" step="100" value="${sh.coolant_flush?.mileage || ''}">
+        </div>
+        <div class="sf-group">
+          <label>Last Brake Fluid Change (miles)</label>
+          <input id="sv-svc-brake" type="number" placeholder="e.g. 60000" min="0" step="100" value="${sh.brake_fluid?.mileage || ''}">
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-card">
+      <div class="settings-card-title">Modifications &amp; Notes</div>
+      <p class="sf-hint">Add anything Cheri Doctor should always know. Just describe what was done — the category handles the rest.</p>
+      <div id="sv-mods-list"></div>
+      <div id="sv-mods-form" style="display:none; margin-top:12px; padding:14px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px;">
+        <div class="settings-fields-grid" style="margin-bottom:10px;">
+          <div class="sf-group">
+            <label>Category</label>
+            <select id="sv-mod-cat">
+              <option value="retrofit">Retrofit — part upgraded to newer spec</option>
+              <option value="conversion">Conversion — system changed to different standard</option>
+              <option value="repair">Repair — component serviced or replaced</option>
+              <option value="note">Note — general info</option>
+            </select>
+          </div>
+          <div class="sf-group">
+            <label>Title</label>
+            <input id="sv-mod-title" type="text" placeholder="e.g. A/C Refrigerant">
+          </div>
+        </div>
+        <div class="sf-group" style="margin-bottom:10px;">
+          <label>Description</label>
+          <textarea id="sv-mod-desc" rows="2" placeholder="e.g. Converted from R-12 to R-134a in 2007"></textarea>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button id="sv-mod-confirm" style="padding:6px 16px; background:var(--accent); color:#fff; border:none; border-radius:7px; font-size:0.82rem; font-weight:600; cursor:pointer; font-family:inherit;">Add</button>
+          <button id="sv-mod-cancel" style="padding:6px 14px; background:none; border:1px solid var(--border); color:var(--text-2); border-radius:7px; font-size:0.82rem; cursor:pointer; font-family:inherit;">Cancel</button>
+        </div>
+      </div>
+      <button id="sv-mods-add-btn" style="margin-top:12px; display:flex; align-items:center; gap:6px; padding:7px 14px; background:none; border:1px dashed var(--border); color:var(--text-2); border-radius:8px; font-size:0.8rem; cursor:pointer; font-family:inherit; transition:all 0.12s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-2)'">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Modification or Note
+      </button>
+    </div>
+
+    <div class="sv-save-row">
+      <button class="sv-save-btn" id="sv-save-btn">Save Settings</button>
+    </div>
+  `;
+
+  messagesEl.appendChild(view);
+  messagesEl.scrollTop = 0;
+
+  // Initialise the mods list from current settings
+  _svModsList = Array.isArray(s.modifications) ? s.modifications.map(m => ({...m})) : [];
+  _renderModsList();
+
+  document.getElementById('sv-back-btn').onclick   = closeSettingsView;
+  document.getElementById('sv-save-btn').onclick    = saveSettingsFromView;
+  document.getElementById('sv-mods-add-btn').onclick = _showModForm;
+  document.getElementById('sv-mod-confirm').onclick  = _confirmMod;
+  document.getElementById('sv-mod-cancel').onclick   = _hideModForm;
+}
+
+function closeSettingsView() {
+  const prev = _settingsPrevState;
+  _settingsPrevState = null;
+  document.getElementById('input-area').style.display = '';
+  if (prev && prev.id) loadSession(prev.id);
+  else if (prev && prev.projectId) showProjectView(prev.projectId);
+  else startNewChat();
+}
+
+// ── Mods list helpers ──────────────────────────────────────────────────────
+let _svModsList = [];
+
+const MOD_CAT_LABELS = {
+  retrofit:   'Retrofit',
+  conversion: 'Conversion',
+  repair:     'Repair',
+  note:       'Note',
+};
+const MOD_CAT_COLORS = {
+  retrofit:   '#3b82f6',
+  conversion: '#f59e0b',
+  repair:     '#22c55e',
+  note:       '#71717a',
+};
+
+function _renderModsList() {
+  const container = document.getElementById('sv-mods-list');
+  if (!container) return;
+  if (!_svModsList.length) {
+    container.innerHTML = '<p style="font-size:0.78rem;color:var(--text-3);padding:4px 0 8px;">No modifications or notes added yet.</p>';
+    return;
+  }
+  container.innerHTML = _svModsList.map((mod, i) => {
+    const color = MOD_CAT_COLORS[mod.category] || '#71717a';
+    const label = MOD_CAT_LABELS[mod.category] || 'Note';
+    return `
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 12px;background:var(--surface-2);border:1px solid var(--border);border-radius:9px;margin-bottom:8px;">
+        <span style="flex-shrink:0;padding:2px 8px;border-radius:4px;font-size:0.65rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;background:${color}22;color:${color};border:1px solid ${color}44;">${label}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:0.84rem;font-weight:600;color:var(--text-1);margin-bottom:2px;">${escHtml(mod.title)}</div>
+          <div style="font-size:0.78rem;color:var(--text-2);line-height:1.5;">${escHtml(mod.description)}</div>
+        </div>
+        <button onclick="_deleteMod(${i})" style="flex-shrink:0;background:none;border:none;color:var(--text-3);cursor:pointer;font-size:1rem;padding:2px 4px;line-height:1;border-radius:4px;transition:color 0.1s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-3)'">×</button>
+      </div>`;
+  }).join('');
+}
+
+function _showModForm() {
+  document.getElementById('sv-mods-form').style.display = 'block';
+  document.getElementById('sv-mods-add-btn').style.display = 'none';
+  document.getElementById('sv-mod-title').focus();
+}
+
+function _hideModForm() {
+  document.getElementById('sv-mods-form').style.display = 'none';
+  document.getElementById('sv-mods-add-btn').style.display = '';
+  document.getElementById('sv-mod-title').value = '';
+  document.getElementById('sv-mod-desc').value = '';
+  document.getElementById('sv-mod-cat').value = 'retrofit';
+}
+
+function _confirmMod() {
+  const title = document.getElementById('sv-mod-title').value.trim();
+  const desc  = document.getElementById('sv-mod-desc').value.trim();
+  if (!title) { document.getElementById('sv-mod-title').focus(); return; }
+  _svModsList.push({
+    id:          Date.now().toString(),
+    category:    document.getElementById('sv-mod-cat').value,
+    title,
+    description: desc,
+  });
+  _renderModsList();
+  _hideModForm();
+}
+
+function _deleteMod(index) {
+  _svModsList.splice(index, 1);
+  _renderModsList();
+}
+
+async function saveSettingsFromView() {
+  const saveBtn = document.getElementById('sv-save-btn');
+  if (!saveBtn) return;
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Saving…';
+
+  const numOrNull = id => {
+    const v = document.getElementById(id)?.value;
+    return v ? parseInt(v) : null;
+  };
+  const strOrNull = id => document.getElementById(id)?.value.trim() || null;
+
+  const settings = {
+    vin:                  strOrNull('sv-vin'),
+    maintenance_schedule: document.getElementById('sv-schedule')?.value || 'I',
+    oil_viscosity:        document.getElementById('sv-viscosity')?.value || '5W-30',
+    odometer:             numOrNull('sv-odometer'),
+    tire_size:            strOrNull('sv-tire'),
+    driving_profile:      document.getElementById('sv-driving')?.value || 'severe',
+    service_history: {
+      oil_change:    { mileage: numOrNull('sv-svc-oil') },
+      spark_plugs:   { mileage: numOrNull('sv-svc-plugs') },
+      trans_fluid:   { mileage: numOrNull('sv-svc-trans') },
+      coolant_flush: { mileage: numOrNull('sv-svc-coolant') },
+      brake_fluid:   { mileage: numOrNull('sv-svc-brake') },
+    },
+    modifications: _svModsList,
+  };
+
+  try {
+    const res = await fetch('/api/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(settings),
+    });
+    if (!res.ok) throw new Error(`Server error ${res.status}`);
+    vehicleSettings = settings;
+    saveBtn.textContent = 'Saved ✓';
+    setTimeout(() => { if (saveBtn) saveBtn.textContent = 'Save Settings'; }, 2000);
+    const toast = document.getElementById('settings-toast');
+    if (toast) { toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000); }
+  } catch (e) {
+    alert('Failed to save settings: ' + e.message);
+  } finally {
+    saveBtn.disabled = false;
+  }
+}
+
+document.getElementById('settings-btn').onclick = showSettingsView;
+
+// ── Project Modal ──────────────────────────────────────────────────────────
+let editingProjectId = null;
+const projectModal = document.getElementById('project-modal');
+const projectNameInput = document.getElementById('project-name-input');
+const projectDescInput = document.getElementById('project-desc-input');
+const projectModalTitle = document.getElementById('project-modal-title');
+const projectModalSave = document.getElementById('project-modal-save');
+
+function openProjectModal(editId) {
+  editingProjectId = editId || null;
+  if (editingProjectId && projects[editingProjectId]) {
+    projectModalTitle.textContent = 'Edit Project';
+    projectModalSave.textContent = 'Save Changes';
+    projectNameInput.value = projects[editingProjectId].name;
+    projectDescInput.value = projects[editingProjectId].description;
+  } else {
+    projectModalTitle.textContent = 'New Project';
+    projectModalSave.textContent = 'Create Project';
+    projectNameInput.value = '';
+    projectDescInput.value = '';
+  }
+  projectModal.classList.add('open');
+  projectNameInput.focus();
+}
+
+function closeProjectModal() {
+  projectModal.classList.remove('open');
+  editingProjectId = null;
+}
+
+function saveProjectFromModal() {
+  const name = projectNameInput.value.trim();
+  const desc = projectDescInput.value.trim();
+  if (!name) { projectNameInput.focus(); return; }
+  if (editingProjectId) {
+    editProject(editingProjectId, name, desc);
+    if (activeProjectId === editingProjectId && !activeId) {
+      closeProjectModal();
+      showProjectView(editingProjectId);
+      return;
+    }
+  } else {
+    const id = createProject(name, desc);
+    activeProjectId = id;
+    closeProjectModal();
+    showProjectView(id);
+    return;
+  }
+  closeProjectModal();
+}
+
+projectModalSave.onclick = saveProjectFromModal;
+document.getElementById('project-modal-cancel').onclick = closeProjectModal;
+projectModal.addEventListener('click', (e) => { if (e.target === projectModal) closeProjectModal(); });
+
 // ── UI Events ──────────────────────────────────────────────────────────────
 queryEl.addEventListener('input', () => {
   queryEl.style.height = 'auto';
@@ -1869,24 +3526,57 @@ queryEl.addEventListener('input', () => {
 queryEl.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
 sendBtn.onclick = sendMessage;
 
-document.getElementById('toggle-sidebar-btn').onclick = () => sidebar.classList.toggle('collapsed');
-togglePaneBtn.onclick = () => refPane.classList.toggle('collapsed');
-document.getElementById('close-pane-btn').onclick = () => refPane.classList.add('collapsed');
-document.getElementById('new-chat-btn').onclick = startNewChat;
-document.getElementById('clear-btn').onclick = () => { 
-  conversation = []; 
-  msgFiguresMap = {};
-  currentlyViewingMsgId = null;
-  if (activeId) { sessions[activeId].messages = []; saveSessions(); }
-  clearMessages(); 
+const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+
+function closeSidebarMobile() {
+  sidebar.classList.add('collapsed');
+  sidebarBackdrop.classList.remove('show');
+}
+
+document.getElementById('toggle-sidebar-btn').onclick = () => {
+  const isCollapsed = sidebar.classList.toggle('collapsed');
+  if (window.innerWidth <= 768) {
+    sidebarBackdrop.classList.toggle('show', !isCollapsed);
+  }
 };
+sidebarBackdrop.onclick = closeSidebarMobile;
+function openRefPane() {
+  const wasCollapsed = refPane.classList.contains('collapsed');
+  refPane.classList.remove('collapsed');
+  // On mobile, push a history entry so the back button closes the pane
+  // instead of navigating away.
+  if (wasCollapsed && window.innerWidth <= 768) {
+    history.pushState({ paneOpen: true }, '');
+  }
+}
+
+function closeRefPane() {
+  refPane.classList.add('collapsed');
+  const paneTitle    = document.getElementById('pane-title');
+  const paneSubtitle = document.getElementById('pane-subtitle');
+  if (paneTitle) paneTitle.textContent = 'Diagrams & Figures';
+  if (paneSubtitle) { paneSubtitle.textContent = ''; paneSubtitle.style.display = 'none'; }
+}
+
+togglePaneBtn.onclick = () => {
+  if (refPane.classList.contains('collapsed')) openRefPane();
+  else closeRefPane();
+};
+document.getElementById('close-pane-btn').onclick = closeRefPane;
+
+// Mobile back-button closes the reference pane instead of navigating back
+window.addEventListener('popstate', (e) => {
+  if (!refPane.classList.contains('collapsed')) {
+    closeRefPane();
+  }
+});
 
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') lightbox.classList.remove('open'); });
 
 document.getElementById('chips').onclick = (e) => {
   if (e.target.classList.contains('chip')) {
     if (e.target.classList.contains('chip-worksheet')) {
-      const topic = e.target.dataset.prompt || e.target.textContent.replace(/^📄\s*/, '');
+      const topic = e.target.dataset.prompt || e.target.textContent;
       queryEl.value = `Generate a detailed diagnostic checklist for: ${topic}`;
       sendMessage();
     } else {
@@ -1896,33 +3586,142 @@ document.getElementById('chips').onclick = (e) => {
   }
 };
 
-// ── Tech Mode ────────────────────────────────────────────────────────────
-const techModeBtn = document.getElementById('tech-mode-btn');
+// ── Sidebar static buttons ────────────────────────────────────────────────
+document.getElementById('new-chat-btn').onclick = startNewChat;
+document.getElementById('new-project-btn').onclick = () => openProjectModal();
 
+// ── Chat search ───────────────────────────────────────────────────────────
+let chatSearchQuery = '';
+const chatSearchInput = document.getElementById('chat-search');
+const chatSearchClear = document.getElementById('chat-search-clear');
+
+chatSearchInput.addEventListener('input', () => {
+  chatSearchQuery = chatSearchInput.value.trim().toLowerCase();
+  chatSearchClear.classList.toggle('visible', chatSearchQuery.length > 0);
+  renderSidebar();
+});
+
+chatSearchClear.onclick = () => {
+  chatSearchInput.value = '';
+  chatSearchQuery = '';
+  chatSearchClear.classList.remove('visible');
+  chatSearchInput.focus();
+  renderSidebar();
+};
+
+// ── Plus Menu ─────────────────────────────────────────────────────────────
+const plusBtn      = document.getElementById('plus-btn');
+const plusDropdown = document.getElementById('plus-dropdown');
+const photoItem    = document.getElementById('photo-item');
+const cameraItem   = document.getElementById('camera-item');
+const techmodeItem = document.getElementById('techmode-item');
+const imageInput   = document.getElementById('image-input');
+const cameraInput  = document.getElementById('camera-input');
+const imagePreviews = document.getElementById('image-previews');
+let pendingImages  = []; // { dataUrl, name }
+
+plusBtn.onclick = (e) => { e.stopPropagation(); plusDropdown.classList.toggle('open'); };
+document.addEventListener('click', () => plusDropdown.classList.remove('open'));
+plusDropdown.addEventListener('click', e => e.stopPropagation());
+
+photoItem.onclick  = () => { plusDropdown.classList.remove('open'); imageInput.click(); };
+cameraItem.onclick = () => { plusDropdown.classList.remove('open'); cameraInput.click(); };
+
+function handleImageFiles(input) {
+  const files = Array.from(input.files);
+  input.value = '';
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      pendingImages.push({ dataUrl: e.target.result, name: file.name });
+      renderImagePreviews();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+imageInput.onchange  = () => handleImageFiles(imageInput);
+cameraInput.onchange = () => handleImageFiles(cameraInput);
+
+function renderImagePreviews() {
+  imagePreviews.innerHTML = '';
+  if (!pendingImages.length) {
+    imagePreviews.classList.remove('has-images');
+    return;
+  }
+  imagePreviews.classList.add('has-images');
+  pendingImages.forEach((img, i) => {
+    const thumb = document.createElement('div');
+    thumb.className = 'img-preview-thumb';
+    thumb.innerHTML = `<img src="${img.dataUrl}" alt="${escHtml(img.name)}"><button class="remove-img" title="Remove">×</button>`;
+    thumb.querySelector('.remove-img').onclick = () => { pendingImages.splice(i, 1); renderImagePreviews(); };
+    imagePreviews.appendChild(thumb);
+  });
+}
+
+// ── Tech Mode ────────────────────────────────────────────────────────────
 function toggleTechMode(on) {
   techModeActive = on;
   document.body.classList.toggle('tech-mode-active', on);
-  techModeBtn.classList.toggle('active', on);
+  plusBtn.classList.toggle('active', on);
+  techmodeItem.classList.toggle('active', on);
   queryEl.placeholder = on ? 'Tech Mode — describe what you see or enter readings…' : 'Ask about your Geo Metro…';
   if (on) {
     queryEl.value = '[TECH_MODE: ON] I\'m ready to start working on Cheri. Guide me through it step by step.';
   } else {
     queryEl.value = '[TECH_MODE: OFF] I\'m done working for now. Let\'s review what we found.';
   }
+  plusDropdown.classList.remove('open');
   sendMessage();
 }
 
-techModeBtn.onclick = () => toggleTechMode(!techModeActive);
+techmodeItem.onclick = () => toggleTechMode(!techModeActive);
 
 modelSelect.onchange = (e) => localStorage.setItem(MODEL_KEY, e.target.value);
 
 // ── Init ───────────────────────────────────────────────────────────────────
-(function init() {
+(async function init() {
   const savedModel = localStorage.getItem(MODEL_KEY);
   if (savedModel && modelSelect) modelSelect.value = savedModel;
-  const ids = Object.keys(sessions).sort((a, b) => (sessions[b].updated || sessions[b].created) - (sessions[a].updated || sessions[a].created));
-  if (ids.length) loadSession(ids[0]);
-  else startNewChat();
+
+  // Load sessions + projects from server
+  try {
+    const [sessRes, projRes] = await Promise.all([
+      fetch('/api/sessions'),
+      fetch('/api/projects'),
+    ]);
+    if (sessRes.ok) sessions = await sessRes.json();
+    if (projRes.ok) projects = await projRes.json();
+  } catch (e) { /* server not ready — start empty */ }
+
+  // One-time migration: if server is empty but localStorage has data, upload it
+  if (Object.keys(sessions).length === 0 && Object.keys(projects).length === 0) {
+    try {
+      const localSessions = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+      const localProjects  = JSON.parse(localStorage.getItem(PROJECTS_KEY) || '{}');
+      if (Object.keys(localSessions).length || Object.keys(localProjects).length) {
+        sessions = localSessions;
+        projects = localProjects;
+        for (const id of Object.keys(sessions)) syncSession(id);
+        for (const id of Object.keys(projects)) syncProject(id);
+        localStorage.removeItem(STORE_KEY);
+        localStorage.removeItem(PROJECTS_KEY);
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  // Restore last tab session, or show welcome
+  const tabSessionId = sessionStorage.getItem(TAB_KEY);
+  if (tabSessionId && sessions[tabSessionId]) {
+    loadSession(tabSessionId);
+  } else {
+    startNewChat();
+  }
+
+  // Collapse sidebar by default on mobile
+  if (window.innerWidth <= 768) sidebar.classList.add('collapsed');
+
+  loadVehicleSettings();
   queryEl.focus();
 })();
 </script>

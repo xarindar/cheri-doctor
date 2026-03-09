@@ -172,6 +172,16 @@ def build_chunks(document: dict, config: dict, source_doc: str = "main") -> tupl
                 if m:
                     fig_num_to_id[m.group(1)] = b["figure_id"]
 
+        # Build block_id → figure_id map for Gemini-extracted pages.
+        # Gemini sets associated_figure_ids using block_ids (e.g. "block_1"),
+        # not figure_ids. We resolve them here so procedure chunks can link
+        # to the correct figures.
+        block_id_to_fig_id: dict[str, str] = {
+            b["block_id"]: b["figure_id"]
+            for b in page["blocks"]
+            if b.get("type") == "figure" and b.get("figure_id") and b.get("block_id")
+        }
+
         # Collect paragraph blocks for batch chunking
         para_buffer: list[dict] = []
         # Buffer for merging adjacent small tables into one chunk
@@ -285,7 +295,8 @@ def build_chunks(document: dict, config: dict, source_doc: str = "main") -> tupl
 
                 chunk = _chunk_procedure(block, doc_id, pn, section_code,
                                          source_label, section_path, seq_counter,
-                                         page_figure_ids, fig_num_to_id, title=ctx)
+                                         page_figure_ids, fig_num_to_id, title=ctx,
+                                         block_id_to_fig_id=block_id_to_fig_id)
                 if chunk:
                     chunks.append(chunk)
 
@@ -384,6 +395,7 @@ def build_chunks(document: dict, config: dict, source_doc: str = "main") -> tupl
                         section_path=section_path,
                         text=fig_text,
                         figure_refs=[fig_id] if fig_id else [],
+                        asset_refs=[block["asset_path"]] if block.get("asset_path") else [],
                     ))
 
             elif btype == "paragraph":
@@ -454,9 +466,13 @@ def build_chunks(document: dict, config: dict, source_doc: str = "main") -> tupl
     if dropped:
         print(f"    Dropped {dropped} chunks with < {MIN_CHUNK_TEXT} chars of text")
 
-    # Stamp every chunk with the source document identifier
+    # Stamp every chunk with the source document identifier.
+    # Prefix supplement chunk IDs with "sup_" so they never collide with
+    # main-manual IDs when both are loaded into the same index lookup.
     for c in chunks:
         c["source_doc"] = source_doc
+        if source_doc == "supplement" and not c["chunk_id"].startswith("sup_"):
+            c["chunk_id"] = "sup_" + c["chunk_id"]
 
     return chunks, figures
 
@@ -612,7 +628,8 @@ def _chunk_procedure(block, doc_id, pn, section_code, source_label,
                      section_path, seq_counter,
                      page_figure_ids: list | None = None,
                      fig_num_to_id: dict | None = None,
-                     title: str = "") -> dict | None:
+                     title: str = "",
+                     block_id_to_fig_id: dict | None = None) -> dict | None:
     steps = block.get("steps") or []
     if not steps:
         return None  # A procedure with zero steps is just a header, not a chunk
@@ -686,6 +703,23 @@ def _chunk_procedure(block, doc_id, pn, section_code, source_label,
 
     text = "\n".join(text_parts)
     
+    # Resolve figure refs from two sources:
+    # 1. Text-based: "Figure 3" mentions in step text
+    # 2. Gemini associated_figure_ids: block IDs Gemini linked to this procedure
+    text_fig_refs = _resolve_fig_refs(text, page_figure_ids or [], fig_num_to_id)
+    assoc_ids = block.get("associated_figure_ids") or []
+    assoc_fig_refs = [
+        block_id_to_fig_id[bid] for bid in assoc_ids
+        if block_id_to_fig_id and bid in block_id_to_fig_id
+    ]
+    # Merge, preserving order, deduplicated
+    seen: set[str] = set()
+    merged_fig_refs: list[str] = []
+    for fid in (assoc_fig_refs + text_fig_refs):
+        if fid not in seen:
+            seen.add(fid)
+            merged_fig_refs.append(fid)
+
     return _make_chunk(
         chunk_id=_gen_id("proc", section_code, pn, seq_counter),
         doc_id=doc_id, page=pn,
@@ -699,7 +733,7 @@ def _chunk_procedure(block, doc_id, pn, section_code, source_label,
         text=text,
         steps=steps,
         starting_step=starting_step,
-        figure_refs=_resolve_fig_refs(text, page_figure_ids or [], fig_num_to_id),
+        figure_refs=merged_fig_refs,
     )
 
 

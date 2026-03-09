@@ -306,7 +306,10 @@ def chat(query: str,
          conversation: list[dict],
          index: RetrievalIndex,
          config: dict,
-         skip_vision: bool = False) -> ChatResponse:
+         skip_vision: bool = False,
+         project_context: str | None = None,
+         vehicle_settings: str | None = None,
+         images: list[str] | None = None) -> ChatResponse:
     """Full RAG chat pipeline."""
     cfg_chat = config.get("chat", {})
     top_k    = cfg_chat.get("top_k_retrieve", 20)
@@ -393,7 +396,10 @@ def chat(query: str,
 
     # 4. Build prompt
     messages = _build_messages(query, reranked, figure_evidence,
-                               conversation, config)
+                               conversation, config,
+                               project_context=project_context,
+                               vehicle_settings=vehicle_settings,
+                               images=images or [])
 
     # 5. Call Claude
     raw = _call_claude(messages, config)
@@ -831,6 +837,8 @@ def _collect_figures(reranked: list[dict]) -> list[dict]:
             try:
                 with open(asset_path, "rb") as f:
                     img_data = base64.standard_b64encode(f.read()).decode()
+                if not img_data:
+                    continue
                 figures.append({
                     "figure_id":    fig_id,
                     "page":         fig.get("page"),
@@ -849,11 +857,22 @@ def _build_messages(query: str,
                     reranked: list[dict],
                     figures: list[dict],
                     conversation: list[dict],
-                    config: dict) -> list[dict]:
+                    config: dict,
+                    project_context: str | None = None,
+                    vehicle_settings: str | None = None,
+                    images: list[str] | None = None) -> list[dict]:
     """Build the Claude API messages list."""
     # Load system prompt
     sys_prompt_path = PROJECT_ROOT / "configs" / "chat_system_prompt.txt"
     system_prompt   = sys_prompt_path.read_text(encoding="utf-8")
+
+    # Inject owner-confirmed vehicle settings (overrides defaults in the static prompt)
+    if vehicle_settings:
+        system_prompt += f"\n\n{vehicle_settings}"
+
+    # Append project context if this chat belongs to a project
+    if project_context:
+        system_prompt += f"\n\n## ACTIVE PROJECT\n\n{project_context}\n\nAll questions in this conversation relate to the project above. Keep this context in mind when answering — reference the project goals and adapt your guidance accordingly."
 
     # Format evidence blocks — use chunk_id as the label (not numbered)
     # so Claude cites by chunk_id rather than saying "Evidence 3"
@@ -891,6 +910,21 @@ def _build_messages(query: str,
                 f"{fig.get('caption_text', 'No caption')}]"
             )
         })
+
+    # Attach user-uploaded images (from the frontend image picker)
+    if images:
+        user_content.append({"type": "text", "text": "\nThe owner has attached the following image(s) for you to analyze:"})
+        for data_url in images:
+            # data_url is like "data:image/jpeg;base64,..."
+            if "," in data_url:
+                header, b64 = data_url.split(",", 1)
+                media_type = header.split(";")[0].replace("data:", "") or "image/jpeg"
+            else:
+                b64, media_type = data_url, "image/jpeg"
+            user_content.append({
+                "type": "image",
+                "source": {"type": "base64", "media_type": media_type, "data": b64},
+            })
 
     user_content.append({"type": "text", "text": f"\nQUESTION: {query}"})
 
