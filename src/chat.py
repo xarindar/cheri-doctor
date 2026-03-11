@@ -72,7 +72,12 @@ SYSTEM_KEYWORDS = {
     "automatic_transaxle": ["transmission", "automatic", "transaxle", "shifting", "gear", "fluid", "torque converter"],
     "manual_transaxle": ["manual transmission", "shift linkage", "manual transaxle"],
     "clutch": ["clutch", "clutch disc", "clutch plate", "pressure plate", "release bearing", "throw-out bearing"],
-    "electrical": ["wiring", "fuse", "relay", "connector", "headlight", "tail light", "horn", "wiper", "turn signal", "gauge", "instrument", "cluster", "speedometer", "tachometer", "warning light"],
+    "electrical": [
+        "wiring", "fuse", "relay", "connector", "headlight", "tail light", "horn", "wiper",
+        "turn signal", "gauge", "instrument", "cluster", "speedometer", "tachometer", "warning light",
+        "cigar lighter", "cigarette lighter", "lighter socket", "power outlet", "12v socket",
+        "accessory socket", "usb charger socket",
+    ],
     "body": ["body", "door", "window", "seat", "trim", "bumper", "hood", "trunk", "hatch", "weatherstrip", "glass", "underbody", "safety belt"],
     "accessories": ["radio", "antenna", "speaker", "clock"],
     "maintenance": ["maintenance", "schedule", "oil change", "fluid change", "tune-up", "service interval", "engine oil", "oil capacity", "oil type", "oil grade", "oil viscosity", "oil specification", "oil filter", "oil", "chassis", "lubricate", "lubrication", "lube", "grease"],
@@ -139,11 +144,16 @@ MAINTENANCE_QUERY_SUPPLEMENTS = {
 COMPONENT_ALIASES = {
     r"\bbelt\b": "drive belt V-belt fan belt",
     r"\bgas\b": "fuel gasoline",
+    r"\b(?:cigarette|cigar)\s*lighter\b": "cigarette lighter cigar lighter accessory power outlet 12V socket",
+    r"\busb\s+charger\s+socket\b": "cigar lighter power outlet socket 12V accessory outlet",
+    r"\bpower\s+outlet\b": "cigar lighter cigarette lighter accessory socket 12V outlet",
     r"\bstarter\b": "starter motor cranking",
     r"\balternator\b": "alternator generator charging",
     r"\bthermostat\b": "thermostat coolant temperature",
     r"\bdistributor\b": "distributor ignition cap rotor",
-    r"\bvalves?\b": "valve intake exhaust",
+    r"\bpcv\s+valve\b": "PCV valve crankcase ventilation",
+    r"\begr\s+valve\b": "EGR valve exhaust gas recirculation",
+    r"(?<!pcv )(?<!egr )\bvalves?\b": "valve intake exhaust",
     r"\bhead\s*gasket\b": "cylinder head gasket",
     r"\bwater\s*pump\b": "water pump coolant pump",
     r"\btiming\s*belt\b": "timing belt cam belt",
@@ -261,7 +271,7 @@ def _detect_figure_intent(query: str) -> bool:
 
 # Broad system-level terms that dilute figure searches
 _SYSTEM_STRIP_TERMS = {
-    "air conditioning", "air conditioner", "heating", "ventilation",
+    "air conditioning", "air conditioner", "heating", "hvac ventilation",
     "engine mechanical", "engine cooling", "engine fuel", "engine electrical",
     "emission controls", "manual transaxle", "automatic transaxle",
     "front suspension", "rear suspension", "power steering", "manual steering",
@@ -931,9 +941,13 @@ def _build_messages(query: str,
     # Build messages list with conversation history
     messages = []
     for turn in conversation:
+        text = turn.get("text") or ""
+        if not text.strip():
+            # API requires non-empty content — use placeholder for image-only messages
+            text = "(image)" if turn.get("role") == "user" else "(continued)"
         messages.append({
             "role":    turn["role"],
-            "content": turn["text"],
+            "content": text,
         })
 
     messages.append({"role": "user", "content": user_content})

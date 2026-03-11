@@ -10,6 +10,7 @@ Usage:
   uvicorn tools.chat_backend.serve:app --host 0.0.0.0 --port 8000
 """
 
+import asyncio
 import sys
 import json
 import hashlib
@@ -18,14 +19,16 @@ import os
 import secrets
 import sqlite3
 import time
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Awaitable, Callable
 
 # Ensure project root is on sys.path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import HTMLResponse, FileResponse, JSONResponse, Response, RedirectResponse
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse, Response, RedirectResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -45,7 +48,33 @@ app.add_middleware(
 
 # ── Authentication ────────────────────────────────────────────────────────
 _PASSWORD_HASH = hashlib.sha256(b"maytoe").hexdigest()
-_AUTH_SECRET = os.environ.get("AUTH_SECRET", secrets.token_hex(32))
+
+def _load_auth_secret() -> str:
+    """Load a stable auth secret.
+
+    Priority:
+    1) AUTH_SECRET env var (explicit deployment configuration)
+    2) persisted secret file in data/ (survives process restarts)
+    3) generate + persist a new secret
+    """
+    env_secret = os.environ.get("AUTH_SECRET")
+    if env_secret:
+        return env_secret
+    secret_file = PROJECT_ROOT / "data" / "auth_secret.txt"
+    try:
+        if secret_file.exists():
+            val = secret_file.read_text(encoding="utf-8").strip()
+            if val:
+                return val
+        secret_file.parent.mkdir(parents=True, exist_ok=True)
+        val = secrets.token_hex(32)
+        secret_file.write_text(val, encoding="utf-8")
+        return val
+    except Exception:
+        # Last-resort fallback keeps server running even if disk write fails.
+        return secrets.token_hex(32)
+
+_AUTH_SECRET = _load_auth_secret()
 _COOKIE_NAME = "cheri_session"
 _SESSION_MAX_AGE = 30 * 24 * 3600  # 30 days
 
@@ -570,7 +599,10 @@ _SEARCH_RE = _re.compile(
     r'\b(search\s+(for|online|the\s+web)?|look\s+up\s+online|find\s+online|google\s+(this|for)?)\b',
     _re.IGNORECASE,
 )
-_RA_SEARCH_RE = _re.compile(r'\b(?:rock\s*auto|amazon|auto\s*zone|o\'?\s*reill(?:y|ey))\b', _re.IGNORECASE)
+_RA_SEARCH_RE = _re.compile(
+    r'\b(?:rock\s*auto|roc\s*auto|rockauto|rocauto|amazon|auto\s*zone|o\'?\s*reill(?:y|ey))\b',
+    _re.IGNORECASE,
+)
 
 # Map natural-language source mentions to ShopHop source keys
 _SOURCE_NAMES = {
@@ -579,6 +611,9 @@ _SOURCE_NAMES = {
     "e-bay":     "ebay",
     "rockauto":  "rockauto",
     "rock auto": "rockauto",
+    "rocauto":   "rockauto",
+    "roc auto":  "rockauto",
+    "rokauto":   "rockauto",
     "autozone":  "autozone",
     "auto zone": "autozone",
     "oreilly":   "oreilly",
@@ -598,41 +633,250 @@ def _extract_sources(query: str) -> list[str] | None:
         if name in q and key not in found:
             found.append(key)
     return found if found else None
-_BUY_INTENT_RE = _re.compile(
+
+
+def _last_user_query_with_source(conversation: list[dict] | None) -> str:
+    for msg in reversed(conversation or []):
+        if msg.get("role") != "user":
+            continue
+        text = (msg.get("text") or "").strip()
+        if text and _extract_sources(text):
+            return text
+    return ""
+
+
+def _resolve_shop_sources(query: str, conversation: list[dict] | None) -> list[str] | None:
+    """Resolve shopping sources for the current turn.
+
+    Priority:
+    1) Sources explicitly named in the current query.
+    2) For contextual follow-ups, inherit the last user-specified source.
+    3) Otherwise None (search all sources).
+    """
+    explicit = _extract_sources(query)
+    if explicit:
+        return explicit
+    prior = _last_user_query_with_source(conversation)
+    if prior:
+        return _extract_sources(prior)
+    return None
+
+
+def _normalize_shop_sources(sources: list[str] | None) -> list[str]:
+    normalized: list[str] = []
+    for source in sources or []:
+        key = (source or "").strip().lower()
+        if key in _SHOP_PROGRESS_SOURCE_LABELS and key not in normalized:
+            normalized.append(key)
+    return normalized
+
+
+_GENERIC_SHOP_PART_HINTS = {
+    "part",
+    "parts",
+    "item",
+    "items",
+    "product",
+    "products",
+    "auto part",
+    "auto parts",
+    "car part",
+    "car parts",
+}
+
+_SHOP_WATCHDOG_DEFAULT_SOURCES = ["amazon", "ebay", "rockauto"]
+_SHOP_REFINEMENT_KEYWORDS = [
+    "cigar lighter assembly",
+    "cigarette lighter assembly",
+    "cigar lighter",
+    "cigarette lighter",
+    "usb charger",
+    "usb charger socket",
+    "power outlet",
+    "socket",
+    "flush mount",
+    "flush-mount",
+    "12v",
+    "g202",
+]
+
+
+def _sanitize_shop_part_hint(value: str | None) -> str:
+    hint = (value or "").strip()
+    if not hint:
+        return ""
+    normalized = _re.sub(r"[^a-z0-9]+", " ", hint.lower()).strip()
+    if normalized in _GENERIC_SHOP_PART_HINTS:
+        return ""
+    return hint
+
+
+def _last_assistant_text(conversation: list[dict] | None) -> str:
+    return next(
+        (m.get("text", "") for m in reversed(conversation or []) if m.get("role") == "assistant"),
+        "",
+    )
+
+
+def _extract_offered_sources(text: str) -> list[str]:
+    if not text or not _SHOP_OFFER_RE.search(text):
+        return []
+    return _normalize_shop_sources(_extract_sources(text))
+
+
+def _shop_session_key(
+    query: str,
+    conversation: list[dict] | None,
+    project_context: str | None = None,
+) -> str:
+    """Build a stable key for a chat's shopping state."""
+    anchor = ""
+    for msg in conversation or []:
+        if msg.get("role") == "user":
+            anchor = (msg.get("text") or "").strip()
+            if anchor:
+                break
+    if not anchor:
+        anchor = (query or "").strip()
+    seed = json.dumps(
+        {
+            "anchor": anchor[:240].lower(),
+            "project": (project_context or "")[:120],
+        },
+        sort_keys=True,
+    )
+    return hashlib.sha1(seed.encode("utf-8")).hexdigest()
+
+
+def _get_shop_session(
+    query: str,
+    conversation: list[dict] | None,
+    project_context: str | None = None,
+) -> "ShopSession":
+    key = _shop_session_key(query, conversation, project_context)
+    session = _shop_sessions.get(key)
+    if session is None:
+        session = ShopSession()
+        _shop_sessions[key] = session
+    return session
+
+
+def _is_affirmative_shop_followup(
+    query: str,
+    conversation: list[dict] | None,
+    shop_session: "ShopSession",
+) -> bool:
+    q = (query or "").strip()
+    if not q:
+        return False
+    is_affirmative = bool(_AFFIRMATIVE_RE.search(q) or _AFFIRM_SHOP_FOLLOWUP_RE.search(q))
+    if not is_affirmative:
+        return False
+    if shop_session.pending_plan:
+        return True
+    last_asst = _last_assistant_text(conversation)
+    return bool(last_asst and _SHOP_OFFER_RE.search(last_asst))
+
+
+def _extract_watchdog_search_phrase(text: str) -> str:
+    if not text:
+        return ""
+    patterns = [
+        r"(?:search(?:ing)?(?:\s+(?:for|on))?|look(?:ing)?\s+for|targeted\s+search\s+for)\s+([^.\n:!?]+)",
+        r"(?:run|doing)\s+(?:a\s+)?(?:proper\s+)?(?:targeted\s+)?search\s+for\s+([^.\n:!?]+)",
+    ]
+    candidate = ""
+    for pat in patterns:
+        matches = _re.findall(pat, text, flags=_re.IGNORECASE)
+        if matches:
+            candidate = matches[-1]
+    candidate = (candidate or "").strip()
+    if not candidate:
+        return ""
+    candidate = _re.sub(r"^(?:a|an|the)\s+", "", candidate, flags=_re.IGNORECASE).strip()
+    candidate = candidate.strip(" -,:;.")
+    return _sanitize_shop_part_hint(candidate)
+
+
+def _extract_shop_refinement_terms(query: str) -> list[str]:
+    q = (query or "").lower()
+    if not q:
+        return []
+    found: list[str] = []
+    for kw in _SHOP_REFINEMENT_KEYWORDS:
+        if kw in q and kw not in found:
+            found.append(kw)
+    # OEM/part number-ish tokens.
+    for m in _re.findall(r"\b(?:oem|p\/n|pn|part\s*#?)\s*[:#-]?\s*([a-z0-9-]{3,})\b", q, flags=_re.IGNORECASE):
+        token = m.strip()
+        if token and token not in found:
+            found.append(token)
+    # Dimensions like 20.63mm / 0.81 in.
+    for m in _re.findall(r"\b\d+(?:\.\d+)?\s*(?:mm|cm|in|inch|inches)\b", q, flags=_re.IGNORECASE):
+        token = _re.sub(r"\s+", "", m.lower())
+        if token and token not in found:
+            found.append(token)
+    return found[:6]
+
+
+def _should_auto_refine_shop_query(query: str) -> bool:
+    q = (query or "").lower()
+    if not q:
+        return False
+    if _re.search(r"\b(?:oem|p\/n|pn|part\s*#)\b", q):
+        return True
+    if _re.search(r"\b\d+(?:\.\d+)?\s*(?:mm|cm|in|inch|inches)\b", q):
+        return True
+    return any(kw in q for kw in _SHOP_REFINEMENT_KEYWORDS)
+
+
+def _build_watchdog_search_terms(
+    assistant_text: str,
+    user_query: str,
+    base_part: str,
+) -> str:
+    phrase = _extract_watchdog_search_phrase(assistant_text)
+    base = _sanitize_shop_part_hint(base_part)
+    if not phrase:
+        phrase = base
+    if not phrase:
+        return ""
+    if _should_auto_refine_shop_query(user_query):
+        refinements = _extract_shop_refinement_terms(user_query)
+        if refinements:
+            merged: list[str] = []
+            for part in [phrase] + refinements:
+                p = part.strip()
+                if p and p not in merged:
+                    merged.append(p)
+            phrase = " ".join(merged)
+    return _re.sub(r"\s+", " ", phrase).strip()
+
+
+def _infer_watchdog_sources(text: str) -> list[str]:
+    sources = _normalize_shop_sources(_extract_sources(text))
+    return sources or list(_SHOP_WATCHDOG_DEFAULT_SOURCES)
+
+
+_SHOP_INTENT_RE = _re.compile(
     r'\b('
-    # explicit purchase intent
-    r'buy|purchase|order\s+online|shop\s+for|'
-    # "can you find X"
-    r'(?:can\s+you\s+)find\s|'
-    # "find me a/the/an/some/those X" — but NOT "can't find" / "cannot find"
-    r'(?<!cannot )(?<!cant )find\s+(?:me\s+)?(?:a|an|the|one|some|those|these)(\s|$)|'
-    # "find it/one online" or "find X to buy"
-    r'find\s+(?:it\s+|one\s+|a\s+|an\s+|some\s+)?(?:online|to\s+buy|for\s+(?:me\s+to\s+buy|purchase))|'
-    # "look up the X", "look for a/some X"
-    r'look\s+(?:up|for)\s+(?:a|an|the|one|some|those|these)(\s|$)|'
-    # "search for a/some X", "search X on amazon"
-    r'search\s+(?:for\s+)?(?:a|an|the|some)?(\s|$)|'
-    # "check amazon/autozone/etc for X"
-    r'check\s+\w+\s+for\s|'
-    # "show me X", "show me what X has"
-    r'show\s+me\s|'
-    # "source a X"
-    r'source\s+(?:a|an|the)\s|'
-    r'looking\s+(?:to\s+buy|for\s+(?:a|an|the|some))|want\s+to\s+(?:buy|get|order)|'
-    r'where\s+(?:can\s+I|do\s+I)\s+(?:buy|get|order|find)|'
-    r'get\s+(?:one|it|some|me\s+(?:a|an|some))\s+|'
-    # "I need a/some X"
-    r'(?:I\s+)?need\s+(?:a|an|some|new|to\s+get)\s|'
-    r'for\s+sale\s+online|'
-    # "what does X have for", "what's on amazon for"
-    r'what(?:\'?s|\s+does\s+\w+\s+have)\s+'
+    # explicit "look something up / search" requests
+    r'look\s+up|'
+    r'search\s+(?:for|on)\s+|'
+    r'find\s+(?:me\s+)?(?:a|an|the|one|some|those|these)\s+|'
+    r'check\s+(?:amazon|ebay|rock\s*auto|roc\s*auto|autozone|o\'?\s*reill(?:y|ey))\s+for\s+|'
+    r'source\s+(?:a|an|the)\s+|'
+    r'price\s+check|compare\s+prices|'
+    # direct buy/order language only (not generic "should I get")
+    r'buy|purchase|order\s+online|shop\s+for|for\s+sale\s+online|'
+    r'where\s+(?:can\s+I|do\s+I)\s+(?:buy|order|find)'
     r')',
     _re.IGNORECASE,
 )
 _AFFIRMATIVE_RE = _re.compile(
-    r'^\s*(yes|yeah|yep|yup|sure|please|go ahead|do it|please do|ok|okay|'
-    r'sounds good|let\'?s (do it|go)|why not|absolutely|of course|definitely|'
-    r'go for it|do that|pull it up|look it up|check it out|check that)\s*[.!]?\s*$',
+    r'^\s*(?:yes|yeah|yep|yup|sure|please|go ahead|do it|please do|ok|okay|'
+    r'sounds good|let\'?s (?:do it|go)|why not|absolutely|of course|definitely|'
+    r'go for it|do that|pull it up|look it up|check it out|check that)\b.*$',
     _re.IGNORECASE,
 )
 def _extract_part_from_bold(conversation: list[dict]) -> str:
@@ -781,14 +1025,61 @@ def _rag_context_for_part(part_name: str) -> str | None:
         return None
 
 
-async def _parts_search(part_name: str, sources: list[str] | None = None) -> tuple[str, list[str], list[dict]]:
-    """Call ShopHop for parts; return (llm_text, sources, shopping_items).
+_SHOP_PROGRESS_SOURCE_LABELS = {
+    "amazon": "Amazon",
+    "rockauto": "RockAuto",
+    "ebay": "eBay",
+    "autozone": "AutoZone",
+    "oreilly": "O'Reilly",
+}
+_DEFAULT_SHOP_PROGRESS_ORDER = ["amazon", "rockauto", "ebay", "autozone", "oreilly"]
+
+
+def _pretty_shop_source(source: str) -> str:
+    return _SHOP_PROGRESS_SOURCE_LABELS.get(source.lower(), source.title())
+
+
+@dataclass
+class ShopSession:
+    last_part_name: str = ""
+    last_queries_used: list[str] = field(default_factory=list)
+    last_sources_searched: list[str] = field(default_factory=list)
+    last_sources_offered: list[str] = field(default_factory=list)
+    last_results: list[dict] = field(default_factory=list)
+    pending_plan: dict | None = None
+    last_manual_context: str | None = None
+
+
+@dataclass
+class PartsSearchResult:
+    llm_text: str
+    sources: list[str]
+    items: list[dict]
+    queries_used: list[str] = field(default_factory=list)
+    sources_searched: list[str] = field(default_factory=list)
+    source_outcomes: dict[str, dict] = field(default_factory=dict)
+    manual_context: str | None = None
+
+
+_shop_sessions: dict[str, ShopSession] = {}
+
+
+async def _parts_search(
+    part_name: str,
+    sources: list[str] | None = None,
+    manual_context: str | None = None,
+    progress_cb: Callable[[dict], Awaitable[None]] | None = None,
+) -> PartsSearchResult:
+    """Call ShopHop for parts.
     If sources is given, only search those specific ShopHop sources."""
     import httpx as _httpx
 
     # Pull manual context before calling ShopHop so the query expander
     # has OEM part numbers and cross-references to work with.
-    manual_context = _rag_context_for_part(part_name)
+    if manual_context is None:
+        manual_context = _rag_context_for_part(part_name)
+
+    requested_sources = _normalize_shop_sources(sources)
 
     try:
         payload = {
@@ -796,10 +1087,22 @@ async def _parts_search(part_name: str, sources: list[str] | None = None) -> tup
             "vehicle": _build_vehicle_payload(),
             "max_results": 20,
         }
-        if sources:
-            payload["sources"] = sources
+        if requested_sources:
+            payload["sources"] = requested_sources
         if manual_context:
             payload["context"] = manual_context
+
+        if progress_cb:
+            await progress_cb({"type": "shopping", "label": "Calling ShopHop"})
+            # When the user requested specific sources (e.g. RockAuto), show
+            # per-source progress immediately so status is visible even if the
+            # upstream call is slow or returns empty.
+            if requested_sources:
+                for src_name in requested_sources:
+                    await progress_cb({
+                        "type": "shopping",
+                        "label": f"Searching {_pretty_shop_source(src_name)}",
+                    })
 
         async with _httpx.AsyncClient() as hc:
             r = await hc.post(
@@ -810,21 +1113,81 @@ async def _parts_search(part_name: str, sources: list[str] | None = None) -> tup
             r.raise_for_status()
             data = r.json()
     except Exception as exc:
-        return f"[Parts search unavailable: {exc}]", [], []
+        return PartsSearchResult(
+            llm_text=f"[Parts search unavailable: {exc}]",
+            sources=[],
+            items=[],
+            source_outcomes={"request": {"status": "error", "reason": str(exc)}},
+            manual_context=manual_context,
+        )
 
     items            = data.get("items", [])
-    sources_searched = data.get("sources_searched", [])
+    sources_searched = _normalize_shop_sources(data.get("sources_searched", []))
     queries_used     = data.get("queries_used", [])
+    source_outcomes  = data.get("source_outcomes", {})
     source_errors    = data.get("source_errors", {})
 
-    sources = [f"parts search ({', '.join(sources_searched)}): {part_name}"]
+    # Backward compatibility path for older ShopHop responses.
+    if not isinstance(source_outcomes, dict):
+        source_outcomes = {}
+    for src_name, err in (source_errors or {}).items():
+        source_outcomes.setdefault(
+            src_name,
+            {"status": "error", "reason": str(err)},
+        )
+
+    item_counts: dict[str, int] = {}
+    for item in items:
+        src_name = (item.get("source") or "").lower()
+        if src_name:
+            item_counts[src_name] = item_counts.get(src_name, 0) + 1
+
+    # Guarantee deterministic status for every source touched by the request.
+    expected_sources = requested_sources or sources_searched
+    for src_name in expected_sources:
+        outcome = source_outcomes.get(src_name)
+        count = item_counts.get(src_name, 0)
+        if not isinstance(outcome, dict):
+            source_outcomes[src_name] = {
+                "status": "ok" if count > 0 else "no_results",
+                "count": count,
+            }
+            continue
+        outcome.setdefault("count", count)
+        status = (outcome.get("status") or "").lower()
+        if status == "ok" and count == 0:
+            outcome["status"] = "no_results"
+        elif not status:
+            outcome["status"] = "ok" if count > 0 else "no_results"
+        source_outcomes[src_name] = outcome
+
+    if progress_cb:
+        progress_sources = sources_searched if not requested_sources else []
+        for src_name in progress_sources:
+            await progress_cb({
+                "type": "shopping",
+                "label": f"Searching {_pretty_shop_source(src_name)}",
+            })
+        await progress_cb({"type": "shopping", "label": "Wrapping Up"})
+
+    source_refs = [f"parts search ({', '.join(sources_searched)}): {part_name}"]
 
     if not items:
         llm_text = (
             f"[PARTS SEARCH: no results for '{part_name}' across "
             f"{', '.join(sources_searched) or 'all sources'}]"
         )
-        return llm_text, sources, []
+        if source_outcomes:
+            llm_text += f"\n[Source outcomes: {source_outcomes}]"
+        return PartsSearchResult(
+            llm_text=llm_text,
+            sources=source_refs,
+            items=[],
+            queries_used=queries_used,
+            sources_searched=sources_searched,
+            source_outcomes=source_outcomes,
+            manual_context=manual_context,
+        )
 
     # Build a compact LLM summary — sidebar shows the full cards
     lines = [
@@ -840,12 +1203,20 @@ async def _parts_search(part_name: str, sources: list[str] | None = None) -> tup
         lines.append(line)
     if len(items) > 10:
         lines.append(f"...and {len(items) - 10} more shown in the Parts sidebar.")
-    if source_errors:
-        lines.append(f"[Search errors: {source_errors}]")
+    if source_outcomes:
+        lines.append(f"[Source outcomes: {source_outcomes}]")
     lines.append("[END PARTS SEARCH]")
     llm_text = "\n".join(lines)
 
-    return llm_text, sources, items
+    return PartsSearchResult(
+        llm_text=llm_text,
+        sources=source_refs,
+        items=items,
+        queries_used=queries_used,
+        sources_searched=sources_searched,
+        source_outcomes=source_outcomes,
+        manual_context=manual_context,
+    )
 
 
 
@@ -875,6 +1246,9 @@ async def _enrich_query(query: str, conversation: list[dict] | None = None) -> t
     """
     extra, sources, shopping_items = [], [], []
     urls = _URL_RE.findall(query)
+    # Do not run generic web search enrichment for parts-buy intent; those
+    # queries should stay clean so the LLM can emit [SHOP_SEARCH: ...].
+    is_shop_intent = _is_shop_query(query, conversation)
 
     for url in urls[:3]:
         try:
@@ -884,7 +1258,7 @@ async def _enrich_query(query: str, conversation: list[dict] | None = None) -> t
         except Exception as exc:
             extra.append(f"[Could not fetch {url}: {exc}]")
 
-    if not urls:
+    if not urls and not is_shop_intent:
         if _SEARCH_RE.search(query):
             search_q = _SEARCH_RE.sub('', query).strip(' .,?!')
             if search_q:
@@ -908,6 +1282,9 @@ class ChatRequest(BaseModel):
   model: str | None = None
   project_context: str | None = None
   images: list[str] = []  # base64 data URLs from the frontend
+  shop_mode_hint: bool = False
+  shop_part_hint: str | None = None
+  tech_mode_hint: bool = False
 
 
 class TitleRequest(BaseModel):
@@ -967,124 +1344,362 @@ _SHOP_SEARCH_RE = _re.compile(
     r'\[SHOP_SEARCH:\s*(.+?)(?:\s*\|\s*([a-z,\s]+))?\s*\]',
     _re.IGNORECASE,
 )
+_SHOP_PROMISE_RE = _re.compile(
+    r'\b(?:let\s+me\s+(?:search|look)|'
+    r'let\s+me\s+do\s+(?:a\s+)?(?:proper\s+)?(?:targeted\s+)?search|'
+    r'while\s+that\s+runs|stand\s+by|'
+    r'i\'?ll\s+(?:search|look)|'
+    r'i\s+will\s+(?:search|look)|'
+    r'going\s+to\s+(?:search|look))\b',
+    _re.IGNORECASE,
+)
+
+_SHOP_FOLLOWUP_RE = _re.compile(
+    r'\b(?:options?|ones?|crummy|junk|better|best|cheaper|price|prices|'
+    r'availability|available|in\s+stock|worth|quality|fit(?:ment)?|'
+    r'which\s+one|what\s+about|how\s+about|do\s+they\s+have)\b',
+    _re.IGNORECASE,
+)
+_SHOP_CONTEXT_RE = _re.compile(
+    r'\b(?:amazon|rock\s*auto|roc\s*auto|ebay|autozone|o\'?\s*reill(?:y|ey)|'
+    r'parts\s+search|view\s+on|fitment|twin\s+pack|silverstar|9004)\b',
+    _re.IGNORECASE,
+)
+_SHOP_OFFER_RE = _re.compile(
+    r'\b(?:want\s+me\s+to\s+(?:search|look)|let\s+me\s+search|'
+    r'should\s+I\s+(?:search|look|check)|want\s+me\s+to\s+(?:pull|check))\b',
+    _re.IGNORECASE,
+)
+_AFFIRM_SHOP_FOLLOWUP_RE = _re.compile(
+    r'^\s*(?:yes|yeah|yep|yup|sure|ok|okay|please|do\s+it|go\s+ahead|'
+    r'why\s+not|absolutely|of\s+course)?\s*'
+    r'(?:find|search|look(?:\s+for)?|check|pull|take\s+a\s+look)?\s*'
+    r'(?:me\s+)?(?:it|that|those|these|there|thoes)?\s*[.!]?\s*$',
+    _re.IGNORECASE,
+)
+
+
+def _is_shop_query(query: str, conversation: list[dict] | None = None) -> bool:
+    q = query or ""
+    if _SHOP_INTENT_RE.search(q) or _RA_SEARCH_RE.search(q) or _extract_sources(q):
+        return True
+    last_asst = _last_assistant_text(conversation)
+    if last_asst and _SHOP_OFFER_RE.search(last_asst):
+        if _AFFIRMATIVE_RE.search(q) or _AFFIRM_SHOP_FOLLOWUP_RE.search(q):
+            return True
+    if not _SHOP_FOLLOWUP_RE.search(q):
+        return False
+    if last_asst and _SHOP_CONTEXT_RE.search(last_asst):
+        return True
+    return bool(last_asst and _SHOP_OFFER_RE.search(last_asst) and _AFFIRM_SHOP_FOLLOWUP_RE.search(q))
+
+
+def _last_shop_user_query(conversation: list[dict] | None) -> str:
+    for msg in reversed(conversation or []):
+        if msg.get("role") != "user":
+            continue
+        text = (msg.get("text") or "").strip()
+        if not text:
+            continue
+        if _SHOP_INTENT_RE.search(text) or _RA_SEARCH_RE.search(text) or _extract_sources(text):
+            return text
+    return ""
+
+
+def _to_chat_payload(response, web_sources: list[str], shopping_results: list[dict], shopping_part_name: str | None) -> dict:
+    figures_out = []
+    for fig_id in response.figure_refs:
+        fig = fig_lookup.get(fig_id, {})
+        if fig:
+            figures_out.append({
+                "figure_id":    fig_id,
+                "page":         fig.get("page"),
+                "caption_text": fig.get("caption_text", ""),
+                "url":          f"/api/figures/{fig_id}",
+            })
+
+    return {
+        "answer":      response.answer,
+        "citations":   [
+            {
+                "chunk_id":     c.chunk_id,
+                "page":         c.page,
+                "source_label": c.source_label,
+                "section_path": c.section_path,
+            }
+            for c in response.citations
+        ],
+        "figure_refs":         response.figure_refs,
+        "figures":             figures_out,
+        "web_sources":         web_sources,
+        "shopping_results":    shopping_results,
+        "shopping_part_name":  shopping_part_name,
+    }
+
+
+async def _run_chat_request(
+    req: ChatRequest,
+    progress_cb: Callable[[dict], Awaitable[None]] | None = None,
+) -> dict:
+    if index is None:
+        raise HTTPException(503, "Index not loaded yet")
+
+    # Allow model override from frontend
+    chat_config = dict(config)
+    if req.model:
+        chat_config = dict(config)
+        chat_config = chat_config.copy()
+        chat_config["chat"] = dict(chat_config.get("chat", {}))
+        chat_config["chat"]["model"] = req.model
+
+    vehicle_settings = _build_settings_context(_load_settings())
+
+    # Enrich query (URL fetch, web search) — parts search is now handled by the
+    # LLM via [SHOP_SEARCH] tags so it can use its full context to decide what
+    # to search for.
+    enriched_query, web_sources, shopping_results = await _enrich_query(req.query, req.conversation)
+
+    # LLM-first mode: always let Cheri Doctor respond first, then execute
+    # [SHOP_SEARCH] tags it emits (or watchdog-generated tags if missing).
+    shop_session = _get_shop_session(req.query, req.conversation, req.project_context)
+    if not shop_session.last_sources_offered:
+        offered_from_context = _extract_offered_sources(_last_assistant_text(req.conversation))
+        if offered_from_context:
+            shop_session.last_sources_offered = offered_from_context
+
+    if progress_cb:
+        await progress_cb({"type": "thinking", "label": "Thinking"})
+
+    response = chat(
+        query=enriched_query,
+        conversation=req.conversation,
+        index=index,
+        config=chat_config,
+        skip_vision=False,
+        project_context=req.project_context,
+        vehicle_settings=vehicle_settings,
+        images=req.images,
+    )
+
+    shopping_part_name: str | None = None
+
+    # Watchdog safety-net: if Cheri promises a search but misses [SHOP_SEARCH],
+    # auto-inject a tag and execute it so the turn doesn't dead-end.
+    if (not _SHOP_SEARCH_RE.search(response.answer or "")) and _SHOP_PROMISE_RE.search(response.answer or ""):
+        watchdog_base_part = shop_session.last_part_name or _sanitize_shop_part_hint(req.shop_part_hint)
+        watchdog_terms = _build_watchdog_search_terms(
+            assistant_text=response.answer or "",
+            user_query=req.query,
+            base_part=watchdog_base_part,
+        )
+        if watchdog_terms:
+            watchdog_sources = _infer_watchdog_sources(response.answer or "")
+            auto_tag = f"[SHOP_SEARCH: {watchdog_terms} | {', '.join(watchdog_sources)}]"
+            print(f"[shop-watchdog] Auto-injected tag: {auto_tag}")
+            from src.models import ChatResponse
+            response = ChatResponse(
+                answer=(response.answer or "").rstrip() + "\n\n" + auto_tag,
+                citations=response.citations,
+                figure_refs=response.figure_refs,
+            )
+
+    # Parse all [SHOP_SEARCH] tags in the response and execute each once.
+    shop_matches = list(_SHOP_SEARCH_RE.finditer(response.answer or ""))
+    if shop_matches:
+        search_specs: list[tuple[str, list[str] | None]] = []
+        seen_specs: set[tuple[str, tuple[str, ...]]] = set()
+        for match in shop_matches:
+            terms = _sanitize_shop_part_hint(match.group(1))
+            if not terms:
+                continue
+            source_str = match.group(2)
+            parsed_sources = (
+                _normalize_shop_sources([s.strip() for s in source_str.split(",") if s.strip()])
+                if source_str else None
+            )
+            spec_key = (terms.lower(), tuple(parsed_sources or []))
+            if spec_key in seen_specs:
+                continue
+            seen_specs.add(spec_key)
+            search_specs.append((terms, parsed_sources))
+
+        if search_specs:
+            if progress_cb:
+                await progress_cb({"type": "shopping", "label": "Running parts search"})
+
+            all_results: list[PartsSearchResult] = []
+            all_items: list[dict] = []
+            all_llm_blocks: list[str] = []
+            all_queries: list[str] = []
+            all_sources_searched: list[str] = []
+            merged_outcomes: dict[str, dict] = {}
+
+            try:
+                for search_terms, shop_sources in search_specs:
+                    search_result = await _parts_search(
+                        search_terms,
+                        sources=shop_sources,
+                        progress_cb=progress_cb,
+                    )
+                    all_results.append(search_result)
+                    all_llm_blocks.append(search_result.llm_text)
+                    web_sources.extend(search_result.sources)
+                    all_items.extend(search_result.items)
+                    all_queries.extend(search_result.queries_used)
+                    for src in search_result.sources_searched:
+                        if src not in all_sources_searched:
+                            all_sources_searched.append(src)
+                    for src, outcome in (search_result.source_outcomes or {}).items():
+                        if isinstance(outcome, dict):
+                            merged_outcomes[src] = outcome
+                        elif src not in merged_outcomes:
+                            merged_outcomes[src] = {"status": "error", "reason": str(outcome)}
+
+                # Deduplicate merged results across multiple tags/queries.
+                deduped_items: list[dict] = []
+                seen_item_keys: set[tuple[str, str, str]] = set()
+                for item in all_items:
+                    key = (
+                        (item.get("item_url") or "").strip().lower(),
+                        (item.get("source") or "").strip().lower(),
+                        (item.get("title") or "").strip().lower(),
+                    )
+                    if key in seen_item_keys:
+                        continue
+                    seen_item_keys.add(key)
+                    deduped_items.append(item)
+                shopping_results = deduped_items
+
+                shopping_part_name = search_specs[0][0]
+                shop_session.last_part_name = shopping_part_name
+                shop_session.last_queries_used = all_queries
+                shop_session.last_sources_searched = all_sources_searched
+                shop_session.last_results = list(shopping_results)
+                if all_results and all_results[-1].manual_context:
+                    shop_session.last_manual_context = all_results[-1].manual_context
+
+                # Strip [SHOP_SEARCH] tags from the assistant text before the
+                # narration pass so the owner sees natural language.
+                pre_search_text = _SHOP_SEARCH_RE.sub('', response.answer).strip()
+
+                followup_conversation = list(req.conversation or [])
+                followup_conversation.append({"role": "user", "text": req.query})
+                if pre_search_text:
+                    followup_conversation.append({"role": "assistant", "text": pre_search_text})
+
+                if progress_cb:
+                    await progress_cb({"type": "shopping", "label": "Summarizing results"})
+
+                followup_query = (
+                    "\n\n".join(all_llm_blocks)
+                    + "\n\nNow summarize the parts search results above for the owner. "
+                      "Highlight the best matches, prices, and any fitment concerns."
+                )
+
+                response = chat(
+                    query=followup_query,
+                    conversation=followup_conversation,
+                    index=index,
+                    config=chat_config,
+                    skip_vision=True,
+                    project_context=req.project_context,
+                    vehicle_settings=vehicle_settings,
+                )
+
+                offered_sources = _extract_offered_sources(response.answer)
+                if offered_sources:
+                    shop_session.last_sources_offered = offered_sources
+
+                if shop_session.last_sources_offered:
+                    available_sources = [
+                        src for src in shop_session.last_sources_offered
+                        if src not in all_sources_searched
+                    ]
+                    unavailable_sources = [
+                        src
+                        for src, outcome in merged_outcomes.items()
+                        if isinstance(outcome, dict)
+                        and (outcome.get("status") or "").lower() in {"blocked", "error", "not_implemented"}
+                    ]
+                    if available_sources:
+                        shop_session.pending_plan = {
+                            "part": shopping_part_name,
+                            "completed": all_sources_searched,
+                            "available": available_sources,
+                            "unavailable": unavailable_sources,
+                        }
+                    else:
+                        shop_session.pending_plan = None
+                else:
+                    shop_session.pending_plan = None
+
+                # Prepend the pre-search text so the owner sees full narrative.
+                if pre_search_text:
+                    from src.models import ChatResponse
+                    response = ChatResponse(
+                        answer=pre_search_text + "\n\n" + response.answer,
+                        citations=response.citations,
+                        figure_refs=response.figure_refs,
+                    )
+            except Exception as exc:
+                from src.models import ChatResponse
+                response = ChatResponse(
+                    answer=_SHOP_SEARCH_RE.sub('', response.answer).strip()
+                        + f"\n\n*Parts search failed: {exc}*",
+                    citations=response.citations,
+                    figure_refs=response.figure_refs,
+                )
+
+    return _to_chat_payload(response, web_sources, shopping_results, shopping_part_name)
+
+
+def _sse_event(event: str, data: dict) -> str:
+    return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
 
 
 @app.post("/api/chat")
 async def api_chat(req: ChatRequest) -> JSONResponse:
+  payload = await _run_chat_request(req)
+  return JSONResponse(payload)
+
+
+@app.post("/api/chat/stream")
+async def api_chat_stream(req: ChatRequest):
   if index is None:
     raise HTTPException(503, "Index not loaded yet")
 
-  # Allow model override from frontend
-  chat_config = dict(config)
-  if req.model:
-    chat_config = dict(config)
-    chat_config = chat_config.copy()
-    chat_config["chat"] = dict(chat_config.get("chat", {}))
-    chat_config["chat"]["model"] = req.model
+  queue: asyncio.Queue[tuple[str | None, dict]] = asyncio.Queue()
 
-  vehicle_settings = _build_settings_context(_load_settings())
+  async def _emit_progress(data: dict):
+    await queue.put(("status", data))
 
-  # Enrich query (URL fetch, web search) — parts search is now handled by the
-  # LLM via [SHOP_SEARCH] tags so it can use its full context to decide what
-  # to search for.
-  enriched_query, web_sources, shopping_results = await _enrich_query(req.query, req.conversation)
-
-  response = chat(
-    query=enriched_query,
-    conversation=req.conversation,
-    index=index,
-    config=chat_config,
-    skip_vision=False,
-    project_context=req.project_context,
-    vehicle_settings=vehicle_settings,
-    images=req.images,
-  )
-
-  # Check if the LLM emitted a [SHOP_SEARCH] tag — if so, run the search
-  # and call the LLM again with results so it can narrate them.
-  shop_match = _SHOP_SEARCH_RE.search(response.answer)
-  if shop_match:
-    search_terms = shop_match.group(1).strip()
-    source_str = shop_match.group(2)
-    shop_sources = (
-        [s.strip() for s in source_str.split(",") if s.strip()]
-        if source_str else None
-    )
-
+  async def _worker():
     try:
-        llm_text, src, items = await _parts_search(search_terms, sources=shop_sources)
-        web_sources.extend(src)
-        shopping_results = items
-
-        # Strip the [SHOP_SEARCH] tag from the answer and append results,
-        # then re-call the LLM so it can narrate what was found.
-        pre_search_text = _SHOP_SEARCH_RE.sub('', response.answer).strip()
-
-        # Build a follow-up conversation: original conversation + assistant's
-        # pre-search text + a system injection with results
-        followup_conversation = list(req.conversation or [])
-        followup_conversation.append({"role": "user", "text": req.query})
-        if pre_search_text:
-            followup_conversation.append({"role": "assistant", "text": pre_search_text})
-
-        followup_query = llm_text + "\n\nNow summarize the parts search results above for the owner. Highlight the best matches, prices, and any fitment concerns."
-
-        response = chat(
-            query=followup_query,
-            conversation=followup_conversation,
-            index=index,
-            config=chat_config,
-            skip_vision=True,
-            project_context=req.project_context,
-            vehicle_settings=vehicle_settings,
-        )
-
-        # Prepend the pre-search text so the owner sees the full narrative
-        if pre_search_text:
-            from src.models import ChatResponse
-            response = ChatResponse(
-                answer=pre_search_text + "\n\n" + response.answer,
-                citations=response.citations,
-                figure_refs=response.figure_refs,
-            )
+      payload = await _run_chat_request(req, progress_cb=_emit_progress)
+      await queue.put(("final", payload))
     except Exception as exc:
-        # Search failed — strip the tag and append error note
-        from src.models import ChatResponse
-        response = ChatResponse(
-            answer=_SHOP_SEARCH_RE.sub('', response.answer).strip()
-                + f"\n\n*Parts search failed: {exc}*",
-            citations=response.citations,
-            figure_refs=response.figure_refs,
-        )
+      await queue.put(("error", {"message": str(exc)}))
+    finally:
+      await queue.put((None, {}))
 
-  # Build figure metadata for the UI
-  figures_out = []
-  for fig_id in response.figure_refs:
-    fig = fig_lookup.get(fig_id, {})
-    if fig:
-      figures_out.append({
-        "figure_id":    fig_id,
-        "page":         fig.get("page"),
-        "caption_text": fig.get("caption_text", ""),
-        "url":          f"/api/figures/{fig_id}",
-      })
+  asyncio.create_task(_worker())
 
-  return JSONResponse({
-    "answer":      response.answer,
-    "citations":   [
-      {
-        "chunk_id":     c.chunk_id,
-        "page":         c.page,
-        "source_label": c.source_label,
-        "section_path": c.section_path,
-      }
-      for c in response.citations
-    ],
-    "figure_refs":       response.figure_refs,
-    "figures":           figures_out,
-    "web_sources":       web_sources,
-    "shopping_results":  shopping_results,
-  })
+  async def _event_stream():
+    while True:
+      event, data = await queue.get()
+      if event is None:
+        break
+      yield _sse_event(event, data)
+
+  return StreamingResponse(
+    _event_stream(),
+    media_type="text/event-stream",
+    headers={
+      "Cache-Control": "no-cache",
+      "Connection": "keep-alive",
+      "X-Accel-Buffering": "no",
+    },
+  )
 
 
 @app.post("/api/generate-worksheet")

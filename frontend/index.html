@@ -1631,9 +1631,19 @@
       height: 28px;
     }
     .parts-searching svg { flex-shrink: 0; opacity: 0.75; color: var(--text-2); }
+    .parts-searching-carousel {
+      position: relative;
+      height: 20px;
+      min-width: 220px;
+      overflow: hidden;
+    }
     .parts-searching-text {
+      position: absolute;
+      left: 0;
+      top: 0;
       font-size: 0.84rem;
       font-weight: 500;
+      white-space: nowrap;
       background: linear-gradient(
         90deg,
         var(--text-3) 0%,
@@ -1648,9 +1658,29 @@
       background-clip: text;
       animation: parts-shimmer 2.4s ease-in-out infinite;
     }
+    .parts-searching-text.is-leaving {
+      animation:
+        parts-shimmer 2.4s ease-in-out infinite,
+        parts-flip-out 0.34s cubic-bezier(.4,.0,.2,1) forwards;
+      transform-origin: 50% 100%;
+    }
+    .parts-searching-text.is-entering {
+      animation:
+        parts-shimmer 2.4s ease-in-out infinite,
+        parts-flip-in 0.34s cubic-bezier(.4,.0,.2,1) forwards;
+      transform-origin: 50% 0%;
+    }
     @keyframes parts-shimmer {
       0%   { background-position: 200% 0; }
       100% { background-position: -200% 0; }
+    }
+    @keyframes parts-flip-out {
+      from { transform: translateY(0) rotateX(0deg); opacity: 1; filter: blur(0px); }
+      to   { transform: translateY(-110%) rotateX(75deg); opacity: 0; filter: blur(1px); }
+    }
+    @keyframes parts-flip-in {
+      from { transform: translateY(110%) rotateX(-75deg); opacity: 0; filter: blur(1px); }
+      to   { transform: translateY(0) rotateX(0deg); opacity: 1; filter: blur(0px); }
     }
 
     /* Shopping sidebar cards */
@@ -2110,6 +2140,7 @@
 <script>
 // ── Config ─────────────────────────────────────────────────────────────────
 const API_URL    = '/api/chat';
+const API_STREAM_URL = '/api/chat/stream';
 const STORE_KEY    = 'geo_metro_sessions_v2';
 const MODEL_KEY    = 'geo_metro_selected_model';
 const PROJECTS_KEY = 'geo_metro_projects';
@@ -2157,6 +2188,8 @@ function syncSession(id) {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(sessions[id]),
+  }).then((res) => {
+    if (res.status === 401) window.location.href = '/login';
   }).catch(() => {});
 }
 
@@ -2166,6 +2199,8 @@ function syncProject(id) {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(projects[id]),
+  }).then((res) => {
+    if (res.status === 401) window.location.href = '/login';
   }).catch(() => {});
 }
 
@@ -2644,27 +2679,51 @@ const _RA_PARTS = [
   'cv axle', 'axle shaft', 'axle', 'wheel bearing', 'bearing', 'seal',
   'clutch', 'transmission', 'transaxle',
   'distributor cap', 'distributor', 'ignition wire', 'plug wire',
+  'headlight bulb', 'bulb', '9004', 'h4',
   'oxygen sensor', 'o2 sensor', 'sensor',
   'tie rod', 'wheel', 'tire',
+  'lighter', 'socket', 'outlet', '12v',
+  'floor mat', 'floor mats', 'carpet', 'flooring',
+  'seat cover', 'dash cover', 'dashboard cover', 'door panel',
+  'speaker', 'speedometer cable', 'air bag',
 ];
-const _RA_TRIGGER_RE = /\brock\s*auto\b/i;
-const _BUY_INTENT_RE = /\b(?:buy|purchase|order\s+online|shop\s+for|(?:can\s+you\s+)?find\s+(?:me\s+)?(?:a|an|the|one)(?:\s|$)|find\s+(?:it\s+|one\s+|a\s+|an\s+)?(?:online|to\s+buy|for\s+(?:me\s+to\s+buy|purchase))|look\s+(?:up|for)\s+(?:a|an|the|one)(?:\s|$)|search\s+for\s+(?:a|an|the)(?:\s|$)|source\s+(?:a|an|the)\s|looking\s+to\s+buy|want\s+to\s+buy|where\s+(?:can\s+I|do\s+I)\s+(?:buy|get|order|find)|get\s+(?:one|it)\s+online|for\s+sale\s+online)\b/i;
+const _SHOP_SOURCE_RE = /\b(?:rock\s*auto|roc\s*auto|rockauto|rocauto|rokauto|ebay|amazon|auto\s*zone|o'?reill(?:y|ey))\b/i;
+const _SHOP_INTENT_RE = /\b(?:look\s+up|search\s+(?:for|on)\s+|find\s+(?:me\s+)?(?:a|an|the|one|some|those|these)\s+|check\s+(?:amazon|ebay|rock\s*auto|roc\s*auto|autozone|o'?reill(?:y|ey))\s+for\s+|source\s+(?:a|an|the)\s+|price\s+check|compare\s+prices|buy|purchase|order\s+online|shop\s+for|for\s+sale\s+online|where\s+(?:can\s+i|do\s+i)\s+(?:buy|order|find))\b/i;
 const _AFFIRMATIVE_RE = /^\s*(yes|yeah|yep|yup|sure|please|go ahead|do it|please do|ok|okay|sounds good|let'?s (?:do it|go)|why not|absolutely|of course|definitely|go for it|do that|pull it up|look it up|check it out|check that)\s*[.!]?\s*$/i;
+const _SHOP_FOLLOWUP_RE = /\b(?:options?|ones?|crummy|junk|better|best|cheaper|price|prices|availability|available|in\s+stock|worth|quality|fit(?:ment)?|which\s+one|what\s+about|how\s+about|do\s+they\s+have)\b/i;
+const _SHOP_CONTEXT_RE = /\b(?:amazon|rock\s*auto|roc\s*auto|ebay|autozone|o'?reill(?:y|ey)|parts\s+search|view\s+on|fitment|silverstar|9004)\b/i;
+const _SHOP_OFFER_RE = /\b(?:want\s+me\s+to\s+(?:search|look)|let\s+me\s+search|should\s+i\s+(?:search|look|check)|want\s+me\s+to\s+(?:pull|check))\b/i;
+const _AFFIRM_SHOP_FOLLOWUP_RE = /^\s*(?:yes|yeah|yep|yup|sure|ok|okay|please|do\s+it|go\s+ahead|why\s+not|absolutely|of\s+course)?\s*(?:find|search|look(?:\s+for)?|check|pull)?\s*(?:me\s+)?(?:it|that|those|these|thoes)\b/i;
 
 function _detectPartsSearch(query) {
-  // Direct trigger — mentions rockauto or ebay
-  if (_RA_TRIGGER_RE.test(query) || /\bebay\b/i.test(query)) {
-    return _extractPartFromQuery(query) || 'parts';
+  if (techModeActive) return null;
+  // Direct source trigger
+  if (_SHOP_SOURCE_RE.test(query)) {
+    return _extractPartFromQuery(query) || _extractPartFromConversation() || null;
   }
   // Buy intent — user wants to find/buy a part online
-  if (_BUY_INTENT_RE.test(query)) {
-    return _extractPartFromQuery(query) || _extractPartFromConversation() || 'parts';
+  if (_SHOP_INTENT_RE.test(query)) {
+    return _extractPartFromQuery(query) || _extractPartFromConversation() || null;
+  }
+  // Follow-up shopping questions in an ongoing parts discussion
+  if (_SHOP_FOLLOWUP_RE.test(query)) {
+    const lastAsst = [...conversation].reverse().find(m => m.role === 'assistant');
+    if (lastAsst && _SHOP_CONTEXT_RE.test(lastAsst.text || '')) {
+      return _extractPartFromConversation() || null;
+    }
+  }
+  // "Yeah find me those" style follow-up after assistant offered to search
+  if (_AFFIRM_SHOP_FOLLOWUP_RE.test(query)) {
+    const lastAsst = [...conversation].reverse().find(m => m.role === 'assistant');
+    if (lastAsst && (_SHOP_CONTEXT_RE.test(lastAsst.text || '') || _SHOP_OFFER_RE.test(lastAsst.text || ''))) {
+      return _extractPartFromConversation() || null;
+    }
   }
   // Short affirmative + last assistant message mentioned parts/rockauto/ebay
   if (_AFFIRMATIVE_RE.test(query)) {
     const lastAsst = [...conversation].reverse().find(m => m.role === 'assistant');
     if (lastAsst && /rockauto|ebay|parts/i.test(lastAsst.text)) {
-      return _extractPartFromConversation() || 'parts';
+      return _extractPartFromConversation() || null;
     }
   }
   return null;
@@ -2687,13 +2746,22 @@ function _extractPartFromConversation() {
 
 const _BAG_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`;
 
+function _typingIndicatorHtml() {
+  return '<div class="typing-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+}
+
+function _shopCarouselHtml(label) {
+  return `<div class="parts-searching">${_BAG_SVG}<div class="parts-searching-carousel"><span class="parts-searching-text">${escHtml(label || 'Searching for parts…')}</span></div></div>`;
+}
+
 function appendTypingRow(partName = null) {
   const row = document.createElement('div');
   row.className = 'msg-row assistant';
   row.id = 'typing-row';
+  row.dataset.shopMode = partName ? '1' : '0';
   const innerContent = partName
-    ? `<div class="parts-searching">${_BAG_SVG}<span class="parts-searching-text">Searching for parts&hellip;</span></div>`
-    : `<div class="typing-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+    ? _shopCarouselHtml('Searching for parts…')
+    : _typingIndicatorHtml();
   row.innerHTML = `
     <div class="msg-inner"><div class="avatar asst">CD</div><div class="msg-body">
       <div class="msg-label">Cheri Doctor</div>
@@ -2702,6 +2770,149 @@ function appendTypingRow(partName = null) {
   messagesEl.appendChild(row);
   scrollToBottom();
   return row;
+}
+
+function setTypingRowToThinking(row) {
+  if (!row || !row.isConnected) return;
+  const bubble = row.querySelector('.bubble');
+  if (!bubble) return;
+  bubble.innerHTML = _typingIndicatorHtml();
+}
+
+function setTypingRowToShopStatus(row, label) {
+  if (!row || !row.isConnected) return;
+  const bubble = row.querySelector('.bubble');
+  if (!bubble) return;
+
+  let carousel = bubble.querySelector('.parts-searching-carousel');
+  if (!carousel) {
+    bubble.innerHTML = _shopCarouselHtml(label || 'Searching for parts…');
+    return;
+  }
+
+  const nextLabel = label || 'Searching for parts…';
+  // If a transition is already running, queue the latest label and exit.
+  if (row.dataset.shopStatusAnimating === '1') {
+    row.dataset.shopStatusQueued = nextLabel;
+    return;
+  }
+
+  // Recover from any prior overlap: keep only the newest status line.
+  const all = Array.from(carousel.querySelectorAll('.parts-searching-text'));
+  if (all.length > 1) {
+    const keep = all[all.length - 1];
+    for (const el of all) {
+      if (el !== keep) el.remove();
+    }
+  }
+  const current = carousel.querySelector('.parts-searching-text');
+  if (current && current.textContent === nextLabel) return;
+
+  if (current) {
+    current.classList.remove('is-entering');
+    current.classList.add('is-leaving');
+  }
+  const next = document.createElement('span');
+  next.className = 'parts-searching-text is-entering';
+  next.textContent = nextLabel;
+  carousel.appendChild(next);
+  row.dataset.shopStatusAnimating = '1';
+
+  setTimeout(() => {
+    const nodes = Array.from(carousel.querySelectorAll('.parts-searching-text'));
+    for (const el of nodes) {
+      if (el !== next) el.remove();
+    }
+    next.classList.remove('is-entering');
+    next.classList.remove('is-leaving');
+    row.dataset.shopStatusAnimating = '0';
+    const queued = (row.dataset.shopStatusQueued || '').trim();
+    row.dataset.shopStatusQueued = '';
+    if (queued && queued !== next.textContent) {
+      setTypingRowToShopStatus(row, queued);
+    }
+  }, 350);
+}
+
+function _statusLabelFromPayload(payload) {
+  const rawLabel = payload && typeof payload.label === 'string' ? payload.label.trim() : '';
+  if (rawLabel) return rawLabel;
+  if (payload && payload.type === 'shopping') return 'Searching for parts…';
+  return 'Thinking';
+}
+
+function handleProgressStatus(typingRow, payload) {
+  if (!payload || !typingRow || !typingRow.isConnected) return;
+  if (payload.type === 'shopping') {
+    typingRow.dataset.shopMode = '1';
+    setTypingRowToShopStatus(typingRow, _statusLabelFromPayload(payload));
+    return;
+  }
+  if (typingRow.dataset.shopMode === '1') {
+    setTypingRowToShopStatus(typingRow, 'Thinking through part options');
+    return;
+  }
+  setTypingRowToThinking(typingRow);
+}
+
+async function postChatStream(body, onStatus) {
+  const res = await fetch(API_STREAM_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (res.status === 401) {
+    window.location.href = '/login';
+    throw new Error('Session expired. Redirecting to login...');
+  }
+  if (!res.ok) throw new Error(`Server error ${res.status}`);
+  if (!res.body) throw new Error('Streaming response body missing');
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let finalPayload = null;
+
+  const processChunk = (chunk) => {
+    const lines = chunk.split('\n');
+    let eventName = 'message';
+    const dataLines = [];
+    for (const ln of lines) {
+      if (ln.startsWith('event:')) eventName = ln.slice(6).trim();
+      if (ln.startsWith('data:')) dataLines.push(ln.slice(5).trimStart());
+    }
+    if (!dataLines.length) return;
+    let payload;
+    try {
+      payload = JSON.parse(dataLines.join('\n'));
+    } catch {
+      return;
+    }
+    if (eventName === 'status') {
+      if (onStatus) onStatus(payload);
+    } else if (eventName === 'final') {
+      finalPayload = payload;
+    } else if (eventName === 'error') {
+      throw new Error(payload.message || 'Stream error');
+    }
+  };
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    let boundary = buffer.indexOf('\n\n');
+    while (boundary !== -1) {
+      const chunk = buffer.slice(0, boundary);
+      buffer = buffer.slice(boundary + 2);
+      if (chunk.trim()) processChunk(chunk);
+      boundary = buffer.indexOf('\n\n');
+    }
+  }
+  if (buffer.trim()) processChunk(buffer.trim());
+
+  if (!finalPayload) throw new Error('No final response from stream');
+  return finalPayload;
 }
 
 // ── Shopping pane ────────────────────────────────────────────────────────────
@@ -2873,22 +3084,29 @@ async function sendMessage() {
       const proj = projects[sess.projectId];
       projectContext = `Project: ${proj.name}\n${proj.description}`;
     }
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: q, conversation, model, project_context: projectContext, images: imagesToSend }),
-    });
-    if (!res.ok) throw new Error(`Server error ${res.status}`);
-    const data = await res.json();
+    const data = await postChatStream(
+      {
+        query: q,
+        conversation,
+        model,
+        project_context: projectContext,
+        images: imagesToSend,
+        shop_mode_hint: !!partsPartName,
+        shop_part_hint: partsPartName || null,
+        tech_mode_hint: !!techModeActive,
+      },
+      (status) => handleProgressStatus(typingRow, status),
+    );
     typingRow.remove();
 
     renderAssistantMessage(data.answer, data.citations || [], data.figures || [], data.web_sources || []);
-    if (partsPartName) {
-      showShoppingPane(data.shopping_results || [], partsPartName);
+    const resolvedPartName = data.shopping_part_name || partsPartName;
+    if (resolvedPartName) {
+      showShoppingPane(data.shopping_results || [], resolvedPartName);
       // Persist results on the session so they survive refresh
       if (activeId) {
         sessions[activeId].shopping_results  = data.shopping_results || [];
-        sessions[activeId].shopping_part_name = partsPartName;
+        sessions[activeId].shopping_part_name = resolvedPartName;
       }
     }
     conversation.push({ role: "assistant", text: data.answer });
@@ -3691,6 +3909,10 @@ modelSelect.onchange = (e) => localStorage.setItem(MODEL_KEY, e.target.value);
       fetch('/api/sessions'),
       fetch('/api/projects'),
     ]);
+    if (sessRes.status === 401 || projRes.status === 401) {
+      window.location.href = '/login';
+      return;
+    }
     if (sessRes.ok) sessions = await sessRes.json();
     if (projRes.ok) projects = await projRes.json();
   } catch (e) { /* server not ready — start empty */ }
