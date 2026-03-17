@@ -6,6 +6,7 @@
   <title>Cheri Doctor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
   <style>
     :root {
@@ -1631,6 +1632,13 @@
       height: 28px;
     }
     .parts-searching svg { flex-shrink: 0; opacity: 0.75; color: var(--text-2); }
+    .parts-searching .status-icon {
+      flex-shrink: 0;
+      opacity: 0.75;
+      color: var(--text-2);
+      font-size: 18px;
+      line-height: 1;
+    }
     .parts-searching-carousel {
       position: relative;
       height: 20px;
@@ -2668,90 +2676,45 @@ function addFigureToPane(f) {
 }
 
 // ── Parts search detection ──────────────────────────────────────────────────
-const _RA_PARTS = [
-  'battery', 'alternator', 'starter', 'spark plug', 'spark plugs',
-  'ignition', 'timing belt', 'serpentine belt', 'drive belt', 'belt',
-  'brake pad', 'brake rotor', 'caliper', 'brake', 'rotor',
-  'oil filter', 'air filter', 'fuel filter', 'cabin filter', 'filter',
-  'water pump', 'fuel pump', 'pump',
-  'radiator', 'thermostat', 'coolant hose', 'hose',
-  'shock absorber', 'strut', 'coil spring', 'control arm', 'ball joint',
-  'cv axle', 'axle shaft', 'axle', 'wheel bearing', 'bearing', 'seal',
-  'clutch', 'transmission', 'transaxle',
-  'distributor cap', 'distributor', 'ignition wire', 'plug wire',
-  'headlight bulb', 'bulb', '9004', 'h4',
-  'oxygen sensor', 'o2 sensor', 'sensor',
-  'tie rod', 'wheel', 'tire',
-  'lighter', 'socket', 'outlet', '12v',
-  'floor mat', 'floor mats', 'carpet', 'flooring',
-  'seat cover', 'dash cover', 'dashboard cover', 'door panel',
-  'speaker', 'speedometer cable', 'air bag',
-];
-const _SHOP_SOURCE_RE = /\b(?:rock\s*auto|roc\s*auto|rockauto|rocauto|rokauto|ebay|amazon|auto\s*zone|o'?reill(?:y|ey))\b/i;
-const _SHOP_INTENT_RE = /\b(?:look\s+up|search\s+(?:for|on)\s+|find\s+(?:me\s+)?(?:a|an|the|one|some|those|these)\s+|check\s+(?:amazon|ebay|rock\s*auto|roc\s*auto|autozone|o'?reill(?:y|ey))\s+for\s+|source\s+(?:a|an|the)\s+|price\s+check|compare\s+prices|buy|purchase|order\s+online|shop\s+for|for\s+sale\s+online|where\s+(?:can\s+i|do\s+i)\s+(?:buy|order|find))\b/i;
-const _AFFIRMATIVE_RE = /^\s*(yes|yeah|yep|yup|sure|please|go ahead|do it|please do|ok|okay|sounds good|let'?s (?:do it|go)|why not|absolutely|of course|definitely|go for it|do that|pull it up|look it up|check it out|check that)\s*[.!]?\s*$/i;
-const _SHOP_FOLLOWUP_RE = /\b(?:options?|ones?|crummy|junk|better|best|cheaper|price|prices|availability|available|in\s+stock|worth|quality|fit(?:ment)?|which\s+one|what\s+about|how\s+about|do\s+they\s+have)\b/i;
-const _SHOP_CONTEXT_RE = /\b(?:amazon|rock\s*auto|roc\s*auto|ebay|autozone|o'?reill(?:y|ey)|parts\s+search|view\s+on|fitment|silverstar|9004)\b/i;
-const _SHOP_OFFER_RE = /\b(?:want\s+me\s+to\s+(?:search|look)|let\s+me\s+search|should\s+i\s+(?:search|look|check)|want\s+me\s+to\s+(?:pull|check))\b/i;
-const _AFFIRM_SHOP_FOLLOWUP_RE = /^\s*(?:yes|yeah|yep|yup|sure|ok|okay|please|do\s+it|go\s+ahead|why\s+not|absolutely|of\s+course)?\s*(?:find|search|look(?:\s+for)?|check|pull)?\s*(?:me\s+)?(?:it|that|those|these|thoes)\b/i;
+const _SHOP_EXPLICIT_SOURCE_RE = /\b(?:rock\s*auto|roc\s*auto|rockauto|rocauto|rokauto|ebay|amazon|auto\s*zone|autozone|o'?reill(?:y|ey)|oreilly)\b/i;
+const _SHOP_EXPLICIT_BUY_RE = /\b(?:buy|purchase|order(?:\s+online)?|shop\s+for|in\s+stock|for\s+sale|sell|search\s+for\s+parts|parts\s+search|find\s+(?:a|an)\s+replacement|find\s+replacement)\b/i;
+const _SHOP_MANUAL_LOOKUP_RE = /\b(?:manual|diagram|figure|info|information|procedure|specs?|wiring|schematic|show\s+diagram|look\s+up)\b/i;
 
 function _detectPartsSearch(query) {
   if (techModeActive) return null;
-  // Direct source trigger
-  if (_SHOP_SOURCE_RE.test(query)) {
-    return _extractPartFromQuery(query) || _extractPartFromConversation() || null;
-  }
-  // Buy intent — user wants to find/buy a part online
-  if (_SHOP_INTENT_RE.test(query)) {
-    return _extractPartFromQuery(query) || _extractPartFromConversation() || null;
-  }
-  // Follow-up shopping questions in an ongoing parts discussion
-  if (_SHOP_FOLLOWUP_RE.test(query)) {
-    const lastAsst = [...conversation].reverse().find(m => m.role === 'assistant');
-    if (lastAsst && _SHOP_CONTEXT_RE.test(lastAsst.text || '')) {
-      return _extractPartFromConversation() || null;
-    }
-  }
-  // "Yeah find me those" style follow-up after assistant offered to search
-  if (_AFFIRM_SHOP_FOLLOWUP_RE.test(query)) {
-    const lastAsst = [...conversation].reverse().find(m => m.role === 'assistant');
-    if (lastAsst && (_SHOP_CONTEXT_RE.test(lastAsst.text || '') || _SHOP_OFFER_RE.test(lastAsst.text || ''))) {
-      return _extractPartFromConversation() || null;
-    }
-  }
-  // Short affirmative + last assistant message mentioned parts/rockauto/ebay
-  if (_AFFIRMATIVE_RE.test(query)) {
-    const lastAsst = [...conversation].reverse().find(m => m.role === 'assistant');
-    if (lastAsst && /rockauto|ebay|parts/i.test(lastAsst.text)) {
-      return _extractPartFromConversation() || null;
-    }
-  }
-  return null;
-}
+  const q = query || '';
+  const hasSource = _SHOP_EXPLICIT_SOURCE_RE.test(q);
+  const hasBuyVerb = _SHOP_EXPLICIT_BUY_RE.test(q);
+  const hasManualLookup = _SHOP_MANUAL_LOOKUP_RE.test(q);
 
-function _extractPartFromQuery(query) {
-  const q = query.toLowerCase();
-  return _RA_PARTS.find(p => q.includes(p)) || '';
-}
+  // Only obvious shopping signals should pre-trigger shop UI.
+  if (!hasSource && !hasBuyVerb) return null;
 
-function _extractPartFromConversation() {
-  const recent = conversation.slice(-8).map(m => (m.text || '').toLowerCase()).reverse();
-  for (const text of recent) {
-    for (const part of _RA_PARTS) {
-      if (text.includes(part)) return part;
-    }
-  }
-  return '';
+  // Explicit manual lookups without shopping verbs should not pre-trigger.
+  if (hasManualLookup && !hasBuyVerb) return null;
+  return '__explicit_shop__';
 }
 
 const _BAG_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`;
+const _BOOK_STATUS_ICON = `<i class="bx bx-book-open status-icon" aria-hidden="true"></i>`;
+const _MANUAL_STATUS_LABEL = 'Checking the manual...';
 
 function _typingIndicatorHtml() {
   return '<div class="typing-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
 }
 
-function _shopCarouselHtml(label) {
-  return `<div class="parts-searching">${_BAG_SVG}<div class="parts-searching-carousel"><span class="parts-searching-text">${escHtml(label || 'Searching for parts…')}</span></div></div>`;
+function _statusIconHtml(kind) {
+  return kind === 'fetching' ? _BOOK_STATUS_ICON : _BAG_SVG;
+}
+
+function _statusLabel(kind, label) {
+  if (kind === 'fetching') return _MANUAL_STATUS_LABEL;
+  return label || 'Searching for parts…';
+}
+
+function _statusCarouselHtml(label, kind = 'shopping') {
+  const resolvedLabel = _statusLabel(kind, label);
+  return `<div class="parts-searching" data-status-kind="${kind}">${_statusIconHtml(kind)}<div class="parts-searching-carousel"><span class="parts-searching-text">${escHtml(resolvedLabel)}</span></div></div>`;
 }
 
 function appendTypingRow(partName = null) {
@@ -2759,8 +2722,9 @@ function appendTypingRow(partName = null) {
   row.className = 'msg-row assistant';
   row.id = 'typing-row';
   row.dataset.shopMode = partName ? '1' : '0';
+  row.dataset.statusKind = partName ? 'shopping' : '';
   const innerContent = partName
-    ? _shopCarouselHtml('Searching for parts…')
+    ? _statusCarouselHtml('Searching for parts…', 'shopping')
     : _typingIndicatorHtml();
   row.innerHTML = `
     <div class="msg-inner"><div class="avatar asst">CD</div><div class="msg-body">
@@ -2777,23 +2741,28 @@ function setTypingRowToThinking(row) {
   const bubble = row.querySelector('.bubble');
   if (!bubble) return;
   bubble.innerHTML = _typingIndicatorHtml();
+  row.dataset.statusKind = '';
+  row.dataset.shopStatusQueuedKind = '';
 }
 
-function setTypingRowToShopStatus(row, label) {
+function setTypingRowToStatus(row, label, kind = 'shopping') {
   if (!row || !row.isConnected) return;
   const bubble = row.querySelector('.bubble');
   if (!bubble) return;
 
+  const nextLabel = _statusLabel(kind, label);
+  const currentKind = row.dataset.statusKind || '';
   let carousel = bubble.querySelector('.parts-searching-carousel');
-  if (!carousel) {
-    bubble.innerHTML = _shopCarouselHtml(label || 'Searching for parts…');
+  if (!carousel || currentKind !== kind) {
+    bubble.innerHTML = _statusCarouselHtml(nextLabel, kind);
+    row.dataset.statusKind = kind;
     return;
   }
 
-  const nextLabel = label || 'Searching for parts…';
   // If a transition is already running, queue the latest label and exit.
   if (row.dataset.shopStatusAnimating === '1') {
     row.dataset.shopStatusQueued = nextLabel;
+    row.dataset.shopStatusQueuedKind = kind;
     return;
   }
 
@@ -2827,15 +2796,18 @@ function setTypingRowToShopStatus(row, label) {
     next.classList.remove('is-leaving');
     row.dataset.shopStatusAnimating = '0';
     const queued = (row.dataset.shopStatusQueued || '').trim();
+    const queuedKind = (row.dataset.shopStatusQueuedKind || kind).trim() || kind;
     row.dataset.shopStatusQueued = '';
+    row.dataset.shopStatusQueuedKind = '';
     if (queued && queued !== next.textContent) {
-      setTypingRowToShopStatus(row, queued);
+      setTypingRowToStatus(row, queued, queuedKind);
     }
   }, 350);
 }
 
 function _statusLabelFromPayload(payload) {
   const rawLabel = payload && typeof payload.label === 'string' ? payload.label.trim() : '';
+  if (payload && payload.type === 'fetching') return _MANUAL_STATUS_LABEL;
   if (rawLabel) return rawLabel;
   if (payload && payload.type === 'shopping') return 'Searching for parts…';
   return 'Thinking';
@@ -2843,13 +2815,19 @@ function _statusLabelFromPayload(payload) {
 
 function handleProgressStatus(typingRow, payload) {
   if (!payload || !typingRow || !typingRow.isConnected) return;
-  if (payload.type === 'shopping') {
-    typingRow.dataset.shopMode = '1';
-    setTypingRowToShopStatus(typingRow, _statusLabelFromPayload(payload));
+  if (payload.type === 'thinking') {
+    typingRow.dataset.shopMode = '0';
+    setTypingRowToThinking(typingRow);
     return;
   }
-  if (typingRow.dataset.shopMode === '1') {
-    setTypingRowToShopStatus(typingRow, 'Thinking through part options');
+  if (payload.type === 'shopping') {
+    typingRow.dataset.shopMode = '1';
+    setTypingRowToStatus(typingRow, _statusLabelFromPayload(payload), 'shopping');
+    return;
+  }
+  if (payload.type === 'fetching') {
+    typingRow.dataset.shopMode = '1';
+    setTypingRowToStatus(typingRow, _statusLabelFromPayload(payload), 'fetching');
     return;
   }
   setTypingRowToThinking(typingRow);
@@ -3072,8 +3050,8 @@ async function sendMessage() {
   conversation.push({ role: "user", text: q });
   if (activeId) sessions[activeId].messages.push({ role: "user", text: q });
 
-  const partsPartName = _detectPartsSearch(q);
-  const typingRow = appendTypingRow(partsPartName);
+  const preShopHint = _detectPartsSearch(q);
+  const typingRow = appendTypingRow(preShopHint ? 'shop' : null);
 
   try {
     const model = modelSelect?.value || 'claude-sonnet-4-6';
@@ -3091,8 +3069,8 @@ async function sendMessage() {
         model,
         project_context: projectContext,
         images: imagesToSend,
-        shop_mode_hint: !!partsPartName,
-        shop_part_hint: partsPartName || null,
+        shop_mode_hint: !!preShopHint,
+        shop_part_hint: null,
         tech_mode_hint: !!techModeActive,
       },
       (status) => handleProgressStatus(typingRow, status),
@@ -3100,7 +3078,7 @@ async function sendMessage() {
     typingRow.remove();
 
     renderAssistantMessage(data.answer, data.citations || [], data.figures || [], data.web_sources || []);
-    const resolvedPartName = data.shopping_part_name || partsPartName;
+    const resolvedPartName = data.shopping_part_name || null;
     if (resolvedPartName) {
       showShoppingPane(data.shopping_results || [], resolvedPartName);
       // Persist results on the session so they survive refresh

@@ -12,7 +12,9 @@ import base64
 import json
 import os
 import re
+from functools import lru_cache
 from pathlib import Path
+from typing import Callable
 
 
 import anthropic
@@ -32,6 +34,448 @@ from src.utils import load_json
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+TOC_TYPES = {"toc_category", "toc_entry"}
+FETCH_CHUNKS_MAX_DIRECT = 20
+FETCH_CHUNKS_MAX_KEYWORDS = 8
+FETCH_CHUNKS_TEXT_LIMIT = 300
+FETCH_CHUNKS_MAX_TOOL_ITERATIONS = 3
+FETCH_CHUNKS_MAX_LEGACY_REQUESTS = 8
+FETCHING_STATUS_LABEL = "Checking the manual..."
+SUPPLEMENT_MATCH_HEAD_TOKENS = 14
+SUPPLEMENT_MATCH_TOKEN_LIMIT = 80
+SUPPLEMENT_MATCH_MIN_SHARED = 8
+SUPPLEMENT_MATCH_MIN_OVERLAP = 0.75
+
+FETCH_CHUNKS_TOOL = {
+    "name": "fetch_chunks",
+    "description": (
+        "Fetch manual chunks when you need more context. "
+        "Use section_code when you know the section from the table of contents. "
+        "Use page when a citation or cross-reference points to a specific page. "
+        "Use keywords as a fallback BM25 search when you do not have a specific section or page. "
+        "Provide only one parameter per call. "
+        "This tool is internal: never mention tool calls or emit placeholder tags like [CHUNK_REQUEST: ...] to the user."
+    ),
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "section_code": {
+                "type": "string",
+                "description": "Manual section code from the TOC, such as 6D1 or 1B.",
+            },
+            "page": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Exact manual page number to fetch.",
+            },
+            "keywords": {
+                "type": "string",
+                "description": "Fallback keyword search when you do not know the section code or page.",
+            },
+        },
+        "additionalProperties": False,
+    },
+}
+LEGACY_CHUNK_REQUEST_RE = re.compile(r"\[CHUNK_REQUEST:\s*([^\]]+)\]", re.IGNORECASE)
+
+
+def _format_page_span(page_span: tuple[int, int] | None) -> str:
+    if not page_span:
+        return "-"
+    start, end = page_span
+    if start == end:
+        return f"p. {start}"
+    return f"pp. {start}-{end}"
+
+
+def _update_page_span(page_spans: dict[str, list[int]], section_code: str, page: int) -> None:
+    bounds = page_spans.setdefault(section_code, [page, page])
+    bounds[0] = min(bounds[0], page)
+    bounds[1] = max(bounds[1], page)
+
+
+def _section_root(section_path: str) -> str:
+    return section_path.split(" > ", 1)[0].strip() if section_path else ""
+
+
+def _chunk_source_doc(chunk: dict) -> str:
+    return chunk.get("source_doc") or "main"
+
+
+def _page_sort_value(page: object) -> int:
+    return page if isinstance(page, int) else 10**9
+
+
+def _page_label(page: object) -> str:
+    return f"p.{page}" if isinstance(page, int) else "p.-"
+
+
+def _supplement_match_tokens(text: str) -> list[str]:
+    cleaned = (text or "").lower()
+    cleaned = re.sub(r"figure\s+\d+[a-z0-9-]*", " ", cleaned)
+    cleaned = re.sub(
+        r"\b(remove or disconnect|install or connect|adjust|inspect|check|"
+        r"caution|notice|note|specifications)\b",
+        " ",
+        cleaned,
+    )
+    return re.findall(r"[a-z0-9]+", cleaned)[:SUPPLEMENT_MATCH_TOKEN_LIMIT]
+
+
+def _supplement_head_signature(chunk: dict) -> str:
+    tokens = _supplement_match_tokens(chunk.get("text", ""))
+    return " ".join(tokens[:SUPPLEMENT_MATCH_HEAD_TOKENS])
+
+
+def _is_authoritative_duplicate(main_chunk: dict, supplement_chunk: dict) -> bool:
+    if _chunk_source_doc(main_chunk) == "supplement":
+        return False
+    if _chunk_source_doc(supplement_chunk) != "supplement":
+        return False
+
+    main_section = (main_chunk.get("section_code") or "").upper()
+    supplement_section = (supplement_chunk.get("section_code") or "").upper()
+    if not main_section or main_section != supplement_section:
+        return False
+    if main_chunk.get("type") != supplement_chunk.get("type"):
+        return False
+
+    main_sig = _supplement_head_signature(main_chunk)
+    supplement_sig = _supplement_head_signature(supplement_chunk)
+    if main_sig and main_sig == supplement_sig:
+        return True
+
+    main_tokens = set(_supplement_match_tokens(main_chunk.get("text", "")))
+    supplement_tokens = set(_supplement_match_tokens(supplement_chunk.get("text", "")))
+    if not main_tokens or not supplement_tokens:
+        return False
+
+    shared = len(main_tokens & supplement_tokens)
+    overlap = shared / min(len(main_tokens), len(supplement_tokens))
+    return shared >= SUPPLEMENT_MATCH_MIN_SHARED and overlap >= SUPPLEMENT_MATCH_MIN_OVERLAP
+
+
+def _prefer_supplement_direct_chunks(chunks: list[dict]) -> list[dict]:
+    supplements = [chunk for chunk in chunks if _chunk_source_doc(chunk) == "supplement"]
+    return supplements if supplements else chunks
+
+
+def _apply_supplement_authority_to_chunk_list(chunks: list[dict]) -> list[dict]:
+    supplements = [chunk for chunk in chunks if _chunk_source_doc(chunk) == "supplement"]
+    if not supplements:
+        return chunks
+
+    filtered: list[dict] = []
+    emitted_ids: set[str] = set()
+    for chunk in chunks:
+        chunk_id = chunk.get("chunk_id")
+        source_doc = _chunk_source_doc(chunk)
+        if source_doc == "supplement":
+            if chunk_id not in emitted_ids:
+                filtered.append(chunk)
+                emitted_ids.add(chunk_id)
+            continue
+
+        match = next((supp for supp in supplements if _is_authoritative_duplicate(chunk, supp)), None)
+        if match:
+            match_id = match.get("chunk_id")
+            if match_id not in emitted_ids:
+                filtered.append(match)
+                emitted_ids.add(match_id)
+            continue
+
+        filtered.append(chunk)
+        if chunk_id:
+            emitted_ids.add(chunk_id)
+
+    return filtered
+
+
+def _apply_supplement_authority_to_results(results: list[dict], *, label: str) -> list[dict]:
+    supplements = [row for row in results if _chunk_source_doc(row["chunk"]) == "supplement"]
+    if not supplements:
+        return results
+
+    filtered: list[dict] = []
+    emitted_ids: set[str] = set()
+    dropped = 0
+
+    for row in results:
+        chunk = row["chunk"]
+        chunk_id = chunk.get("chunk_id")
+        source_doc = _chunk_source_doc(chunk)
+        if source_doc == "supplement":
+            if chunk_id not in emitted_ids:
+                filtered.append(row)
+                emitted_ids.add(chunk_id)
+            continue
+
+        match = next((supp for supp in supplements if _is_authoritative_duplicate(chunk, supp["chunk"])), None)
+        if match:
+            dropped += 1
+            match_id = match["chunk"].get("chunk_id")
+            if match_id not in emitted_ids:
+                filtered.append(match)
+                emitted_ids.add(match_id)
+            continue
+
+        filtered.append(row)
+        if chunk_id:
+            emitted_ids.add(chunk_id)
+
+    if dropped:
+        print(f"  [chat] Dropped {dropped} main chunk(s) in favor of supplement authority during {label}")
+
+    return filtered
+
+
+def _truncate_tool_text(text: str, max_chars: int = FETCH_CHUNKS_TEXT_LIMIT) -> str:
+    compact = re.sub(r"\s+", " ", (text or "").strip())
+    if len(compact) <= max_chars:
+        return compact
+    return compact[: max_chars - 3].rstrip() + "..."
+
+
+def _serialize_tool_chunk(chunk: dict) -> dict[str, object]:
+    return {
+        "chunk_id": chunk.get("chunk_id"),
+        "section_code": chunk.get("section_code"),
+        "section_path": chunk.get("section_path"),
+        "page": chunk.get("page"),
+        "type": chunk.get("type"),
+        "text": _truncate_tool_text(chunk.get("text", "")),
+    }
+
+
+def format_fetch_chunks_result(result: dict) -> str:
+    if result.get("error"):
+        return f"fetch_chunks error: {result['error']}"
+
+    lines = [
+        "fetch_chunks results",
+        f"mode: {result.get('mode', '-')}",
+        f"returned: {len(result.get('chunks', []))}",
+        f"total_available: {result.get('total_available', 0)}",
+    ]
+    if result.get("truncated"):
+        lines.append("truncated: true")
+
+    if result.get("section_code"):
+        lines.append(f"section_code: {result['section_code']}")
+    if result.get("page") is not None:
+        lines.append(f"page: {result['page']}")
+    if result.get("keywords"):
+        lines.append(f"keywords: {result['keywords']}")
+
+    for chunk in result.get("chunks", []):
+        section_code = chunk.get("section_code") or "-"
+        chunk_type = chunk.get("type") or "-"
+        lines.append(f"[{section_code} | {_page_label(chunk.get('page'))} | {chunk_type}] {chunk.get('text', '')}")
+
+    return "\n".join(lines)
+
+
+def fetch_chunks(index: RetrievalIndex,
+                 section_code: str | None = None,
+                 page: int | None = None,
+                 keywords: str | None = None) -> dict[str, object]:
+    """Fetch compact chunk payloads for tool use."""
+    normalized_section = (section_code or "").strip().upper() or None
+    normalized_keywords = (keywords or "").strip() or None
+
+    normalized_page = None
+    if page is not None:
+        try:
+            normalized_page = int(page)
+        except (TypeError, ValueError):
+            return {
+                "error": "page must be an integer",
+                "mode": "page",
+                "chunks": [],
+                "truncated": False,
+                "total_available": 0,
+            }
+        if normalized_page < 1:
+            return {
+                "error": "page must be >= 1",
+                "mode": "page",
+                "chunks": [],
+                "truncated": False,
+                "total_available": 0,
+            }
+
+    provided = [
+        name for name, value in (
+            ("section_code", normalized_section),
+            ("page", normalized_page),
+            ("keywords", normalized_keywords),
+        )
+        if value is not None
+    ]
+    if len(provided) != 1:
+        return {
+            "error": "Provide exactly one of section_code, page, or keywords",
+            "mode": "invalid",
+            "chunks": [],
+            "truncated": False,
+            "total_available": 0,
+        }
+
+    if normalized_section is not None:
+        mode = "section_code"
+        matches = [
+            chunk for chunk in index.lookup.values()
+            if chunk.get("type") not in TOC_TYPES
+            and (chunk.get("section_code") or "").upper() == normalized_section
+        ]
+        matches = _prefer_supplement_direct_chunks(matches)
+        matches.sort(key=lambda chunk: (_page_sort_value(chunk.get("page")), chunk.get("chunk_id") or ""))
+        total_available = len(matches)
+        limited = matches[:FETCH_CHUNKS_MAX_DIRECT]
+    elif normalized_page is not None:
+        mode = "page"
+        matches = [
+            chunk for chunk in index.lookup.values()
+            if chunk.get("type") not in TOC_TYPES
+            and chunk.get("page") == normalized_page
+        ]
+        matches = _prefer_supplement_direct_chunks(matches)
+        matches.sort(key=lambda chunk: (chunk.get("section_code") or "", chunk.get("chunk_id") or ""))
+        total_available = len(matches)
+        limited = matches[:FETCH_CHUNKS_MAX_DIRECT]
+    else:
+        mode = "keywords"
+        tokens = re.findall(r"[a-z0-9]+", normalized_keywords.lower())
+        if not tokens:
+            return {
+                "error": "keywords must contain at least one alphanumeric token",
+                "mode": mode,
+                "chunks": [],
+                "truncated": False,
+                "total_available": 0,
+                "keywords": normalized_keywords,
+            }
+
+        # BM25-only retrieval is intentional here: this tool is the model's
+        # fallback keyword search when it lacks a concrete section or page.
+        ranked = index._bm25_search(normalized_keywords, top_k=len(index.chunk_ids))
+        matches = [
+            index.lookup[cid]
+            for cid, _score in ranked
+            if cid in index.lookup and index.lookup[cid].get("type") not in TOC_TYPES
+        ]
+        matches = _apply_supplement_authority_to_chunk_list(matches)
+        total_available = len(matches)
+        limited = matches[:FETCH_CHUNKS_MAX_KEYWORDS]
+
+    return {
+        "mode": mode,
+        "section_code": normalized_section,
+        "page": normalized_page,
+        "keywords": normalized_keywords,
+        "truncated": total_available > len(limited),
+        "total_available": total_available,
+        "chunks": [_serialize_tool_chunk(chunk) for chunk in limited],
+    }
+
+
+@lru_cache(maxsize=1)
+def get_toc_chunks() -> list[dict[str, str]]:
+    lookup = load_json(PROJECT_ROOT / "tools" / "rag_index" / "chunk_lookup.json")
+    if not isinstance(lookup, dict):
+        return []
+
+    page_spans: dict[str, list[int]] = {}
+    categories: list[dict] = []
+    entries: list[dict] = []
+
+    for chunk in lookup.values():
+        chunk_type = chunk.get("type")
+        if chunk_type == "toc_category":
+            categories.append(chunk)
+            continue
+        if chunk_type == "toc_entry":
+            entries.append(chunk)
+            continue
+
+        # Keep page spans aligned to the main manual TOC.
+        if chunk.get("source_doc") == "supplement":
+            continue
+
+        section_code = chunk.get("section_code")
+        page = chunk.get("page")
+        if section_code and isinstance(page, int):
+            _update_page_span(page_spans, section_code, page)
+
+    entry_pages = {
+        section_code: (bounds[0], bounds[1])
+        for section_code, bounds in page_spans.items()
+    }
+    entries_by_category: dict[str, list[dict]] = {}
+    for entry in entries:
+        entries_by_category.setdefault(_section_root(entry.get("section_path", "")), []).append(entry)
+
+    rows: list[dict[str, str]] = []
+    seen_entry_ids: set[str] = set()
+
+    for category in categories:
+        category_path = category.get("section_path") or category.get("source_label") or "-"
+        category_entries = entries_by_category.get(category_path, [])
+
+        category_span: tuple[int, int] | None = None
+        for entry in category_entries:
+            entry_span = entry_pages.get(entry.get("section_code", ""))
+            if not entry_span:
+                continue
+            if category_span is None:
+                category_span = entry_span
+            else:
+                category_span = (
+                    min(category_span[0], entry_span[0]),
+                    max(category_span[1], entry_span[1]),
+                )
+
+        rows.append({
+            "section_code": "-",
+            "section_path": category_path,
+            "pages": _format_page_span(category_span),
+        })
+
+        for entry in category_entries:
+            seen_entry_ids.add(entry.get("chunk_id", ""))
+            rows.append({
+                "section_code": entry.get("section_code") or "-",
+                "section_path": entry.get("section_path") or entry.get("source_label") or "-",
+                "pages": _format_page_span(entry_pages.get(entry.get("section_code", ""))),
+            })
+
+    for entry in entries:
+        chunk_id = entry.get("chunk_id", "")
+        if chunk_id in seen_entry_ids:
+            continue
+        rows.append({
+            "section_code": entry.get("section_code") or "-",
+            "section_path": entry.get("section_path") or entry.get("source_label") or "-",
+            "pages": _format_page_span(entry_pages.get(entry.get("section_code", ""))),
+        })
+
+    return rows
+
+
+@lru_cache(maxsize=1)
+def get_toc_text() -> str:
+    rows = get_toc_chunks()
+    if not rows:
+        return ""
+
+    lines = [
+        "## MANUAL TABLE OF CONTENTS",
+        "section_code | section_path | pages",
+    ]
+    for row in rows:
+        lines.append(f"{row['section_code']} | {row['section_path']} | {row['pages']}")
+    return "\n".join(lines)
+
 
 # Type boosts for reranking — surface procedures and safety info first
 TYPE_BOOST = {
@@ -319,7 +763,8 @@ def chat(query: str,
          skip_vision: bool = False,
          project_context: str | None = None,
          vehicle_settings: str | None = None,
-         images: list[str] | None = None) -> ChatResponse:
+         images: list[str] | None = None,
+         progress_cb: Callable[[dict], None] | None = None) -> ChatResponse:
     """Full RAG chat pipeline."""
     cfg_chat = config.get("chat", {})
     top_k    = cfg_chat.get("top_k_retrieve", 20)
@@ -384,6 +829,8 @@ def chat(query: str,
         if added_figs:
             print(f"  [chat] Added {added_figs} figure-targeted result(s)")
 
+    results = _apply_supplement_authority_to_results(results, label="retrieval merge")
+
     # 1.5 Neural rerank: cross-encoder scores (query, chunk) pairs for precision.
     # Keep a wider pool (top_k + 10) so borderline cross-section chunks survive
     # for the type-boost reranker to evaluate.
@@ -398,6 +845,7 @@ def chat(query: str,
 
     # 2.6 Dependency resolution: pull in referenced figure/flowchart chunks
     reranked = _expand_dependencies(reranked, index)
+    reranked = _apply_supplement_authority_to_results(reranked, label="final evidence")
 
     # 3. Collect figure images
     figure_evidence = []
@@ -412,7 +860,7 @@ def chat(query: str,
                                images=images or [])
 
     # 5. Call Claude
-    raw = _call_claude(messages, config)
+    raw = _call_claude(messages, config, index=index, progress_cb=progress_cb)
 
     # 6. Parse response
     response = _parse_response(raw, reranked)
@@ -876,6 +1324,17 @@ def _build_messages(query: str,
     sys_prompt_path = PROJECT_ROOT / "configs" / "chat_system_prompt.txt"
     system_prompt   = sys_prompt_path.read_text(encoding="utf-8")
 
+    toc_text = get_toc_text()
+    if toc_text:
+        system_prompt = (
+            "You have access to the full manual. Here is the table of contents. "
+            "The fetch_chunks tool is available now and should be used for any additional manual lookups. "
+            "Never expose manual lookups to the owner, never emit placeholder tags like [CHUNK_REQUEST: ...], "
+            "and never narrate that you are requesting chunks. If you need more manual context, call the native tool internally and then answer normally.\n\n"
+            f"{toc_text}\n\n"
+            f"{system_prompt}"
+        )
+
     # Inject owner-confirmed vehicle settings (overrides defaults in the static prompt)
     if vehicle_settings:
         system_prompt += f"\n\n{vehicle_settings}"
@@ -955,7 +1414,115 @@ def _build_messages(query: str,
     return [{"system": system_prompt, "messages": messages}]
 
 
-def _call_claude(messages: list[dict], config: dict) -> str:
+def _block_attr(block, name: str, default=None):
+    if isinstance(block, dict):
+        return block.get(name, default)
+    return getattr(block, name, default)
+
+
+def _text_from_blocks(blocks) -> str:
+    parts = []
+    for block in blocks or []:
+        if _block_attr(block, "type") == "text":
+            text = _block_attr(block, "text", "")
+            if text:
+                parts.append(text)
+    return "".join(parts).strip()
+
+
+def _manual_lookup_status(progress_cb: Callable[[dict], None] | None) -> None:
+    if not progress_cb:
+        return
+    try:
+        progress_cb({"type": "fetching", "label": FETCHING_STATUS_LABEL})
+    except Exception:
+        pass
+
+
+def _strip_legacy_chunk_requests(text: str) -> str:
+    stripped = LEGACY_CHUNK_REQUEST_RE.sub("", text or "")
+    stripped = re.sub(r"\n{3,}", "\n\n", stripped)
+    return stripped.strip()
+
+
+def _tool_iteration_count(convo: list[dict]) -> int:
+    count = 0
+    for message in convo:
+        if message.get("role") != "user":
+            continue
+        content = message.get("content")
+        if isinstance(content, list) and any(
+            isinstance(block, dict) and block.get("type") == "tool_result"
+            for block in content
+        ):
+            count += 1
+            continue
+        if isinstance(content, str) and content.startswith("Internal manual lookup results:"):
+            count += 1
+    return count
+
+
+def _resolve_legacy_chunk_request(token: str, index: RetrievalIndex) -> dict[str, object] | None:
+    cleaned = token.strip().strip("\"'")
+    if not cleaned:
+        return None
+
+    lookup = getattr(index, "lookup", {})
+    lowered = cleaned.lower()
+    if lowered.startswith("toc_") and lowered in lookup:
+        toc_chunk = lookup[lowered]
+        section_code = toc_chunk.get("section_code")
+        if section_code:
+            return {"section_code": section_code}
+        page = toc_chunk.get("page")
+        if isinstance(page, int):
+            return {"page": page}
+
+    page_match = re.fullmatch(r"(?:p(?:age)?\.?\s*)?(\d+)", cleaned, re.IGNORECASE)
+    if page_match and cleaned.lower().startswith(("p", "page")):
+        return {"page": int(page_match.group(1))}
+
+    if " " not in cleaned and re.search(r"\d", cleaned):
+        return {"section_code": cleaned.upper()}
+
+    return {"keywords": cleaned}
+
+
+def _legacy_chunk_request_context(raw: str, index: RetrievalIndex | None) -> str:
+    if index is None:
+        return ""
+
+    requests: list[dict[str, object]] = []
+    seen: set[tuple[tuple[str, object], ...]] = set()
+
+    for payload in LEGACY_CHUNK_REQUEST_RE.findall(raw or ""):
+        for token in payload.split(","):
+            params = _resolve_legacy_chunk_request(token, index)
+            if not params:
+                continue
+            key = tuple(sorted(params.items()))
+            if key in seen:
+                continue
+            seen.add(key)
+            requests.append(params)
+            if len(requests) >= FETCH_CHUNKS_MAX_LEGACY_REQUESTS:
+                break
+        if len(requests) >= FETCH_CHUNKS_MAX_LEGACY_REQUESTS:
+            break
+
+    if not requests:
+        return ""
+
+    chunks = []
+    for params in requests:
+        chunks.append(format_fetch_chunks_result(fetch_chunks(index, **params)))
+    return "\n\n".join(chunks)
+
+
+def _call_claude(messages: list[dict],
+                 config: dict,
+                 index: RetrievalIndex | None = None,
+                 progress_cb: Callable[[dict], None] | None = None) -> str:
     """Call Claude API and return raw text response."""
     cfg_chat = config.get("chat", {})
     model    = cfg_chat.get("model", "claude-sonnet-4-20250514")
@@ -968,14 +1535,82 @@ def _call_claude(messages: list[dict], config: dict) -> str:
     # Default: Claude
     client   = anthropic.Anthropic()
     payload  = messages[0]
-    response = client.messages.create(
-        model=model,
-        max_tokens=max_tok,
-        temperature=temp,
-        system=payload["system"],
-        messages=payload["messages"],
-    )
-    return response.content[0].text
+    convo    = list(payload["messages"])
+
+    while True:
+        tool_iterations = _tool_iteration_count(convo)
+        response = client.messages.create(
+            model=model,
+            max_tokens=max_tok,
+            temperature=temp,
+            system=payload["system"],
+            messages=convo,
+            tools=[FETCH_CHUNKS_TOOL],
+            tool_choice={"type": "auto"},
+        )
+        stop_reason = getattr(response, "stop_reason", None)
+        response_text = _text_from_blocks(response.content)
+        if stop_reason != "tool_use":
+            legacy_context = _legacy_chunk_request_context(response_text, index)
+            if legacy_context and tool_iterations < FETCH_CHUNKS_MAX_TOOL_ITERATIONS:
+                _manual_lookup_status(progress_cb)
+                convo.append({"role": "assistant", "content": response.content})
+                convo.append({
+                    "role": "user",
+                    "content": (
+                        "Internal manual lookup results:\n\n"
+                        "You previously exposed a visible [CHUNK_REQUEST: ...] placeholder. "
+                        "That syntax is internal and must never be shown to the owner. "
+                        "I completed those manual lookups for you. Use the results below to answer the owner's "
+                        "question directly in one clean response. Do not mention chunk requests, internal tools, "
+                        "or loading.\n\n"
+                        f"{legacy_context}"
+                    ),
+                })
+                continue
+            return _strip_legacy_chunk_requests(response_text)
+
+        tool_uses = [
+            block for block in response.content
+            if _block_attr(block, "type") == "tool_use"
+        ]
+        if not tool_uses:
+            return _strip_legacy_chunk_requests(response_text)
+
+        if tool_iterations >= FETCH_CHUNKS_MAX_TOOL_ITERATIONS:
+            fallback = _strip_legacy_chunk_requests(response_text)
+            if fallback:
+                return fallback
+            return (
+                "I couldn't finish the extra manual lookups within the current limit. "
+                "Please ask a narrower follow-up."
+            )
+
+        _manual_lookup_status(progress_cb)
+        convo.append({"role": "assistant", "content": response.content})
+
+        tool_results = []
+        for block in tool_uses:
+            tool_name = _block_attr(block, "name")
+            tool_input = _block_attr(block, "input", {}) or {}
+            if tool_name == "fetch_chunks" and index is not None:
+                result = fetch_chunks(index, **tool_input)
+            else:
+                result = {
+                    "error": f"Unknown or unavailable tool: {tool_name}",
+                    "mode": "invalid",
+                    "chunks": [],
+                    "truncated": False,
+                    "total_available": 0,
+                }
+            tool_results.append({
+                "type": "tool_result",
+                "tool_use_id": _block_attr(block, "id"),
+                "content": format_fetch_chunks_result(result),
+                "is_error": bool(result.get("error")),
+            })
+
+        convo.append({"role": "user", "content": tool_results})
 
 
 def _parse_response(raw: str, reranked: list[dict]) -> ChatResponse:

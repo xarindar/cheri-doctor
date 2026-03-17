@@ -108,9 +108,17 @@ def _tokenize(chunk: dict) -> list[str]:
     if chunk.get("type") == "figure":
         parts.append("figure diagram illustration")
         parts.append(chunk.get("section_path", ""))  # double-weight section context
-    combined = " ".join(p for p in parts if p)
+    combined = " ".join(p for p in parts if p).lower()
+    
+    # Bridge the 1990 "cigar" vs 2026 "cigarette" gap.
+    # If it says "cigar", add "cigarette". If it says "cigarette", add "cigar".
+    if "cigar" in combined and "cigarette" not in combined:
+        combined += " cigarette"
+    elif "cigarette" in combined and "cigar" not in combined:
+        combined += " cigar"
+
     # Simple whitespace tokenizer, lowercased, alphanumeric only
-    return re.findall(r"[a-z0-9]+", combined.lower())
+    return re.findall(r"[a-z0-9]+", combined)
 
 
 def _embed_text(chunk: dict) -> str:
@@ -128,9 +136,18 @@ def _embed_text(chunk: dict) -> str:
         parts = [f"Figure/Diagram in {prefix}" if prefix else "Figure/Diagram"]
         if text:
             parts.append(text)
-        return " - ".join(parts)
+        out = " - ".join(parts)
+    else:
+        out = f"{prefix}: {text}" if prefix else text
 
-    return f"{prefix}: {text}" if prefix else text
+    # Bridge the 1990 "cigar" vs 2026 "cigarette" gap in embeddings too.
+    low = out.lower()
+    if "cigar" in low and "cigarette" not in low:
+        out += " (cigarette)"
+    elif "cigarette" in low and "cigar" not in low:
+        out += " (cigar)"
+    
+    return out
 
 
 class RetrievalIndex:

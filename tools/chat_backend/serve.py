@@ -11,6 +11,7 @@ Usage:
 """
 
 import asyncio
+import inspect
 import sys
 import json
 import hashlib
@@ -701,8 +702,27 @@ _SHOP_REFINEMENT_KEYWORDS = [
 ]
 
 
+_CONVERSATIONAL_PREFIX_RE = _re.compile(
+    r'^(?:yeah|yes|sure|ok|okay|no|hey|please|now|can you|could you|'
+    r'go ahead(?:\s+and)?|i want you to|i need you to|'
+    r'look(?:\s+(?:on|at|for|up))?|search(?:\s+(?:on|for))?|find(?:\s+(?:me|on))?|'
+    r'check(?:\s+(?:on|for))?|try(?:\s+(?:to find|looking))?)\b[\s,:-]*',
+    _re.IGNORECASE,
+)
+
+
+def _strip_conversational_prefix(text: str) -> str:
+    cleaned = (text or "").strip()
+    previous = None
+    while cleaned and cleaned != previous:
+        previous = cleaned
+        cleaned = _CONVERSATIONAL_PREFIX_RE.sub("", cleaned).strip()
+        cleaned = _re.sub(r"^(?:for|to|me)\b[\s,:-]*", "", cleaned, flags=_re.IGNORECASE).strip()
+    return cleaned
+
+
 def _sanitize_shop_part_hint(value: str | None) -> str:
-    hint = (value or "").strip()
+    hint = _strip_conversational_prefix((value or "").strip())
     if not hint:
         return ""
     normalized = _re.sub(r"[^a-z0-9]+", " ", hint.lower()).strip()
@@ -782,8 +802,8 @@ def _extract_watchdog_search_phrase(text: str) -> str:
     if not text:
         return ""
     patterns = [
-        r"(?:search(?:ing)?(?:\s+(?:for|on))?|look(?:ing)?\s+for|targeted\s+search\s+for)\s+([^.\n:!?]+)",
-        r"(?:run|doing)\s+(?:a\s+)?(?:proper\s+)?(?:targeted\s+)?search\s+for\s+([^.\n:!?]+)",
+        r"(?:search(?:ing)?(?:\s+(?:for|on))?|look(?:ing)?\s+for|targeted\s+search\s+for)\s+([^\n:!?]+)",
+        r"(?:run|doing)\s+(?:a\s+)?(?:proper\s+)?(?:targeted\s+)?search\s+for\s+([^\n:!?]+)",
     ]
     candidate = ""
     for pat in patterns:
@@ -793,8 +813,17 @@ def _extract_watchdog_search_phrase(text: str) -> str:
     candidate = (candidate or "").strip()
     if not candidate:
         return ""
+    
+    # Clean up greedy trailing text
+    candidate = _re.split(r'\s+(?:that|which|to|it|and|for|on|with|in)\s+', candidate, flags=_re.IGNORECASE)[0]
+    candidate = _re.sub(r"\bstand\s+by\b.*$", "", candidate, flags=_re.IGNORECASE).strip()
     candidate = _re.sub(r"^(?:a|an|the)\s+", "", candidate, flags=_re.IGNORECASE).strip()
     candidate = candidate.strip(" -,:;.")
+    
+    # Filter out generic filler phrases
+    if any(filler in candidate.lower() for filler in ["is something", "is one that", "are those"]):
+        return ""
+        
     return _sanitize_shop_part_hint(candidate)
 
 
@@ -843,12 +872,17 @@ def _build_watchdog_search_terms(
         return ""
     if _should_auto_refine_shop_query(user_query):
         refinements = _extract_shop_refinement_terms(user_query)
-        if refinements:
-            merged: list[str] = []
-            for part in [phrase] + refinements:
-                p = part.strip()
-                if p and p not in merged:
-                    merged.append(p)
+        if refinements or base:
+            merged: list[str] = [phrase]
+            lower_merged = phrase.lower()
+            if base and base.lower() not in lower_merged:
+                merged.append(base)
+                lower_merged += " " + base.lower()
+            for ref in refinements:
+                normalized_ref = ref.strip().lower()
+                if normalized_ref and normalized_ref not in lower_merged:
+                    merged.append(ref)
+                    lower_merged += " " + normalized_ref
             phrase = " ".join(merged)
     return _re.sub(r"\s+", " ", phrase).strip()
 
@@ -1064,6 +1098,217 @@ class PartsSearchResult:
 _shop_sessions: dict[str, ShopSession] = {}
 
 
+_SHOP_QUERY_STOP_WORDS = {
+    "is",
+    "a",
+    "an",
+    "the",
+    "that",
+    "this",
+    "these",
+    "those",
+    "it",
+    "for",
+    "of",
+    "and",
+    "or",
+    "with",
+    "something",
+    "some",
+    "thing",
+    "stuff",
+    "one",
+    "get",
+    "me",
+    "look",
+    "looking",
+    "search",
+    "searching",
+    "find",
+    "finding",
+    "check",
+    "checking",
+    "buy",
+    "purchase",
+    "order",
+    "shop",
+    "shopping",
+    "now",
+    "yeah",
+    "yep",
+    "yup",
+    "sure",
+    "please",
+    "go",
+    "ahead",
+    "on",
+    "up",
+    "there",
+    "here",
+    "amazon",
+    "ebay",
+    "rockauto",
+    "autozone",
+    "oreilly",
+    "let",
+    "can",
+    "could",
+    "would",
+    "should",
+    "will",
+}
+_SHOP_QUERY_GENERIC_TERMS = {
+    "thing",
+    "things",
+    "something",
+    "stuff",
+    "item",
+    "items",
+    "part",
+    "parts",
+}
+_SHOP_QUERY_KNOWN_JUNK_PHRASES = {
+    "is something that",
+    "is one that",
+    "are those",
+    "something that",
+    "one that",
+}
+_SHOP_QUERY_FALLBACK_SKIP_WORDS = _SHOP_QUERY_STOP_WORDS | {
+    "look",
+    "search",
+    "find",
+    "check",
+    "buy",
+    "purchase",
+    "order",
+    "shop",
+    "need",
+    "needs",
+    "want",
+    "wants",
+    "replace",
+    "replacement",
+    "please",
+    "yeah",
+    "yep",
+    "sure",
+    "now",
+    "can",
+    "could",
+    "would",
+    "should",
+    "will",
+    "let",
+    "go",
+    "ahead",
+    "there",
+    "here",
+    "amazon",
+    "ebay",
+    "rockauto",
+    "autozone",
+    "oreilly",
+    "oreily",
+    "oriley",
+    "reilly",
+}
+_SHOP_QUERY_USER_SCAFFOLD_WORDS = {
+    "do",
+    "does",
+    "did",
+    "is",
+    "are",
+    "was",
+    "were",
+    "have",
+    "has",
+    "had",
+    "in",
+    "stock",
+    "available",
+    "availability",
+    "there",
+    "this",
+    "cheri",
+    "cheris",
+    "cheri's",
+}
+
+
+def _shop_query_real_tokens(text: str) -> list[str]:
+    tokens = _re.findall(r"[a-z0-9]+", (text or "").lower())
+    return [tok for tok in tokens if tok not in _SHOP_QUERY_STOP_WORDS and len(tok) > 1]
+
+
+def _is_valid_shop_search_terms(terms: str) -> bool:
+    cleaned = _sanitize_shop_part_hint(terms)
+    if not cleaned:
+        return False
+    lowered = cleaned.lower()
+    if any(lowered == phrase or lowered.startswith(f"{phrase} ") for phrase in _SHOP_QUERY_KNOWN_JUNK_PHRASES):
+        return False
+
+    real_tokens = _shop_query_real_tokens(cleaned)
+    if len(real_tokens) < 3:
+        return False
+    if not any(len(tok) >= 4 for tok in real_tokens):
+        return False
+    if all(tok in _SHOP_QUERY_GENERIC_TERMS for tok in real_tokens):
+        return False
+    return True
+
+
+def _fallback_shop_query_from_user_text(user_query: str) -> str:
+    phrase = _sanitize_shop_part_hint(_extract_watchdog_search_phrase(user_query))
+    if phrase:
+        phrase_tokens = _shop_query_real_tokens(phrase)
+        if (len(phrase_tokens) >= 2 and any(len(tok) >= 4 for tok in phrase_tokens)) or any(
+            len(tok) >= 5 for tok in phrase_tokens
+        ):
+            return phrase
+
+    fallback_tokens: list[str] = []
+    for tok in _re.findall(r"[a-z0-9]+", (user_query or "").lower()):
+        if tok in _SHOP_QUERY_FALLBACK_SKIP_WORDS or tok in _SHOP_QUERY_USER_SCAFFOLD_WORDS:
+            continue
+        if len(tok) < 3 and not any(ch.isdigit() for ch in tok):
+            continue
+        fallback_tokens.append(tok)
+
+    if len(fallback_tokens) >= 2 and any(len(tok) >= 4 for tok in fallback_tokens):
+        return " ".join(fallback_tokens[:6])
+    if len(fallback_tokens) == 1:
+        token = fallback_tokens[0]
+        if len(token) >= 5 and token not in _SHOP_QUERY_GENERIC_TERMS:
+            return token
+    return ""
+
+
+def _validate_shop_search_terms(
+    terms: str,
+    shop_session: "ShopSession | None",
+    user_query: str,
+) -> str | None:
+    cleaned = _sanitize_shop_part_hint(terms)
+    if _is_valid_shop_search_terms(cleaned):
+        return cleaned
+
+    original = cleaned or (terms or "").strip()
+    session_part = _sanitize_shop_part_hint((shop_session.last_part_name if shop_session else ""))
+    if session_part:
+        print(f"[shop-query-rejected] original: {original!r}, fallback: session.last_part_name={session_part!r}")
+        return session_part
+
+    user_fallback = _sanitize_shop_part_hint(_fallback_shop_query_from_user_text(user_query))
+    if user_fallback:
+        print(f"[shop-query-rejected] original: {original!r}, fallback: user_query={user_fallback!r}")
+        return user_fallback
+
+    print(f"[shop-query-rejected] original: {original!r}, no fallback available - skipping search")
+    return None
+
+
 async def _parts_search(
     part_name: str,
     sources: list[str] | None = None,
@@ -1173,10 +1418,22 @@ async def _parts_search(
     source_refs = [f"parts search ({', '.join(sources_searched)}): {part_name}"]
 
     if not items:
+        unavailable_sources = [
+            src_name
+            for src_name, outcome in (source_outcomes or {}).items()
+            if isinstance(outcome, dict)
+            and (outcome.get("status") or "").lower() in {"blocked", "error"}
+        ]
         llm_text = (
             f"[PARTS SEARCH: no results for '{part_name}' across "
             f"{', '.join(sources_searched) or 'all sources'}]"
         )
+        if unavailable_sources:
+            llm_text += (
+                "\n[Search unavailable on: "
+                + ", ".join(sorted(set(unavailable_sources)))
+                + "]"
+            )
         if source_outcomes:
             llm_text += f"\n[Source outcomes: {source_outcomes}]"
         return PartsSearchResult(
@@ -1341,18 +1598,21 @@ async def api_generate_title(req: TitleRequest) -> JSONResponse:
 
 
 _SHOP_SEARCH_RE = _re.compile(
-    r'\[SHOP_SEARCH:\s*(.+?)(?:\s*\|\s*([a-z,\s]+))?\s*\]',
+    r'\[SHOP[-_\s]*SEARCH\s*[:\-]?\s*(.+?)(?:\s*\|\s*([a-z,\s]+))?\s*\]',
     _re.IGNORECASE,
 )
 _SHOP_PROMISE_RE = _re.compile(
-    r'\b(?:let\s+me\s+(?:search|look)|'
+    r'\b(?:let\s+me\s+(?:search|look|fire\s+off))|'
     r'let\s+me\s+do\s+(?:a\s+)?(?:proper\s+)?(?:targeted\s+)?search|'
+    r'on\s+it(?:\s*[—-]\s*|\s*,?\s*)?(?:i\'?m\s+)?search(?:ing)?\b|'
+    r'searching\s+(?:amazon|ebay|rock\s*auto|roc\s*auto|autozone|o\'?\s*reill(?:y|ey)|for)\b|'
     r'while\s+that\s+runs|stand\s+by|'
     r'i\'?ll\s+(?:search|look)|'
     r'i\s+will\s+(?:search|look)|'
-    r'going\s+to\s+(?:search|look))\b',
+    r'going\s+to\s+(?:search|look)\b',
     _re.IGNORECASE,
 )
+
 
 _SHOP_FOLLOWUP_RE = _re.compile(
     r'\b(?:options?|ones?|crummy|junk|better|best|cheaper|price|prices|'
@@ -1437,6 +1697,17 @@ def _to_chat_payload(response, web_sources: list[str], shopping_results: list[di
     }
 
 
+def _schedule_progress_callback(
+    progress_cb: Callable[[dict], Awaitable[None]] | None,
+    data: dict,
+) -> None:
+    if not progress_cb:
+        return
+    result = progress_cb(data)
+    if inspect.isawaitable(result):
+        asyncio.create_task(result)
+
+
 async def _run_chat_request(
     req: ChatRequest,
     progress_cb: Callable[[dict], Awaitable[None]] | None = None,
@@ -1467,10 +1738,18 @@ async def _run_chat_request(
         if offered_from_context:
             shop_session.last_sources_offered = offered_from_context
 
+    chat_progress_cb = None
+    if progress_cb:
+        loop = asyncio.get_running_loop()
+
+        def chat_progress_cb(data: dict) -> None:
+            loop.call_soon_threadsafe(_schedule_progress_callback, progress_cb, data)
+
     if progress_cb:
         await progress_cb({"type": "thinking", "label": "Thinking"})
 
-    response = chat(
+    response = await asyncio.to_thread(
+        chat,
         query=enriched_query,
         conversation=req.conversation,
         index=index,
@@ -1479,6 +1758,7 @@ async def _run_chat_request(
         project_context=req.project_context,
         vehicle_settings=vehicle_settings,
         images=req.images,
+        progress_cb=chat_progress_cb,
     )
 
     shopping_part_name: str | None = None
@@ -1486,7 +1766,16 @@ async def _run_chat_request(
     # Watchdog safety-net: if Cheri promises a search but misses [SHOP_SEARCH],
     # auto-inject a tag and execute it so the turn doesn't dead-end.
     if (not _SHOP_SEARCH_RE.search(response.answer or "")) and _SHOP_PROMISE_RE.search(response.answer or ""):
-        watchdog_base_part = shop_session.last_part_name or _sanitize_shop_part_hint(req.shop_part_hint)
+        watchdog_base_part = _sanitize_shop_part_hint(shop_session.last_part_name)
+        if not watchdog_base_part:
+            hinted_part = _sanitize_shop_part_hint(req.shop_part_hint)
+            if hinted_part and _is_valid_shop_search_terms(hinted_part):
+                watchdog_base_part = hinted_part
+            elif hinted_part:
+                print(
+                    f"[shop-query-rejected] original: {hinted_part!r}, "
+                    "fallback: ignored shop_part_hint for watchdog base"
+                )
         watchdog_terms = _build_watchdog_search_terms(
             assistant_text=response.answer or "",
             user_query=req.query,
@@ -1509,7 +1798,11 @@ async def _run_chat_request(
         search_specs: list[tuple[str, list[str] | None]] = []
         seen_specs: set[tuple[str, tuple[str, ...]]] = set()
         for match in shop_matches:
-            terms = _sanitize_shop_part_hint(match.group(1))
+            terms = _validate_shop_search_terms(
+                terms=match.group(1),
+                shop_session=shop_session,
+                user_query=req.query,
+            )
             if not terms:
                 continue
             source_str = match.group(2)
@@ -1522,6 +1815,14 @@ async def _run_chat_request(
                 continue
             seen_specs.add(spec_key)
             search_specs.append((terms, parsed_sources))
+
+        if not search_specs:
+            from src.models import ChatResponse
+            response = ChatResponse(
+                answer=_SHOP_SEARCH_RE.sub('', response.answer).strip(),
+                citations=response.citations,
+                figure_refs=response.figure_refs,
+            )
 
         if search_specs:
             if progress_cb:
@@ -1596,7 +1897,8 @@ async def _run_chat_request(
                       "Highlight the best matches, prices, and any fitment concerns."
                 )
 
-                response = chat(
+                response = await asyncio.to_thread(
+                    chat,
                     query=followup_query,
                     conversation=followup_conversation,
                     index=index,
@@ -1604,6 +1906,7 @@ async def _run_chat_request(
                     skip_vision=True,
                     project_context=req.project_context,
                     vehicle_settings=vehicle_settings,
+                    progress_cb=chat_progress_cb,
                 )
 
                 offered_sources = _extract_offered_sources(response.answer)
