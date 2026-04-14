@@ -52,6 +52,160 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@dataclass(frozen=True)
+class VehicleProfile:
+    vehicle_id: str
+    label: str
+    config_path: Path
+    prompt_path: Path
+    index_dir: Path
+    figure_sources: tuple[Path, ...]
+    chunk_sources: tuple[Path, ...]
+    page_image_dir: Path | None = None
+    shopping_vehicle: dict[str, object] | None = None
+
+
+@dataclass
+class VehicleRuntime:
+    profile: VehicleProfile
+    config: dict
+    index: object | None = None
+    fig_lookup: dict[str, dict] = field(default_factory=dict)
+    chunk_fig_map: dict[str, str] = field(default_factory=dict)
+    chunk_text_lookup: dict[str, dict] = field(default_factory=dict)
+
+
+DEFAULT_VEHICLE_ID = "metro"
+VEHICLE_ALIASES = {
+    "cheri": "metro",
+    "geo": "metro",
+    "geo-metro": "metro",
+    "geo_metro": "metro",
+    "cruze": "cruze",
+    "chevy-cruze": "cruze",
+    "chevy_cruze": "cruze",
+    "chevrolet-cruze": "cruze",
+    "chevrolet_cruze": "cruze",
+}
+VEHICLE_PROFILES: dict[str, VehicleProfile] = {
+    "metro": VehicleProfile(
+        vehicle_id="metro",
+        label="1990 Geo Metro",
+        config_path=PROJECT_ROOT / "configs" / "default.yaml",
+        prompt_path=PROJECT_ROOT / "configs" / "chat_system_prompt.txt",
+        index_dir=PROJECT_ROOT / "tools" / "rag_index",
+        figure_sources=(
+            PROJECT_ROOT / "build" / "figures.jsonl",
+            PROJECT_ROOT / "build_supplement" / "figures.jsonl",
+        ),
+        chunk_sources=(
+            PROJECT_ROOT / "build" / "chunks.jsonl",
+            PROJECT_ROOT / "build_supplement" / "chunks.jsonl",
+        ),
+        page_image_dir=PROJECT_ROOT / "build" / "pages",
+        shopping_vehicle={"year": 1990, "make": "Geo", "model": "Metro", "engine": "993cc L3"},
+    ),
+    "cruze": VehicleProfile(
+        vehicle_id="cruze",
+        label="Chevrolet Cruze",
+        config_path=PROJECT_ROOT / "configs" / "cruze.yaml",
+        prompt_path=PROJECT_ROOT / "configs" / "cruze_chat_system_prompt.txt",
+        index_dir=PROJECT_ROOT / "tools" / "cruze_index",
+        figure_sources=(PROJECT_ROOT / "build_cruze" / "figures.jsonl",),
+        chunk_sources=(PROJECT_ROOT / "build_cruze" / "chunks.jsonl",),
+        page_image_dir=PROJECT_ROOT / "build_cruze" / "pages",
+        shopping_vehicle={"year": 2014, "make": "Chevrolet", "model": "Cruze"},
+    ),
+}
+_vehicle_runtimes: dict[str, VehicleRuntime] = {}
+
+
+def _project_relative(path: Path) -> str:
+    try:
+        return str(path.relative_to(PROJECT_ROOT))
+    except ValueError:
+        return str(path)
+
+
+def _normalize_vehicle_id(vehicle: str | None) -> str:
+    key = (vehicle or DEFAULT_VEHICLE_ID).strip().lower()
+    key = VEHICLE_ALIASES.get(key, key)
+    if key not in VEHICLE_PROFILES:
+        raise HTTPException(400, f"Unknown vehicle: {vehicle}")
+    return key
+
+
+def _index_ready(index_dir: Path) -> bool:
+    required = ("bm25_index.pkl", "embeddings.npy", "chunk_ids.json", "chunk_lookup.json")
+    return all((index_dir / name).exists() for name in required)
+
+
+def _vehicle_config(profile: VehicleProfile) -> dict:
+    config = load_config(profile.config_path)
+    config = dict(config)
+    config["chat"] = dict(config.get("chat", {}))
+    config["chat"]["system_prompt"] = _project_relative(profile.prompt_path)
+    config["chat"]["index_dir"] = _project_relative(profile.index_dir)
+    config["_vehicle_id"] = profile.vehicle_id
+    config["_vehicle_label"] = profile.label
+    config["_system_prompt_path"] = _project_relative(profile.prompt_path)
+    config["_index_dir"] = _project_relative(profile.index_dir)
+    config["_chunk_lookup_path"] = _project_relative(profile.index_dir / "chunk_lookup.json")
+    return config
+
+
+def _load_vehicle_runtime(vehicle: str | None, *, require_index: bool = False) -> VehicleRuntime:
+    vehicle_id = _normalize_vehicle_id(vehicle)
+    cached = _vehicle_runtimes.get(vehicle_id)
+    if cached is not None:
+        if require_index and cached.index is None:
+            if not _index_ready(cached.profile.index_dir):
+                raise HTTPException(503, f"{cached.profile.label} index is not available yet")
+            cached.index = load_index(cached.config)
+        return cached
+
+    profile = VEHICLE_PROFILES[vehicle_id]
+    runtime = VehicleRuntime(profile=profile, config=_vehicle_config(profile))
+
+    if _index_ready(profile.index_dir):
+        runtime.index = load_index(runtime.config)
+    elif require_index:
+        raise HTTPException(503, f"{profile.label} index is not available yet")
+
+    for fig_path in profile.figure_sources:
+        if not fig_path.exists():
+            continue
+        for fig in load_jsonl(fig_path):
+            if fig.get("figure_id"):
+                runtime.fig_lookup[fig["figure_id"]] = fig
+
+    import re as _startup_re
+
+    for chunk_path in profile.chunk_sources:
+        if not chunk_path.exists():
+            continue
+        for chunk in load_jsonl(chunk_path):
+            cid = chunk.get("chunk_id")
+            if cid:
+                runtime.chunk_text_lookup[cid] = {
+                    "type": chunk.get("type", "text"),
+                    "text": chunk.get("text", ""),
+                    "section_path": chunk.get("section_path", ""),
+                }
+            if chunk.get("type") == "figure" and chunk.get("figure_refs"):
+                asset_id = chunk["figure_refs"][0]
+                runtime.chunk_fig_map[chunk["chunk_id"]] = asset_id
+                source_label = chunk.get("source_label", "")
+                if source_label:
+                    runtime.chunk_fig_map[source_label] = asset_id
+                cap = _startup_re.match(r"(?:Figure|Fig\.?)\s+(\S+)", chunk.get("text", ""))
+                if cap:
+                    runtime.chunk_fig_map[cap.group(1)] = asset_id
+
+    _vehicle_runtimes[vehicle_id] = runtime
+    return runtime
+
 # ── Authentication ────────────────────────────────────────────────────────
 _PASSWORD_HASH = hashlib.sha256(b"maytoe").hexdigest()
 
@@ -818,68 +972,13 @@ def _build_settings_context(settings: dict) -> str:
 
 
 # ── Load resources at startup ─────────────────────────────────────────────
-config     = load_config(PROJECT_ROOT / "configs" / "default.yaml")
-index      = None
-fig_lookup: dict[str, dict] = {}
-chunk_fig_map: dict[str, str] = {}  # chunk-style fig ID → asset-style fig ID
-chunk_text_lookup: dict[str, dict] = {}  # chunk_id → {type, text, section_path, ...}
 
 
 @app.on_event("startup")
 async def startup():
-    global index, fig_lookup, chunk_fig_map
-    print("Loading retrieval index...")
-    index = load_index(config)
-    print(f"Index loaded: {len(index.chunk_ids)} chunks")
-
-    fig_sources = [
-        PROJECT_ROOT / "build" / "figures.jsonl",
-        PROJECT_ROOT / "build_supplement" / "figures.jsonl",
-    ]
-    for fig_path in fig_sources:
-        if fig_path.exists():
-            before = len(fig_lookup)
-            for fig in load_jsonl(fig_path):
-                if fig.get("figure_id"):
-                    fig_lookup[fig["figure_id"]] = fig
-            print(f"  Loaded {len(fig_lookup) - before} figures from {fig_path.parent.name}/figures.jsonl")
-    print(f"Figures loaded: {len(fig_lookup)} total")
-
-    # Build comprehensive figure ID mapping for resolving any citation style
-    import re as _startup_re
-    for chunk_path in [PROJECT_ROOT / "build" / "chunks.jsonl",
-                       PROJECT_ROOT / "build_supplement" / "chunks.jsonl"]:
-        if chunk_path.exists():
-            for chunk in load_jsonl(chunk_path):
-                if chunk.get("type") == "figure" and chunk.get("figure_refs"):
-                    asset_id = chunk["figure_refs"][0]
-                    # chunk_id → asset_id
-                    chunk_fig_map[chunk["chunk_id"]] = asset_id
-                    # source_label → asset_id (e.g. "7A-1")
-                    sl = chunk.get("source_label", "")
-                    if sl:
-                        chunk_fig_map[sl] = asset_id
-                    # Caption "Figure 7A-1" → asset_id
-                    text = chunk.get("text", "")
-                    cap = _startup_re.match(r"(?:Figure|Fig\.?)\s+(\S+)", text)
-                    if cap:
-                        chunk_fig_map[cap.group(1)] = asset_id
-    print(f"Chunk→figure map: {len(chunk_fig_map)} entries")
-
-    # Load chunk text for citation previews
-    global chunk_text_lookup
-    for chunk_path in [PROJECT_ROOT / "build" / "chunks.jsonl",
-                       PROJECT_ROOT / "build_supplement" / "chunks.jsonl"]:
-        if chunk_path.exists():
-            for chunk in load_jsonl(chunk_path):
-                cid = chunk.get("chunk_id")
-                if cid:
-                    chunk_text_lookup[cid] = {
-                        "type": chunk.get("type", "text"),
-                        "text": chunk.get("text", ""),
-                        "section_path": chunk.get("section_path", ""),
-                    }
-    print(f"Chunk text lookup: {len(chunk_text_lookup)} entries")
+    runtime = _load_vehicle_runtime(DEFAULT_VEHICLE_ID, require_index=True)
+    chunk_total = len(runtime.index.chunk_ids) if runtime.index is not None else 0
+    print(f"Default vehicle ready: {runtime.profile.label} ({chunk_total} chunks)")
 
 
 # ── Web fetch / search / RockAuto utilities ───────────────────────────────
@@ -1223,7 +1322,9 @@ def _extract_part_from_bold(conversation: list[dict]) -> str:
     return ""
 
 
-async def _extract_part_from_description(query: str, conversation: list[dict]) -> str:
+async def _extract_part_from_description(query: str,
+                                        conversation: list[dict],
+                                        runtime: VehicleRuntime) -> str:
     """Use Haiku + RAG to identify the auto part being described in natural language.
     Called only when regex extraction fails — i.e. the user described the part
     conceptually rather than naming it directly.
@@ -1248,7 +1349,7 @@ async def _extract_part_from_description(query: str, conversation: list[dict]) -
         "",
     )
     retrieval_query = (last_asst_text[:400] + " " + query).strip() if last_asst_text else query
-    manual_context = _rag_context_for_part(retrieval_query)
+    manual_context = _rag_context_for_part(retrieval_query, runtime)
     context_block = ""
     if manual_context:
         context_block = (
@@ -1257,7 +1358,7 @@ async def _extract_part_from_description(query: str, conversation: list[dict]) -
         )
 
     prompt = (
-        f"A user wants to search for an auto part to buy for a 1990 Geo Metro.\n"
+        f"A user wants to search for an auto part to buy for a {runtime.profile.label}.\n"
         f"Recent conversation:\n{recent}\n"
         f"User's latest message: {query}\n"
         f"{context_block}\n"
@@ -1309,32 +1410,34 @@ def _web_search(query: str, max_results: int = 5) -> str:
 
 _SHOPHOP_URL = os.environ.get("SHOPHOP_URL", "http://localhost:8001/hunt/auto")
 
-def _build_vehicle_payload() -> dict:
-    """Build the ShopHop vehicle dict from vehicle_settings.json so there's one
-    source of truth for the car's identity instead of a separate hardcoded dict."""
-    s = _load_settings()
-    vin = s.get("vin", "")
+def _build_vehicle_payload(profile: VehicleProfile) -> dict:
+    """Build the ShopHop vehicle payload for the active vehicle profile."""
+    if profile.vehicle_id != DEFAULT_VEHICLE_ID:
+        return dict(profile.shopping_vehicle or {})
+
+    settings = _load_settings()
+    vin = settings.get("vin", "")
     # Engine derived from VIN position 8 where possible; fall back to G10 default.
     engine = "993cc L3"  # G10 — matches VIN JG1MR3362LK769576
-    return {
-        "year":   1990,
-        "make":   "Geo",
-        "model":  "Metro",
-        "engine": engine,
-    }
+    payload = dict(profile.shopping_vehicle or {})
+    payload["engine"] = engine
+    if vin:
+        payload["vin"] = vin
+    return payload
 
 
-def _rag_context_for_part(part_name: str) -> str | None:
+def _rag_context_for_part(part_name: str, runtime: VehicleRuntime | None = None) -> str | None:
     """Retrieve the top 3 manual chunks for a part and return them as a text block.
 
     This gives ShopHop's Haiku expander real OEM part numbers, cross-references,
     and manual terminology — making its query expansion far more targeted than
     generic layperson guessing.
     """
-    if index is None:
+    runtime = runtime or _load_vehicle_runtime(DEFAULT_VEHICLE_ID)
+    if runtime.index is None:
         return None
     try:
-        chunks = index.retrieve(part_name, top_k=3)
+        chunks = runtime.index.retrieve(part_name, top_k=3)
         if not chunks:
             return None
         parts = []
@@ -1603,6 +1706,7 @@ def _validate_shop_search_terms(
 
 async def _parts_search(
     part_name: str,
+    runtime: VehicleRuntime,
     sources: list[str] | None = None,
     manual_context: str | None = None,
     progress_cb: Callable[[dict], Awaitable[None]] | None = None,
@@ -1614,14 +1718,14 @@ async def _parts_search(
     # Pull manual context before calling ShopHop so the query expander
     # has OEM part numbers and cross-references to work with.
     if manual_context is None:
-        manual_context = _rag_context_for_part(part_name)
+        manual_context = _rag_context_for_part(part_name, runtime)
 
     requested_sources = _normalize_shop_sources(sources)
 
     try:
         payload = {
             "part": part_name,
-            "vehicle": _build_vehicle_payload(),
+            "vehicle": _build_vehicle_payload(runtime.profile),
             "max_results": 20,
         }
         if requested_sources:
@@ -1769,7 +1873,9 @@ async def _parts_search(
 
 
 
-async def _identify_part_for_search(query: str, conversation: list[dict] | None) -> str:
+async def _identify_part_for_search(query: str,
+                                    conversation: list[dict] | None,
+                                    runtime: VehicleRuntime) -> str:
     """Single source of truth for part name extraction before a shopping search.
 
     Priority:
@@ -1783,7 +1889,7 @@ async def _identify_part_for_search(query: str, conversation: list[dict] | None)
         if bold:
             return bold
     try:
-        return await _extract_part_from_description(query, conversation or [])
+        return await _extract_part_from_description(query, conversation or [], runtime)
     except Exception:
         return ""
 
@@ -1829,6 +1935,7 @@ class ChatRequest(BaseModel):
   query: str
   conversation: list[dict] = []
   model: str | None = None
+  vehicle: str | None = None
   project_context: str | None = None
   images: list[str] = []  # base64 data URLs from the frontend
   shop_mode_hint: bool = False
@@ -1850,6 +1957,7 @@ class TTSRequest(BaseModel):
 
 class WorksheetRequest(BaseModel):
   prompt: str  # e.g. "alternator diagnostic tests"
+  vehicle: str | None = None
 
 
 class ChatAPIResponse(BaseModel):
@@ -2079,7 +2187,14 @@ def _last_shop_user_query(conversation: list[dict] | None) -> str:
     return ""
 
 
-def _to_chat_payload(response, web_sources: list[str], shopping_results: list[dict], shopping_part_name: str | None, saved_notes: list[dict] | None = None) -> dict:
+def _to_chat_payload(response,
+                     web_sources: list[str],
+                     shopping_results: list[dict],
+                     shopping_part_name: str | None,
+                     *,
+                     runtime: VehicleRuntime,
+                     vehicle_id: str,
+                     saved_notes: list[dict] | None = None) -> dict:
     figures_out = []
     print(f"  [figures] figure_refs from response: {response.figure_refs}")
     # Also check what figure citations are in the answer text
@@ -2088,18 +2203,21 @@ def _to_chat_payload(response, web_sources: list[str], shopping_results: list[di
     print(f"  [figures] fig citations in answer text: {fig_cites_in_answer}")
     for fig_id in response.figure_refs:
         # Try direct lookup first (asset-style ID like fig_p0477_000)
-        fig = fig_lookup.get(fig_id)
+        fig = runtime.fig_lookup.get(fig_id)
         # Fallback: resolve chunk-style ID (fig_7a_p477_0) → asset-style
         resolved_id = fig_id
-        if not fig and fig_id in chunk_fig_map:
-            resolved_id = chunk_fig_map[fig_id]
-            fig = fig_lookup.get(resolved_id)
+        if not fig and fig_id in runtime.chunk_fig_map:
+            resolved_id = runtime.chunk_fig_map[fig_id]
+            fig = runtime.fig_lookup.get(resolved_id)
         if fig:
+            fig_url = f"/api/figures/{resolved_id}"
+            if vehicle_id != DEFAULT_VEHICLE_ID:
+                fig_url += f"?vehicle={vehicle_id}"
             figures_out.append({
                 "figure_id":    resolved_id,
                 "page":         fig.get("page"),
                 "caption_text": fig.get("caption_text", ""),
-                "url":          f"/api/figures/{resolved_id}",
+                "url":          fig_url,
             })
 
     enriched_citations = []
@@ -2111,7 +2229,7 @@ def _to_chat_payload(response, web_sources: list[str], shopping_results: list[di
             "section_path": c.section_path,
         }
         # Enrich with type and text preview from chunk lookup
-        chunk_info = chunk_text_lookup.get(c.chunk_id)
+        chunk_info = runtime.chunk_text_lookup.get(c.chunk_id)
         if chunk_info:
             cite["type"] = chunk_info["type"]
             text = chunk_info["text"] or ""
@@ -2152,18 +2270,22 @@ async def _run_chat_request(
     req: ChatRequest,
     progress_cb: Callable[[dict], Awaitable[None]] | None = None,
 ) -> dict:
-    if index is None:
-        raise HTTPException(503, "Index not loaded yet")
+    vehicle_id = _normalize_vehicle_id(req.vehicle)
+    runtime = _load_vehicle_runtime(vehicle_id, require_index=True)
+    if runtime.index is None:
+        raise HTTPException(503, f"{runtime.profile.label} index not loaded yet")
 
     # Allow model override from frontend
-    chat_config = dict(config)
+    chat_config = dict(runtime.config)
     if req.model:
-        chat_config = dict(config)
+        chat_config = dict(runtime.config)
         chat_config = chat_config.copy()
         chat_config["chat"] = dict(chat_config.get("chat", {}))
         chat_config["chat"]["model"] = req.model
 
-    vehicle_settings = _build_settings_context(_load_settings())
+    vehicle_settings = ""
+    if vehicle_id == DEFAULT_VEHICLE_ID:
+        vehicle_settings = _build_settings_context(_load_settings())
 
     # Enrich query (URL fetch, web search) — parts search is now handled by the
     # LLM via [SHOP_SEARCH] tags so it can use its full context to decide what
@@ -2225,7 +2347,7 @@ async def _run_chat_request(
         chat,
         query=enriched_query,
         conversation=req.conversation,
-        index=index,
+        index=runtime.index,
         config=chat_config,
         skip_vision=False,
         deep_research=req.deep_research,
@@ -2320,6 +2442,7 @@ async def _run_chat_request(
                 for search_terms, shop_sources in search_specs:
                     search_result = await _parts_search(
                         search_terms,
+                        runtime,
                         sources=shop_sources,
                         progress_cb=progress_cb,
                     )
@@ -2382,7 +2505,7 @@ async def _run_chat_request(
                     chat,
                     query=followup_query,
                     conversation=followup_conversation,
-                    index=index,
+                    index=runtime.index,
                     config=chat_config,
                     skip_vision=True,
                     project_context=req.project_context,
@@ -2440,7 +2563,15 @@ async def _run_chat_request(
                     deep_research_summary=response.deep_research_summary,
                 )
 
-    return _to_chat_payload(response, web_sources, shopping_results, shopping_part_name, saved_notes)
+    return _to_chat_payload(
+        response,
+        web_sources,
+        shopping_results,
+        shopping_part_name,
+        runtime=runtime,
+        vehicle_id=vehicle_id,
+        saved_notes=saved_notes,
+    )
 
 
 def _sse_event(event: str, data: dict) -> str:
@@ -2455,9 +2586,6 @@ async def api_chat(req: ChatRequest) -> JSONResponse:
 
 @app.post("/api/chat/stream")
 async def api_chat_stream(req: ChatRequest):
-  if index is None:
-    raise HTTPException(503, "Index not loaded yet")
-
   queue: asyncio.Queue[tuple[str | None, dict]] = asyncio.Queue()
 
   async def _emit_progress(data: dict):
@@ -2495,11 +2623,12 @@ async def api_chat_stream(req: ChatRequest):
 @app.post("/api/generate-worksheet")
 async def api_generate_worksheet(req: WorksheetRequest):
   """Generate a PDF diagnostic worksheet from a user prompt."""
-  if index is None:
-    raise HTTPException(503, "Index not loaded yet")
+  runtime = _load_vehicle_runtime(req.vehicle, require_index=True)
+  if runtime.index is None:
+    raise HTTPException(503, f"{runtime.profile.label} index not loaded yet")
   try:
     from tools.worksheet_generator import generate_worksheet_pdf
-    pdf_bytes = generate_worksheet_pdf(req.prompt, index, config)
+    pdf_bytes = generate_worksheet_pdf(req.prompt, runtime.index, runtime.config)
     
     # Ensure we have proper bytes object
     if isinstance(pdf_bytes, bytearray):
@@ -2520,9 +2649,11 @@ async def api_generate_worksheet(req: WorksheetRequest):
 
 
 @app.get("/api/figures/{figure_id}")
-async def serve_figure(figure_id: str):
-    resolved_id = chunk_fig_map.get(figure_id, figure_id)
-    fig = fig_lookup.get(resolved_id)
+async def serve_figure(figure_id: str, vehicle: str | None = None):
+    vehicle_id = _normalize_vehicle_id(vehicle)
+    runtime = _load_vehicle_runtime(vehicle_id)
+    resolved_id = runtime.chunk_fig_map.get(figure_id, figure_id)
+    fig = runtime.fig_lookup.get(resolved_id)
     if not fig:
         raise HTTPException(404, f"Figure {figure_id} not found")
     asset_path = PROJECT_ROOT / fig.get("asset_path", "")
@@ -2533,20 +2664,24 @@ async def serve_figure(figure_id: str):
 
 
 @app.get("/api/manual/page/{page_num}")
-async def serve_manual_page(page_num: int):
+async def serve_manual_page(page_num: int, vehicle: str | None = None):
     """Serve a rasterized manual page image."""
-    page_path = PROJECT_ROOT / "build" / "pages" / f"page_{page_num:04d}.png"
+    runtime = _load_vehicle_runtime(vehicle)
+    if runtime.profile.page_image_dir is None:
+        raise HTTPException(404, f"Page images are not available for {runtime.profile.label}")
+    page_path = runtime.profile.page_image_dir / f"page_{page_num:04d}.png"
     if not page_path.exists():
         raise HTTPException(404, f"Page {page_num} not found")
     return FileResponse(str(page_path), media_type="image/png")
 
 @app.get("/api/manual/toc")
-async def get_manual_toc():
+async def get_manual_toc(vehicle: str | None = None):
     """Return the table of contents with section codes and page numbers."""
-    section_names = config.get("structure", {}).get("section_names", {})
+    runtime = _load_vehicle_runtime(vehicle)
+    section_names = runtime.config.get("structure", {}).get("section_names", {})
     # Build section → first page mapping from chunk data
     section_pages: dict[str, int] = {}
-    for cid, info in chunk_text_lookup.items():
+    for cid, info in runtime.chunk_text_lookup.items():
         sp = info.get("section_path", "")
         # Extract section code from chunk_id (e.g., proc_6a1_p241_0 → 6a1 → 6A1)
         parts = cid.split("_")
@@ -2571,11 +2706,12 @@ async def get_manual_toc():
     return JSONResponse(toc)
 
 @app.get("/api/manual/info")
-async def get_manual_info():
+async def get_manual_info(vehicle: str | None = None):
     """Return manual metadata (total pages, etc.)."""
-    pages_dir = PROJECT_ROOT / "build" / "pages"
-    total = len(list(pages_dir.glob("page_*.png"))) if pages_dir.exists() else 0
-    return JSONResponse({"total_pages": total, "title": "1990 Geo Metro Service Manual"})
+    runtime = _load_vehicle_runtime(vehicle)
+    pages_dir = runtime.profile.page_image_dir
+    total = len(list(pages_dir.glob("page_*.png"))) if pages_dir and pages_dir.exists() else 0
+    return JSONResponse({"total_pages": total, "title": f"{runtime.profile.label} Service Manual"})
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_ui():

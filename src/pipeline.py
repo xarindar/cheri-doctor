@@ -61,6 +61,92 @@ def _strip_leading_toc_chunk(text: str) -> str:
     return text
 
 
+def _normalize_document_for_chunking(document: dict) -> dict:
+    """Adapt lightweight extractor output to the chunker's block schema."""
+    pages = document.get("pages") or []
+    if not pages or "blocks" in pages[0] or "text_blocks" not in pages[0]:
+        return document
+
+    normalized_pages = []
+    last_section_path = ""
+    for page in pages:
+        page_num = page.get("page_num")
+        section_path = (page.get("section_path") or last_section_path or "").strip()
+        if section_path:
+            last_section_path = section_path
+        source_label = section_path.rsplit(" > ", 1)[-1].strip() if section_path else ""
+        figures_by_num = {
+            fig.get("fig_num"): fig
+            for fig in page.get("figures", [])
+            if fig.get("fig_num") is not None
+        }
+
+        blocks = []
+        block_idx = 0
+        for raw_block in page.get("text_blocks", []):
+            block_type = raw_block.get("type")
+            text = (raw_block.get("text") or "").strip()
+            if not text:
+                continue
+
+            block = {
+                "block_id": f"p{page_num}_b{block_idx:03d}",
+                "order_index": block_idx,
+            }
+            block_idx += 1
+
+            if block_type == "heading":
+                block.update({"type": "heading", "text": text})
+            elif block_type == "text":
+                block.update({"type": "paragraph", "text": text})
+            elif block_type == "warning":
+                advisory_type = text.split(":", 1)[0].strip().lower()
+                if advisory_type not in {"warning", "caution", "note"}:
+                    advisory_type = "caution"
+                block.update({"type": advisory_type, "text": text})
+            elif block_type == "procedure":
+                steps = [line.strip() for line in text.splitlines() if line.strip()]
+                block.update({"type": "ordered_list", "text": text, "steps": steps})
+            elif block_type == "figure_caption":
+                fig = figures_by_num.get(raw_block.get("fig_num"))
+                block.update(
+                    {
+                        "type": "caption",
+                        "text": text,
+                        "parent_figure_id": fig.get("fig_id") if fig else None,
+                    }
+                )
+            else:
+                block.update({"type": "paragraph", "text": text})
+
+            blocks.append(block)
+
+        for fig in page.get("figures", []):
+            blocks.append(
+                {
+                    "block_id": f"p{page_num}_b{block_idx:03d}",
+                    "order_index": block_idx,
+                    "type": "figure",
+                    "figure_id": fig.get("fig_id"),
+                    "asset_path": fig.get("asset_path"),
+                    "caption_text": fig.get("caption"),
+                    "figure_number": fig.get("fig_num"),
+                }
+            )
+            block_idx += 1
+
+        normalized_pages.append(
+                {
+                    **page,
+                    "section_path": section_path,
+                    "source_label": page.get("source_label") or source_label,
+                    "blocks": blocks,
+                }
+            )
+
+    return {**document, "pages": normalized_pages}
+
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -129,10 +215,17 @@ def run_pipeline(config_path: str = "configs/default.yaml",
             # Save page_metas for subsequent stages
             save_json(page_metas, build_dir / "page_metas.json")
     else:
-        page_metas = load_json(build_dir / "page_metas.json")
-        manifest_data = load_json(build_dir / "manifest.json")
-        manifest = Manifest(**{k: v for k, v in manifest_data.items()
-                               if k in Manifest.__dataclass_fields__})
+        if not (stages & {"B", "C", "D"}):
+            page_metas = []
+            manifest = Manifest(
+                doc_id=config["pipeline"]["doc_id"],
+                source_pdf=Path(config["pipeline"]["source_pdf"]).name,
+            )
+        else:
+            page_metas = load_json(build_dir / "page_metas.json")
+            manifest_data = load_json(build_dir / "manifest.json")
+            manifest = Manifest(**{k: v for k, v in manifest_data.items()
+                                   if k in Manifest.__dataclass_fields__})
 
     # Apply page range filter
     if page_range:
@@ -193,7 +286,7 @@ def run_pipeline(config_path: str = "configs/default.yaml",
                 skew_angle=v["skew_angle"],
                 original_size=tuple(v["original_size"]),
             )
-    else:
+    elif stages & {"C", "D"}:
         pre_data = load_json(build_dir / "preprocess_results.json")
         from src.models import PreprocessResult
         preprocess_results = {}
@@ -205,6 +298,8 @@ def run_pipeline(config_path: str = "configs/default.yaml",
                 skew_angle=v["skew_angle"],
                 original_size=tuple(v["original_size"]),
             )
+    else:
+        preprocess_results = {}
 
     # ── Stage C: Layout Segmentation ─────────────────────────────
     if "C" in stages:
@@ -286,7 +381,7 @@ def run_pipeline(config_path: str = "configs/default.yaml",
                             save_json(layout_data, layout_results_path)
 
                 save_json(layout_data, layout_results_path)
-    else:
+    elif "D" in stages:
         layout_results_path = build_dir / "layout_results.json"
         if force_all_gemini and not layout_results_path.exists():
             # Stage C was skipped and no saved layout file — stub in-memory
@@ -354,6 +449,8 @@ def run_pipeline(config_path: str = "configs/default.yaml",
                         print(f"    [CV-enhance] p{pn} failed: {e}")
             if enhanced_count:
                 print(f"    [CV-enhance] Added figure regions to {enhanced_count} pages.")
+    else:
+        layout_results = {}
 
     # ── Stage D: Region-Specific Extraction ──────────────────────
     if "D" in stages:
@@ -834,7 +931,7 @@ def run_pipeline(config_path: str = "configs/default.yaml",
         print("\n[Stage E] Building heading hierarchy...")
         from src.structure import build_structure
         if "D" not in stages:
-            document = load_json(build_dir / "document.json")
+            document = _normalize_document_for_chunking(load_json(build_dir / "document.json"))
         with Timer("Structure"):
             build_structure(document["pages"], config)
         save_json(document, build_dir / "document.json")
@@ -845,7 +942,7 @@ def run_pipeline(config_path: str = "configs/default.yaml",
         print("\n[Stage F] Building retrieval chunks...")
         from src.chunker import build_chunks, build_toc_chunks, build_csv_table_chunks
         if "D" not in stages and "E" not in stages:
-            document = load_json(build_dir / "document.json")
+            document = _normalize_document_for_chunking(load_json(build_dir / "document.json"))
         _source_doc = config.get("pipeline", {}).get("source_doc", "main")
         with Timer("Chunking"):
             chunks, figures = build_chunks(document, config, source_doc=_source_doc)
@@ -885,7 +982,10 @@ def run_pipeline(config_path: str = "configs/default.yaml",
     if "G" in stages:
         print("\n[Stage G] Building search indices...")
         from src.index_build import build_indices
-        index_dir = resolve_path("tools/rag_index", PROJECT_ROOT)
+        index_dir = resolve_path(
+            config.get("chat", {}).get("index_dir", "tools/rag_index"),
+            PROJECT_ROOT,
+        )
 
         chunks_paths = [build_dir / "chunks.jsonl"]
         for sup_path_str in config.get("pipeline", {}).get("supplemental_chunks", []):

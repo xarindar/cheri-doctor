@@ -1,0 +1,46 @@
+# Chevrolet Cruze runtime configuration
+
+pipeline:
+  doc_id: "chevrolet_cruze"
+  source_pdf: "data/cruze/cruze-manual.pdf"
+  build_dir: "build_cruze"
+  source_doc: "cruze"
+  front_matter_pages: 0
+  supplemental_chunks: []
+
+structure:
+  section_names: {}
+
+chunking:
+  min_tokens: 200
+  max_tokens: 600
+  chars_per_token: 4
+  procedure_whole: true
+  caution_whole: true
+
+indexing:
+  bm25:
+    k1: 1.5
+    b: 0.75
+  embeddings:
+    model: "all-MiniLM-L6-v2"
+    dimension: 384
+    batch_size: 64
+
+chat:
+  model: "gemini-2.5-flash"
+  provider: "gemini"
+  max_tokens: 4096
+  top_k_retrieve: 20
+  top_n_rerank: 10
+  temperature: 0.1
+  system_prompt: "configs/cruze_chat_system_prompt.txt"
+  index_dir: "tools/cruze_index"
+
+providers:
+  gemini:
+    api_base: "https://generativelanguage.googleapis.com"
+    api_version: "v1beta"
+    api_key_env: "GEMINI_API_KEY"
+    default_model: "gemini-1.5-pro-latest"
+    allow_list_models_probe: true

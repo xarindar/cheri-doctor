@@ -47,6 +47,42 @@ SUPPLEMENT_MATCH_TOKEN_LIMIT = 80
 SUPPLEMENT_MATCH_MIN_SHARED = 8
 SUPPLEMENT_MATCH_MIN_OVERLAP = 0.75
 
+
+def _resolve_project_path(path_value: str | Path | None, fallback: str | Path) -> Path:
+    raw = path_value if path_value not in (None, "") else fallback
+    path = raw if isinstance(raw, Path) else Path(raw)
+    return path if path.is_absolute() else PROJECT_ROOT / path
+
+
+def _index_dir_from_config(config: dict | None) -> Path:
+    if config:
+        override = config.get("_index_dir")
+        if override:
+            return _resolve_project_path(override, "tools/rag_index")
+        chat_cfg = config.get("chat", {})
+        if chat_cfg.get("index_dir"):
+            return _resolve_project_path(chat_cfg["index_dir"], "tools/rag_index")
+    return _resolve_project_path(None, "tools/rag_index")
+
+
+def _system_prompt_path_from_config(config: dict | None) -> Path:
+    if config:
+        override = config.get("_system_prompt_path")
+        if override:
+            return _resolve_project_path(override, "configs/chat_system_prompt.txt")
+        chat_cfg = config.get("chat", {})
+        if chat_cfg.get("system_prompt"):
+            return _resolve_project_path(chat_cfg["system_prompt"], "configs/chat_system_prompt.txt")
+    return _resolve_project_path(None, "configs/chat_system_prompt.txt")
+
+
+def _chunk_lookup_path_from_config(config: dict | None) -> Path:
+    if config:
+        override = config.get("_chunk_lookup_path")
+        if override:
+            return _resolve_project_path(override, "tools/rag_index/chunk_lookup.json")
+    return _index_dir_from_config(config) / "chunk_lookup.json"
+
 FETCH_CHUNKS_TOOL = {
     "name": "fetch_chunks",
     "description": (
@@ -488,9 +524,12 @@ def fetch_chunks(index: RetrievalIndex,
     }
 
 
-@lru_cache(maxsize=1)
-def get_toc_chunks() -> list[dict[str, str]]:
-    lookup = load_json(PROJECT_ROOT / "tools" / "rag_index" / "chunk_lookup.json")
+@lru_cache(maxsize=8)
+def _get_toc_chunks_cached(lookup_path_str: str) -> list[dict[str, str]]:
+    lookup_path = Path(lookup_path_str)
+    if not lookup_path.exists():
+        return []
+    lookup = load_json(lookup_path)
     if not isinstance(lookup, dict):
         return []
 
@@ -571,9 +610,13 @@ def get_toc_chunks() -> list[dict[str, str]]:
     return rows
 
 
-@lru_cache(maxsize=1)
-def get_toc_text() -> str:
-    rows = get_toc_chunks()
+def get_toc_chunks(config: dict | None = None) -> list[dict[str, str]]:
+    return _get_toc_chunks_cached(str(_chunk_lookup_path_from_config(config)))
+
+
+@lru_cache(maxsize=8)
+def _get_toc_text_cached(lookup_path_str: str) -> str:
+    rows = _get_toc_chunks_cached(lookup_path_str)
     if not rows:
         return ""
 
@@ -584,6 +627,10 @@ def get_toc_text() -> str:
     for row in rows:
         lines.append(f"{row['section_code']} | {row['section_path']} | {row['pages']}")
     return "\n".join(lines)
+
+
+def get_toc_text(config: dict | None = None) -> str:
+    return _get_toc_text_cached(str(_chunk_lookup_path_from_config(config)))
 
 
 # Type boosts for reranking — surface procedures and safety info first
@@ -1793,7 +1840,7 @@ def chat(query: str,
     # 3. Collect figure images
     figure_evidence = []
     if not skip_vision:
-        figure_evidence = _collect_figures(reranked)
+        figure_evidence = _collect_figures(reranked, config)
 
     # 4. Build prompt
     messages = _build_messages(query, reranked, figure_evidence,
@@ -1808,7 +1855,7 @@ def chat(query: str,
                        note_callback=note_callback, retrieve_notes=retrieve_notes)
 
     # 6. Parse response
-    response = _parse_response(raw, reranked, query=query)
+    response = _parse_response(raw, reranked, query=query, config=config)
     response.mode = response_mode
     response.deep_research_summary = deep_research_summary
 
@@ -1824,8 +1871,8 @@ def chat(query: str,
 
 
 def load_index(config: dict) -> RetrievalIndex:
-    """Load the retrieval index from tools/rag_index/."""
-    index_dir = PROJECT_ROOT / "tools" / "rag_index"
+    """Load the retrieval index configured for the active vehicle/profile."""
+    index_dir = _index_dir_from_config(config)
     return RetrievalIndex(index_dir, config)
 
 
@@ -2255,13 +2302,17 @@ def _expand_dependencies(reranked: list[dict], index: RetrievalIndex) -> list[di
     return reranked + additions
 
 
-def _collect_figures(reranked: list[dict]) -> list[dict]:
+def _collect_figures(reranked: list[dict], config: dict | None = None) -> list[dict]:
     """Gather figure image data for chunks that reference figures."""
     seen    = set()
     figures = []
 
     # Load figures lookup
-    fig_lookup_path = PROJECT_ROOT / "build" / "figures.jsonl"
+    build_dir = PROJECT_ROOT / "build"
+    if config:
+        from src.utils import resolve_path
+        build_dir = resolve_path(config.get("pipeline", {}).get("build_dir", "build"), PROJECT_ROOT)
+    fig_lookup_path = build_dir / "figures.jsonl"
     fig_lookup: dict[str, dict] = {}
     if fig_lookup_path.exists():
         from src.utils import load_jsonl
@@ -2325,10 +2376,10 @@ def _build_messages(query: str,
                     images: list[str] | None = None) -> list[dict]:
     """Build the Claude API messages list."""
     # Load system prompt
-    sys_prompt_path = PROJECT_ROOT / "configs" / "chat_system_prompt.txt"
+    sys_prompt_path = _system_prompt_path_from_config(config)
     system_prompt   = sys_prompt_path.read_text(encoding="utf-8")
 
-    toc_text = get_toc_text()
+    toc_text = get_toc_text(config)
     if toc_text:
         system_prompt = (
             "You have access to the full manual. Here is the table of contents. "
@@ -2894,8 +2945,8 @@ def _call_claude(messages: list[dict],
     )
 
 
-@lru_cache(maxsize=1)
-def _chunk_fig_lookup() -> dict[str, str]:
+@lru_cache(maxsize=8)
+def _chunk_fig_lookup_cached(lookup_path_str: str) -> dict[str, str]:
     """Build a comprehensive fig ID resolver → asset-style fig ID.
 
     Handles three citation styles the LLM may use:
@@ -2903,7 +2954,10 @@ def _chunk_fig_lookup() -> dict[str, str]:
       - source_label: 7A-1           → fig_p0477_000  (via page context)
       - caption ref:  Figure 7A-1    → fig_p0477_000
     """
-    lookup = load_json(PROJECT_ROOT / "tools" / "rag_index" / "chunk_lookup.json")
+    lookup_path = Path(lookup_path_str)
+    if not lookup_path.exists():
+        return {}
+    lookup = load_json(lookup_path)
     mapping: dict[str, str] = {}
     if isinstance(lookup, dict):
         for cid, chunk in lookup.items():
@@ -2929,7 +2983,15 @@ def _chunk_fig_lookup() -> dict[str, str]:
     return mapping
 
 
-def _parse_response(raw: str, reranked: list[dict], *, query: str = "") -> ChatResponse:
+def _chunk_fig_lookup(config: dict | None = None) -> dict[str, str]:
+    return _chunk_fig_lookup_cached(str(_chunk_lookup_path_from_config(config)))
+
+
+def _parse_response(raw: str,
+                    reranked: list[dict],
+                    *,
+                    query: str = "",
+                    config: dict | None = None) -> ChatResponse:
     """Extract citations from the raw response text."""
     chunk_map = {r["chunk"]["chunk_id"]: r["chunk"] for r in reranked}
     text_citation_lookup: dict[str, dict] = {}
@@ -2966,7 +3028,7 @@ def _parse_response(raw: str, reranked: list[dict], *, query: str = "") -> ChatR
                 resolved = True
             if not resolved:
                 # Try global lookup (handles source_labels, caption refs, chunk IDs)
-                global_map = _chunk_fig_lookup()
+                global_map = _chunk_fig_lookup(config)
                 for key in [f"{fig_id}@{page_str}", fig_id]:
                     if key in global_map:
                         real_id = global_map[key]
@@ -3003,7 +3065,7 @@ def _parse_response(raw: str, reranked: list[dict], *, query: str = "") -> ChatR
             real_id = chunk["figure_refs"][0]
             return f"[p{page} | fig: {real_id}]"
         # Fallback: resolve via global figure map (handles chunk IDs, source labels, caption refs)
-        global_map = _chunk_fig_lookup()
+        global_map = _chunk_fig_lookup(config)
         # Try page-qualified key first (most precise), then bare key
         for key in [f"{fig_id}@{page}", fig_id]:
             if key in global_map:
