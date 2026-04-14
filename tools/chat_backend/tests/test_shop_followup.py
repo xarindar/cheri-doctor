@@ -70,6 +70,7 @@ class TestShopFollowup(unittest.IsolatedAsyncioTestCase):
             project_context,
             vehicle_settings: str,
             images=None,
+            progress_cb=None,
         ) -> _DummyChatResponse:
             if "[PARTS SEARCH" in query and "no results" in query.lower():
                 return _DummyChatResponse(
@@ -175,6 +176,7 @@ class TestShopFollowup(unittest.IsolatedAsyncioTestCase):
             project_context,
             vehicle_settings: str,
             images=None,
+            progress_cb=None,
         ) -> _DummyChatResponse:
             if "[PARTS SEARCH" in query:
                 return _DummyChatResponse("Here are the best USB charger socket options.")
@@ -245,6 +247,7 @@ class TestShopFollowup(unittest.IsolatedAsyncioTestCase):
             project_context,
             vehicle_settings: str,
             images=None,
+            progress_cb=None,
         ) -> _DummyChatResponse:
             if "[PARTS SEARCH" in query:
                 return _DummyChatResponse("Found one option.")
@@ -300,6 +303,7 @@ class TestShopFollowup(unittest.IsolatedAsyncioTestCase):
             project_context,
             vehicle_settings: str,
             images=None,
+            progress_cb=None,
         ) -> _DummyChatResponse:
             return _DummyChatResponse("Trying now.\n[SHOP_SEARCH: is something that | amazon]")
 
@@ -359,6 +363,7 @@ class TestShopFollowup(unittest.IsolatedAsyncioTestCase):
             project_context,
             vehicle_settings: str,
             images=None,
+            progress_cb=None,
         ) -> _DummyChatResponse:
             if "[PARTS SEARCH" in query:
                 return _DummyChatResponse("Found an option.")
@@ -430,6 +435,7 @@ class TestShopFollowup(unittest.IsolatedAsyncioTestCase):
             project_context,
             vehicle_settings: str,
             images=None,
+            progress_cb=None,
         ) -> _DummyChatResponse:
             if "[PARTS SEARCH" in query:
                 return _DummyChatResponse("Found eBay options.")
@@ -505,6 +511,7 @@ class TestShopFollowup(unittest.IsolatedAsyncioTestCase):
             project_context,
             vehicle_settings: str,
             images=None,
+            progress_cb=None,
         ) -> _DummyChatResponse:
             if "[PARTS SEARCH" in query:
                 return _DummyChatResponse("Found options.")

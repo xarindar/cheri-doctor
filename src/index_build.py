@@ -18,6 +18,48 @@ from sentence_transformers import SentenceTransformer
 
 from src.utils import load_jsonl, save_json
 
+def _metadata_text(chunk: dict) -> str:
+    parts: list[str] = []
+
+    for info_type in chunk.get("info_types") or []:
+        parts.append(info_type.replace("_", " "))
+        if info_type == "connector_face":
+            parts.append("connector face terminal end view")
+        elif info_type == "pinout":
+            parts.append("pinout pin terminal cavity")
+        elif info_type == "diagram":
+            parts.append("diagram schematic illustration")
+        elif info_type == "spec":
+            parts.append("spec specification voltage resistance torque")
+        elif info_type == "location":
+            parts.append("location component position")
+        elif info_type == "diagnostic":
+            parts.append("diagnostic symptom cause correction")
+        elif info_type == "wiring":
+            parts.append("wiring wire circuit harness")
+        elif info_type == "cross_reference":
+            parts.append("cross reference mapping index")
+
+    entities = chunk.get("entities") or []
+    if entities:
+        parts.append(" ".join(entities))
+
+    body_styles = chunk.get("body_styles") or []
+    if body_styles:
+        parts.append("body style " + " ".join(body_styles))
+
+    trim_variants = chunk.get("trim_variants") or []
+    if trim_variants:
+        parts.append("trim variant " + " ".join(trim_variants))
+
+    sir_equipped = chunk.get("sir_equipped")
+    if sir_equipped is True:
+        parts.append("sir equipped airbag")
+    elif sir_equipped is False:
+        parts.append("without sir non airbag")
+
+    return " ".join(parts)
+
 
 def build_indices(chunks_path: "Path | list[Path]", config: dict, index_dir: Path):
     """Build BM25 and embedding indices from one or more chunks.jsonl files.
@@ -104,6 +146,7 @@ def _tokenize(chunk: dict) -> list[str]:
         chunk.get("text", ""),
         chunk.get("section_path", ""),
         chunk.get("source_label", "") or "",
+        _metadata_text(chunk),
     ]
     if chunk.get("type") == "figure":
         parts.append("figure diagram illustration")
@@ -130,15 +173,19 @@ def _embed_text(chunk: dict) -> str:
     prefix = chunk.get("section_path", "")
     text   = chunk.get("text", "")
     ctype  = chunk.get("type", "")
+    metadata = _metadata_text(chunk)
 
     if ctype == "figure":
         # Enrich short figure text with section context for better embedding
         parts = [f"Figure/Diagram in {prefix}" if prefix else "Figure/Diagram"]
+        if metadata:
+            parts.append(metadata)
         if text:
             parts.append(text)
         out = " - ".join(parts)
     else:
-        out = f"{prefix}: {text}" if prefix else text
+        enriched_text = f"{metadata} - {text}" if metadata and text else (metadata or text)
+        out = f"{prefix}: {enriched_text}" if prefix else enriched_text
 
     # Bridge the 1990 "cigar" vs 2026 "cigarette" gap in embeddings too.
     low = out.lower()

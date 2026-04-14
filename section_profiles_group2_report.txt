@@ -1,0 +1,1554 @@
+================================================================================
+SECTION PROFILER — Group 2 (Drivetrain, Transaxle, Brakes, Suspension, Steering)
+================================================================================
+
+Loaded 1896 chunks across 17 target sections
+Total sections in corpus: 51
+  2     :   40 chunks  — 2
+  3     :   36 chunks  — STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Diagnosis
+  3A    :   14 chunks  — STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Wheel Alignment
+  3B    :   87 chunks  — STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+  3C    :  152 chunks  — STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+  3D    :  112 chunks  — STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+  3E    :   88 chunks  — STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Wheels and Tires
+  3F    :   55 chunks  — STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+  3F4   :   69 chunks  — 3F4
+  4D    :   23 chunks  — 4D
+  5     :  308 chunks  — 5
+  5B    :   27 chunks  — Brakes Hydraulic
+  7A    :  103 chunks  — TRANSAXLE — 7 > Automatic Transaxle
+  7A1   :  388 chunks  — TRANSAXLE — 7 > Unit Repair
+  7B    :  280 chunks  — TRANSAXLE — 7 > Manual Transaxle
+  7C    :   52 chunks  — TRANSAXLE — 7 > Clutch
+  9A    :   62 chunks  — ACCESSORIES > Radio
+
+================================================================================
+SECTION 2: 2
+  Chunks: 40, Total term occurrences: 1999
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    hood                            freq=  31  sections=10  tfidf=0.023788
+    bumper                          freq=  21  sections= 6  tfidf=0.020863
+    latch                           freq=  16  sections= 5  tfidf=0.017129
+    retaining                       freq=  27  sections=18  tfidf=0.013336
+    fender                          freq=  15  sections=10  tfidf=0.011510
+    hinge                           freq=   9  sections= 4  tfidf=0.010456
+    bezels                          freq=   4  sections= 1  tfidf=0.006481
+    skirt                           freq=   6  sections= 5  tfidf=0.006423
+    cowl                            freq=   7  sections= 9  tfidf=0.005705
+    lamps                           freq=   6  sections= 7  tfidf=0.005560
+    tray                            freq=   4  sections= 3  tfidf=0.005094
+    member                          freq=   5  sections= 6  tfidf=0.004967
+    license                         freq=   4  sections= 4  tfidf=0.004647
+    lamp                            freq=   8  sections=15  tfidf=0.004639
+    support                         freq=  13  sections=24  tfidf=0.004636
+    bolts                           freq=  22  sections=33  tfidf=0.004462
+    upper                           freq=  14  sections=26  tfidf=0.004454
+    rustproofing                    freq=   3  sections= 2  tfidf=0.004252
+    wheel                           freq=  10  sections=22  tfidf=0.003984
+    underbody                       freq=   4  sections= 6  tfidf=0.003974
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    retaining bolts                           freq=  15  sections= 8  tfidf=0.013016
+    and lower cover                           freq=   8  sections= 1  tfidf=0.012961
+    lower cover                               freq=   8  sections= 3  tfidf=0.010187
+    cover retaining screws                    freq=   6  sections= 1  tfidf=0.009721
+    hood latch                                freq=   8  sections= 4  tfidf=0.009294
+    cover retaining                           freq=   6  sections= 2  tfidf=0.008504
+    upper and lower                           freq=  11  sections=12  tfidf=0.007522
+    retaining screws                          freq=   8  sections= 7  tfidf=0.007413
+    right and left                            freq=   9  sections=10  tfidf=0.006906
+    front fender                              freq=   7  sections= 7  tfidf=0.006487
+    headlamp bezels                           freq=   4  sections= 1  tfidf=0.006481
+    lamp connectors                           freq=   4  sections= 1  tfidf=0.006481
+    and left headlamp                         freq=   4  sections= 1  tfidf=0.006481
+    left headlamp bezels                      freq=   4  sections= 1  tfidf=0.006481
+    lower cover retaining                     freq=   4  sections= 1  tfidf=0.006481
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=   9  also_in: 3B(10), 3C(70), 3D(4), 3E(3), 3F(25), 3F4(24)
+    bolts                                here=  22  also_in: 3(5), 3A(3), 3B(9), 3C(47), 3D(6), 3F(10)
+    side                                 here=   7  also_in: 3(17), 3A(4), 3B(14), 3C(5), 3D(12), 3E(8)
+    notice                               here=   3  also_in: 3B(3), 3C(13), 3D(18), 3E(11), 3F(8), 3F4(5)
+    bolt                                 here=   3  also_in: 3A(3), 3B(8), 3C(23), 3D(39), 3F(12), 3F4(15)
+    front                                here=  19  also_in: 3(41), 3A(13), 3B(7), 3C(32), 3D(19), 3E(7)
+    lower                                here=  14  also_in: 3(4), 3B(10), 3C(31), 3D(41), 3E(5), 3F(22)
+    wheel                                here=  10  also_in: 3(45), 3A(11), 3B(15), 3C(91), 3D(37), 3E(130)
+    damage                               here=   3  also_in: 3B(12), 3C(8), 3D(7), 3E(17), 3F(7), 3F4(9)
+    mounting                             here=   2  also_in: 3(5), 3C(16), 3D(11), 3E(17), 3F(6), 3F4(13)
+    correct                              here=   1  also_in: 3A(5), 3B(3), 3C(7), 3D(4), 3E(11), 3F(3)
+    disconnect                           here=  11  also_in: 3B(3), 3C(9), 3D(7), 3F(8), 3F4(8), 5(26)
+    rear                                 here=   5  also_in: 3(13), 3A(8), 3C(29), 3D(40), 3E(8), 3F4(6)
+    nuts                                 here=   4  also_in: 3(4), 3B(7), 3C(28), 3D(14), 3E(25), 3F(15)
+    position                             here=   2  also_in: 3B(7), 3C(13), 3E(7), 3F(5), 3F4(8), 5(3)
+    torque                               here=   1  also_in: 3(5), 3B(34), 3D(9), 3E(6), 3F(12), 4D(7)
+    connect                              here=  11  also_in: 3C(10), 3D(7), 3F(6), 3F4(8), 5(23), 7A(13)
+    fasteners                            here=   1  also_in: 3A(3), 3B(3), 3C(4), 3D(4), 3E(3), 3F(3)
+    install or connect                   here=  11  also_in: 3C(10), 3D(7), 3F4(7), 5(15), 7A(13), 7A1(10)
+    cover                                here=  10  also_in: 3C(8), 3F(12), 3F4(13), 5(3), 7A(31), 7A1(63)
+    proper                               here=   7  also_in: 3(5), 3A(3), 3C(4), 3D(5), 3E(5), 3F4(7)
+    body                                 here=   5  also_in: 3A(3), 3B(3), 3C(8), 3D(18), 3E(4), 5(63)
+    parts                                here=   2  also_in: 3A(4), 3B(13), 3E(3), 3F(5), 4D(4), 5(55)
+    apply                                here=   2  also_in: 3B(6), 3C(9), 3D(3), 4D(4), 5(14), 7A(10)
+    remove or disconnect                 here=  11  also_in: 3C(9), 3D(7), 3F4(8), 5(12), 7A(15), 7A1(5)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    3C     (overlap=  309)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    5      (overlap=  306)  5
+    7A1    (overlap=  295)  TRANSAXLE — 7 > Unit Repair
+    7B     (overlap=  259)  TRANSAXLE — 7 > Manual Transaxle
+    3F4    (overlap=  240)  3F4
+    7A     (overlap=  234)  TRANSAXLE — 7 > Automatic Transaxle
+    3F     (overlap=  188)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+    3D     (overlap=  184)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+
+================================================================================
+SECTION 3: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Diagnosis
+  Chunks: 36, Total term occurrences: 4748
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    tire                            freq=  80  sections=13  tfidf=0.021782
+    correction                      freq=  72  sections=15  tfidf=0.017579
+    tires                           freq=  32  sections=13  tfidf=0.008713
+    possible                        freq=  73  sections=30  tfidf=0.007654
+    wheel                           freq=  45  sections=22  tfidf=0.007547
+    rack                            freq=  18  sections= 6  tfidf=0.007529
+    tie                             freq=  16  sections= 7  tfidf=0.006242
+    cause                           freq=  74  sections=34  tfidf=0.005868
+    pinion                          freq=  17  sections= 9  tfidf=0.005833
+    road                            freq=  14  sections= 9  tfidf=0.004804
+    waddle                          freq=   7  sections= 1  tfidf=0.004775
+    sagging                         freq=   7  sections= 1  tfidf=0.004775
+    alignment                       freq=  24  sections=19  tfidf=0.004732
+    shock                           freq=  11  sections= 6  tfidf=0.004601
+    suspension                      freq=  17  sections=14  tfidf=0.004382
+    rod                             freq=  16  sections=14  tfidf=0.004124
+    worn                            freq=  16  sections=15  tfidf=0.003906
+    joints                          freq=  11  sections= 9  tfidf=0.003775
+    lead                            freq=  23  sections=23  tfidf=0.003651
+    absorber                        freq=   8  sections= 5  tfidf=0.003606
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    possible cause                            freq=  72  sections=16  tfidf=0.016660
+    general diagnosis chart                   freq=  15  sections= 1  tfidf=0.010232
+    general diagnosis                         freq=  16  sections= 2  tfidf=0.009547
+    rack and pinion                           freq=  17  sections= 3  tfidf=0.009114
+    diagnosis chart                           freq=  15  sections= 3  tfidf=0.008042
+    end alignment                             freq=  14  sections= 3  tfidf=0.007506
+    front end alignment                       freq=  14  sections= 3  tfidf=0.007506
+    tire possible                             freq=  10  sections= 1  tfidf=0.006821
+    tire possible cause                       freq=  10  sections= 1  tfidf=0.006821
+    tie rod                                   freq=  16  sections= 6  tfidf=0.006692
+    correction replace tire                   freq=   9  sections= 1  tfidf=0.006139
+    joints correction                         freq=   8  sections= 1  tfidf=0.005457
+    joints correction replace                 freq=   8  sections= 1  tfidf=0.005457
+    cause worn                                freq=  12  sections= 6  tfidf=0.005019
+    possible cause worn                       freq=  12  sections= 6  tfidf=0.005019
+
+  CONFUSION TERMS (shared with other target sections):
+    side                                 here=  17  also_in: 2(7), 3A(4), 3B(14), 3C(5), 3D(12), 3E(8)
+    bolts                                here=   5  also_in: 2(22), 3A(3), 3B(9), 3C(47), 3D(6), 3F(10)
+    wheel                                here=  45  also_in: 2(10), 3A(11), 3B(15), 3C(91), 3D(37), 3E(130)
+    front                                here=  41  also_in: 2(19), 3A(13), 3B(7), 3C(32), 3D(19), 3E(7)
+    lower                                here=   4  also_in: 2(14), 3B(10), 3C(31), 3D(41), 3E(5), 3F(22)
+    rear                                 here=  13  also_in: 2(5), 3A(8), 3C(29), 3D(40), 3E(8), 3F4(6)
+    tighten                              here=   8  also_in: 3B(10), 3C(20), 3D(10), 3E(4), 3F(5), 3F4(6)
+    mounting                             here=   5  also_in: 3C(16), 3D(11), 3E(17), 3F(6), 3F4(13), 5(16)
+    nuts                                 here=   4  also_in: 2(4), 3B(7), 3C(28), 3D(14), 3E(25), 3F(15)
+    cause                                here=  74  also_in: 3A(4), 3B(3), 3E(25), 3F(12), 3F4(3), 5(54)
+    end                                  here=  25  also_in: 3B(44), 3C(25), 3D(11), 3F(3), 5(21), 7A(4)
+    wheels                               here=   5  also_in: 3A(10), 3B(4), 3C(10), 3E(27), 3F(3), 3F4(3)
+    torque                               here=   5  also_in: 3B(34), 3D(9), 3E(6), 3F(12), 4D(7), 5(35)
+    shaft                                here=   3  also_in: 3B(20), 3C(15), 3F(52), 3F4(33), 4D(12), 5(4)
+    rod                                  here=  16  also_in: 3A(10), 3B(75), 3C(39), 3D(64), 5(47), 7A(5)
+    brake                                here=   7  also_in: 3C(43), 3D(54), 3E(8), 3F4(7), 5(459), 5B(18)
+    control                              here=   7  also_in: 3A(7), 3C(32), 3D(63), 3E(4), 5(25), 7A(29)
+    proper                               here=   5  also_in: 2(7), 3A(3), 3C(4), 3D(5), 3E(5), 3F4(7)
+    joint                                here=   3  also_in: 3B(23), 3C(9), 3F(40), 3F4(20), 4D(43), 5(7)
+    parts                                here=   2  also_in: 3A(4), 3B(13), 3E(3), 3F(5), 4D(4), 5(55)
+    part                                 here=   2  also_in: 2(4), 3B(12), 3D(10), 3E(3), 3F(5), 3F4(5)
+    steering                             here=  15  also_in: 3A(8), 3B(99), 3C(8), 3E(7), 3F(131), 3F4(139)
+    spring                               here=   9  also_in: 3B(4), 3C(51), 3D(17), 5(53), 7A(4), 7A1(92)
+    bearing                              here=   7  also_in: 3B(32), 3C(77), 3D(18), 4D(5), 5(3), 7A1(99)
+    inspect                              here=   3  also_in: 3B(14), 3C(5), 3D(4), 3F4(6), 5(25), 7A1(4)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    5      (overlap=  829)  5
+    3E     (overlap=  513)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Wheels and Tires
+    7A1    (overlap=  500)  TRANSAXLE — 7 > Unit Repair
+    3C     (overlap=  496)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    7B     (overlap=  380)  TRANSAXLE — 7 > Manual Transaxle
+    3B     (overlap=  365)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    3D     (overlap=  363)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    9A     (overlap=  258)  ACCESSORIES > Radio
+
+================================================================================
+SECTION 3A: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Wheel Alignment
+  Chunks: 14, Total term occurrences: 1886
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    camber                          freq=  14  sections= 2  tfidf=0.021031
+    toe                             freq=  18  sections= 5  tfidf=0.020425
+    caster                          freq=  13  sections= 2  tfidf=0.019529
+    angle                           freq=  12  sections= 8  tfidf=0.011037
+    tilt                            freq=   8  sections= 3  tfidf=0.010798
+    alignment                       freq=  16  sections=19  tfidf=0.007941
+    tie                             freq=   7  sections= 7  tfidf=0.006875
+    viewed                          freq=   5  sections= 3  tfidf=0.006748
+    rod                             freq=  10  sections=14  tfidf=0.006489
+    vertical                        freq=   6  sections= 7  tfidf=0.005893
+    a-3                             freq=   6  sections= 8  tfidf=0.005518
+    data                            freq=   5  sections= 6  tfidf=0.005265
+    wheels                          freq=  10  sections=19  tfidf=0.004963
+    wheel                           freq=  11  sections=22  tfidf=0.004645
+    a-2                             freq=   5  sections= 8  tfidf=0.004599
+    toe-in                          freq=   3  sections= 2  tfidf=0.004507
+    backward                        freq=   3  sections= 2  tfidf=0.004507
+    suspension                      freq=   6  sections=14  tfidf=0.003893
+    a-1                             freq=   4  sections= 9  tfidf=0.003455
+    steering                        freq=   8  sections=22  tfidf=0.003378
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    alignment service data                    freq=   5  sections= 1  tfidf=0.008586
+    from the vertical                         freq=   4  sections= 1  tfidf=0.006869
+    vertical when viewed                      freq=   4  sections= 1  tfidf=0.006869
+    when viewed from                          freq=   4  sections= 1  tfidf=0.006869
+    viewed from the                           freq=   4  sections= 1  tfidf=0.006869
+    toe adjustment                            freq=   5  sections= 3  tfidf=0.006748
+    control rod                               freq=   5  sections= 4  tfidf=0.006157
+    steering angle                            freq=   4  sections= 2  tfidf=0.006009
+    tie rod                                   freq=   5  sections= 6  tfidf=0.005265
+    camber angle                              freq=   3  sections= 1  tfidf=0.005152
+    of the wheels                             freq=   3  sections= 1  tfidf=0.005152
+    tilt of the                               freq=   3  sections= 1  tfidf=0.005152
+    when the wheels                           freq=   3  sections= 1  tfidf=0.005152
+    caster angle                              freq=   3  sections= 1  tfidf=0.005152
+    wheel toe                                 freq=   3  sections= 1  tfidf=0.005152
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=   2  also_in: 2(9), 3B(10), 3C(70), 3D(4), 3E(3), 3F(25)
+    notice                               here=   2  also_in: 2(3), 3B(3), 3C(13), 3D(18), 3E(11), 3F(8)
+    side                                 here=   4  also_in: 2(7), 3(17), 3B(14), 3C(5), 3D(12), 3E(8)
+    bolts                                here=   3  also_in: 2(22), 3(5), 3B(9), 3C(47), 3D(6), 3F(10)
+    bolt                                 here=   3  also_in: 2(3), 3B(8), 3C(23), 3D(39), 3F(12), 3F4(15)
+    damage                               here=   1  also_in: 2(3), 3B(12), 3C(8), 3D(7), 3E(17), 3F(7)
+    front                                here=  13  also_in: 2(19), 3(41), 3B(7), 3C(32), 3D(19), 3E(7)
+    wheel                                here=  11  also_in: 2(10), 3(45), 3B(15), 3C(91), 3D(37), 3E(130)
+    nuts                                 here=   2  also_in: 2(4), 3(4), 3B(7), 3C(28), 3D(14), 3E(25)
+    rear                                 here=   8  also_in: 2(5), 3(13), 3C(29), 3D(40), 3E(8), 3F4(6)
+    correct                              here=   5  also_in: 3B(3), 3C(7), 3D(4), 3E(11), 3F(3), 3F4(4)
+    torque                               here=   2  also_in: 3(5), 3B(34), 3D(9), 3E(6), 3F(12), 4D(7)
+    end                                  here=   2  also_in: 3(25), 3B(44), 3C(25), 3D(11), 3F(3), 5(21)
+    wheels                               here=  10  also_in: 3(5), 3B(4), 3C(10), 3E(27), 3F(3), 3F4(3)
+    cause                                here=   4  also_in: 3(74), 3B(3), 3E(25), 3F(12), 3F4(3), 5(54)
+    joint                                here=   2  also_in: 3(3), 3B(23), 3C(9), 3F(40), 3F4(20), 4D(43)
+    rod                                  here=  10  also_in: 3(16), 3B(75), 3C(39), 3D(64), 5(47), 7A(5)
+    control                              here=   7  also_in: 3(7), 3C(32), 3D(63), 3E(4), 5(25), 7A(29)
+    fasteners                            here=   3  also_in: 3B(3), 3C(4), 3D(4), 3E(3), 3F(3), 3F4(4)
+    body                                 here=   3  also_in: 2(5), 3B(3), 3C(8), 3D(18), 3E(4), 5(63)
+    proper                               here=   3  also_in: 2(7), 3(5), 3C(4), 3D(5), 3E(5), 3F4(7)
+    removed                              here=   2  also_in: 3B(4), 3E(5), 3F(5), 3F4(4), 5(17), 7A(3)
+    part                                 here=   2  also_in: 2(4), 3B(12), 3D(10), 3E(3), 3F(5), 3F4(5)
+    steering                             here=   8  also_in: 3(15), 3B(99), 3C(8), 3E(7), 3F(131), 3F4(139)
+    parts                                here=   4  also_in: 3B(13), 3E(3), 3F(5), 4D(4), 5(55), 5B(6)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    5      (overlap=  265)  5
+    3C     (overlap=  215)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    3D     (overlap=  212)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    3      (overlap=  203)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Diagnosis
+    7A1    (overlap=  200)  TRANSAXLE — 7 > Unit Repair
+    3B     (overlap=  180)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    3E     (overlap=  178)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Wheels and Tires
+    7B     (overlap=  157)  TRANSAXLE — 7 > Manual Transaxle
+
+================================================================================
+SECTION 3B: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+  Chunks: 87, Total term occurrences: 5894
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    rack                            freq= 107  sections= 6  tfidf=0.036052
+    tie                             freq=  79  sections= 7  tfidf=0.024828
+    pinion                          freq=  68  sections= 9  tfidf=0.018797
+    rod                             freq=  75  sections=14  tfidf=0.015572
+    steering                        freq=  99  sections=22  tfidf=0.013376
+    gear                            freq=  43  sections=18  tfidf=0.007204
+    bushing                         freq=  24  sections=11  tfidf=0.005892
+    case                            freq=  43  sections=22  tfidf=0.005810
+    tie-rod                         freq=  12  sections= 3  tfidf=0.005183
+    castle                          freq=  13  sections= 4  tfidf=0.005122
+    plunger                         freq=  17  sections= 8  tfidf=0.005003
+    boot                            freq=  18  sections=11  tfidf=0.004419
+    split                           freq=  14  sections= 7  tfidf=0.004400
+    bearing                         freq=  32  sections=23  tfidf=0.004092
+    lock                            freq=  33  sections=26  tfidf=0.003561
+    teeth                           freq=   8  sections= 3  tfidf=0.003455
+    knuckle                         freq=  13  sections=10  tfidf=0.003383
+    tightening                      freq=  18  sections=16  tfidf=0.003355
+    end                             freq=  44  sections=32  tfidf=0.003250
+    marking                         freq=   8  sections= 4  tfidf=0.003152
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    tie rod                                   freq=  75  sections= 6  tfidf=0.025270
+    gear case                                 freq=  39  sections= 4  tfidf=0.015367
+    steering rack                             freq=  29  sections= 2  tfidf=0.013940
+    tie rod end                               freq=  32  sections= 6  tfidf=0.010782
+    pinion bearing                            freq=  21  sections= 2  tfidf=0.010095
+    steering gear                             freq=  20  sections= 2  tfidf=0.009614
+    rod end                                   freq=  32  sections= 8  tfidf=0.009418
+    steering gear case                        freq=  18  sections= 2  tfidf=0.008653
+    steering pinion                           freq=  17  sections= 3  tfidf=0.007342
+    rack plunger                              freq=  14  sections= 2  tfidf=0.006730
+    end lock                                  freq=  12  sections= 1  tfidf=0.006594
+    bearing plug                              freq=  10  sections= 1  tfidf=0.005495
+    rack bushing                              freq=  11  sections= 2  tfidf=0.005288
+    remove and install                        freq=  11  sections= 2  tfidf=0.005288
+    steering shaft                            freq=  15  sections= 6  tfidf=0.005054
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=  10  also_in: 2(9), 3C(70), 3D(4), 3E(3), 3F(25), 3F4(24)
+    side                                 here=  14  also_in: 2(7), 3(17), 3A(4), 3C(5), 3D(12), 3E(8)
+    bolts                                here=   9  also_in: 2(22), 3(5), 3A(3), 3C(47), 3D(6), 3F(10)
+    bolt                                 here=   8  also_in: 2(3), 3A(3), 3C(23), 3D(39), 3F(12), 3F4(15)
+    notice                               here=   3  also_in: 2(3), 3C(13), 3D(18), 3E(11), 3F(8), 3F4(5)
+    nut                                  here=  30  also_in: 3C(62), 3D(66), 3E(8), 3F(6), 3F4(4), 4D(16)
+    n m                                  here=  17  also_in: 3C(65), 3D(35), 3E(7), 3F(21), 3F4(12), 4D(12)
+    lb ft                                here=  17  also_in: 3C(62), 3D(34), 3E(7), 3F(21), 3F4(5), 4D(12)
+    wheel                                here=  15  also_in: 2(10), 3(45), 3A(11), 3C(91), 3D(37), 3E(130)
+    damage                               here=  12  also_in: 2(3), 3C(8), 3D(7), 3E(17), 3F(7), 3F4(9)
+    lower                                here=  10  also_in: 2(14), 3(4), 3C(31), 3D(41), 3E(5), 3F(22)
+    front                                here=   7  also_in: 2(19), 3(41), 3A(13), 3C(32), 3D(19), 3E(7)
+    tighten                              here=  10  also_in: 3(8), 3C(20), 3D(10), 3E(4), 3F(5), 3F4(6)
+    m lb                                 here=   9  also_in: 3C(65), 3D(34), 3E(7), 3F(19), 3F4(12), 4D(8)
+    n m lb                               here=   9  also_in: 3C(65), 3D(34), 3E(7), 3F(19), 3F4(12), 4D(8)
+    m lb ft                              here=   9  also_in: 3C(62), 3D(34), 3E(7), 3F(19), 3F4(5), 4D(8)
+    nuts                                 here=   7  also_in: 2(4), 3(4), 3C(28), 3D(14), 3E(25), 3F(15)
+    correct                              here=   3  also_in: 3A(5), 3C(7), 3D(4), 3E(11), 3F(3), 3F4(4)
+    disconnect                           here=   3  also_in: 2(11), 3C(9), 3D(7), 3F(8), 3F4(8), 5(26)
+    end                                  here=  44  also_in: 3(25), 3C(25), 3D(11), 3F(3), 5(21), 7A(4)
+    torque                               here=  34  also_in: 3(5), 3D(9), 3E(6), 3F(12), 4D(7), 5(35)
+    installation                         here=  32  also_in: 3C(23), 3D(13), 3F(15), 4D(4), 5(39), 7A(4)
+    shaft                                here=  20  also_in: 3(3), 3C(15), 3F(52), 3F4(33), 4D(12), 5(4)
+    position                             here=   7  also_in: 3C(13), 3E(7), 3F(5), 3F4(8), 5(3), 7A(39)
+    wheels                               here=   4  also_in: 3(5), 3A(10), 3C(10), 3E(27), 3F(3), 3F4(3)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    5      (overlap= 1014)  5
+    7A1    (overlap=  981)  TRANSAXLE — 7 > Unit Repair
+    7B     (overlap=  971)  TRANSAXLE — 7 > Manual Transaxle
+    3C     (overlap=  915)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    3F     (overlap=  689)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+    3D     (overlap=  628)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    7C     (overlap=  579)  TRANSAXLE — 7 > Clutch
+    3F4    (overlap=  533)  3F4
+
+================================================================================
+SECTION 3C: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+  Chunks: 152, Total term occurrences: 10008
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    strut                           freq= 203  sections= 7  tfidf=0.037573
+    arm                             freq=  82  sections=16  tfidf=0.009001
+    stud                            freq=  51  sections=11  tfidf=0.007373
+    wheel                           freq=  91  sections=22  tfidf=0.007241
+    knuckle                         freq=  45  sections=10  tfidf=0.006897
+    suspension                      freq=  56  sections=14  tfidf=0.006848
+    hub                             freq=  46  sections=11  tfidf=0.006651
+    bushing                         freq=  45  sections=11  tfidf=0.006506
+    bearing                         freq=  77  sections=23  tfidf=0.005799
+    compressor                      freq=  32  sections= 9  tfidf=0.005209
+    bracket                         freq=  67  sections=23  tfidf=0.005046
+    race                            freq=  21  sections= 4  tfidf=0.004873
+    rod                             freq=  39  sections=14  tfidf=0.004769
+    spacer                          freq=  25  sections= 7  tfidf=0.004627
+    damper                          freq=  28  sections= 9  tfidf=0.004558
+    ball                            freq=  35  sections=13  tfidf=0.004521
+    caliper                         freq=  19  sections= 5  tfidf=0.004063
+    spring                          freq=  51  sections=22  tfidf=0.004058
+    stopper                         freq=  17  sections= 5  tfidf=0.003635
+    forcing                         freq=  11  sections= 1  tfidf=0.003560
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    strut assembly                            freq=  43  sections= 3  tfidf=0.010937
+    strut bracket                             freq=  27  sections= 1  tfidf=0.008737
+    suspension arm                            freq=  42  sections= 6  tfidf=0.008334
+    control arm                               freq=  31  sections= 3  tfidf=0.007885
+    ball stud                                 freq=  30  sections= 4  tfidf=0.006962
+    strut spring                              freq=  19  sections= 1  tfidf=0.006149
+    ft strut                                  freq=  18  sections= 1  tfidf=0.005825
+    lb ft strut                               freq=  18  sections= 1  tfidf=0.005825
+    rear bushing                              freq=  17  sections= 1  tfidf=0.005501
+    arm bracket                               freq=  19  sections= 2  tfidf=0.005379
+    m lb ft                                   freq=  62  sections=21  tfidf=0.005209
+    m lb                                      freq=  65  sections=22  tfidf=0.005172
+    n m lb                                    freq=  65  sections=22  tfidf=0.005172
+    wheel hub                                 freq=  23  sections= 5  tfidf=0.004918
+    bracket nut                               freq=  19  sections= 3  tfidf=0.004833
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=  70  also_in: 2(9), 3B(10), 3D(4), 3E(3), 3F(25), 3F4(24)
+    bolts                                here=  47  also_in: 2(22), 3(5), 3A(3), 3B(9), 3D(6), 3F(10)
+    bolt                                 here=  23  also_in: 2(3), 3A(3), 3B(8), 3D(39), 3F(12), 3F4(15)
+    notice                               here=  13  also_in: 2(3), 3B(3), 3D(18), 3E(11), 3F(8), 3F4(5)
+    side                                 here=   5  also_in: 2(7), 3(17), 3A(4), 3B(14), 3D(12), 3E(8)
+    wheel                                here=  91  also_in: 2(10), 3(45), 3A(11), 3B(15), 3D(37), 3E(130)
+    n m                                  here=  65  also_in: 3B(17), 3D(35), 3E(7), 3F(21), 3F4(12), 4D(12)
+    nut                                  here=  62  also_in: 3B(30), 3D(66), 3E(8), 3F(6), 3F4(4), 4D(16)
+    lb ft                                here=  62  also_in: 3B(17), 3D(34), 3E(7), 3F(21), 3F4(5), 4D(12)
+    front                                here=  32  also_in: 2(19), 3(41), 3A(13), 3B(7), 3D(19), 3E(7)
+    lower                                here=  31  also_in: 2(14), 3(4), 3B(10), 3D(41), 3E(5), 3F(22)
+    damage                               here=   8  also_in: 2(3), 3B(12), 3D(7), 3E(17), 3F(7), 3F4(9)
+    m lb                                 here=  65  also_in: 3B(9), 3D(34), 3E(7), 3F(19), 3F4(12), 4D(8)
+    n m lb                               here=  65  also_in: 3B(9), 3D(34), 3E(7), 3F(19), 3F4(12), 4D(8)
+    m lb ft                              here=  62  also_in: 3B(9), 3D(34), 3E(7), 3F(19), 3F4(5), 4D(8)
+    rear                                 here=  29  also_in: 2(5), 3(13), 3A(8), 3D(40), 3E(8), 3F4(6)
+    nuts                                 here=  28  also_in: 2(4), 3(4), 3B(7), 3D(14), 3E(25), 3F(15)
+    tighten                              here=  20  also_in: 3(8), 3B(10), 3D(10), 3E(4), 3F(5), 3F4(6)
+    mounting                             here=  16  also_in: 3(5), 3D(11), 3E(17), 3F(6), 3F4(13), 5(16)
+    disconnect                           here=   9  also_in: 2(11), 3B(3), 3D(7), 3F(8), 3F4(8), 5(26)
+    correct                              here=   7  also_in: 3A(5), 3B(3), 3D(4), 3E(11), 3F(3), 3F4(4)
+    end                                  here=  25  also_in: 3(25), 3B(44), 3D(11), 3F(3), 5(21), 7A(4)
+    installation                         here=  23  also_in: 3B(32), 3D(13), 3F(15), 4D(4), 5(39), 7A(4)
+    shaft                                here=  15  also_in: 3(3), 3B(20), 3F(52), 3F4(33), 4D(12), 5(4)
+    position                             here=  13  also_in: 3B(7), 3E(7), 3F(5), 3F4(8), 5(3), 7A(39)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    7B     (overlap= 1936)  TRANSAXLE — 7 > Manual Transaxle
+    3D     (overlap= 1733)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    5      (overlap= 1677)  5
+    7A1    (overlap= 1561)  TRANSAXLE — 7 > Unit Repair
+    3B     (overlap=  906)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    7A     (overlap=  889)  TRANSAXLE — 7 > Automatic Transaxle
+    3F     (overlap=  617)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+    3E     (overlap=  607)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Wheels and Tires
+
+================================================================================
+SECTION 3D: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+  Chunks: 112, Total term occurrences: 5867
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    strut                           freq=  64  sections= 7  tfidf=0.020207
+    knuckle                         freq=  62  sections=10  tfidf=0.016210
+    suspension                      freq=  65  sections=14  tfidf=0.013558
+    rod                             freq=  64  sections=14  tfidf=0.013350
+    mount                           freq=  39  sections=11  tfidf=0.009618
+    arm                             freq=  47  sections=16  tfidf=0.008801
+    brake                           freq=  54  sections=24  tfidf=0.006562
+    control                         freq=  63  sections=27  tfidf=0.006439
+    nut                             freq=  66  sections=29  tfidf=0.005969
+    wheel                           freq=  37  sections=22  tfidf=0.005022
+    jack                            freq=  15  sections= 8  tfidf=0.004435
+    outside                         freq=  26  sections=18  tfidf=0.004376
+    drum                            freq=  13  sections= 7  tfidf=0.004104
+    lower                           freq=  41  sections=29  tfidf=0.003708
+    rear                            freq=  40  sections=29  tfidf=0.003618
+    bolt                            freq=  39  sections=29  tfidf=0.003527
+    flexible                        freq=   8  sections= 6  tfidf=0.002708
+    slit                            freq=   6  sections= 3  tfidf=0.002603
+    component                       freq=  12  sections=15  tfidf=0.002371
+    bearing                         freq=  18  sections=23  tfidf=0.002313
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    control rod                               freq=  62  sections= 4  tfidf=0.024542
+    lower mount                               freq=  33  sections= 1  tfidf=0.018217
+    suspension arm                            freq=  43  sections= 6  tfidf=0.014555
+    lower mount bolt                          freq=  20  sections= 1  tfidf=0.011040
+    mount bolt                                freq=  21  sections= 2  tfidf=0.010141
+    rod outside                               freq=  18  sections= 1  tfidf=0.009936
+    control rod outside                       freq=  18  sections= 1  tfidf=0.009936
+    outside nut                               freq=  17  sections= 1  tfidf=0.009384
+    rod outside nut                           freq=  15  sections= 1  tfidf=0.008280
+    rear suspension                           freq=  19  sections= 4  tfidf=0.007521
+    strut lower mount                         freq=  13  sections= 1  tfidf=0.007176
+    figure control rod                        freq=  12  sections= 1  tfidf=0.006624
+    component view                            freq=  12  sections= 1  tfidf=0.006624
+    rear suspension component                 freq=  12  sections= 1  tfidf=0.006624
+    suspension component view                 freq=  12  sections= 1  tfidf=0.006624
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=   4  also_in: 2(9), 3B(10), 3C(70), 3E(3), 3F(25), 3F4(24)
+    bolt                                 here=  39  also_in: 2(3), 3A(3), 3B(8), 3C(23), 3F(12), 3F4(15)
+    notice                               here=  18  also_in: 2(3), 3B(3), 3C(13), 3E(11), 3F(8), 3F4(5)
+    side                                 here=  12  also_in: 2(7), 3(17), 3A(4), 3B(14), 3C(5), 3E(8)
+    bolts                                here=   6  also_in: 2(22), 3(5), 3A(3), 3B(9), 3C(47), 3F(10)
+    nut                                  here=  66  also_in: 3B(30), 3C(62), 3E(8), 3F(6), 3F4(4), 4D(16)
+    lower                                here=  41  also_in: 2(14), 3(4), 3B(10), 3C(31), 3E(5), 3F(22)
+    wheel                                here=  37  also_in: 2(10), 3(45), 3A(11), 3B(15), 3C(91), 3E(130)
+    n m                                  here=  35  also_in: 3B(17), 3C(65), 3E(7), 3F(21), 3F4(12), 4D(12)
+    lb ft                                here=  34  also_in: 3B(17), 3C(62), 3E(7), 3F(21), 3F4(5), 4D(12)
+    front                                here=  19  also_in: 2(19), 3(41), 3A(13), 3B(7), 3C(32), 3E(7)
+    damage                               here=   7  also_in: 2(3), 3B(12), 3C(8), 3E(17), 3F(7), 3F4(9)
+    rear                                 here=  40  also_in: 2(5), 3(13), 3A(8), 3C(29), 3E(8), 3F4(6)
+    m lb                                 here=  34  also_in: 3B(9), 3C(65), 3E(7), 3F(19), 3F4(12), 4D(8)
+    n m lb                               here=  34  also_in: 3B(9), 3C(65), 3E(7), 3F(19), 3F4(12), 4D(8)
+    m lb ft                              here=  34  also_in: 3B(9), 3C(62), 3E(7), 3F(19), 3F4(5), 4D(8)
+    nuts                                 here=  14  also_in: 2(4), 3(4), 3B(7), 3C(28), 3E(25), 3F(15)
+    mounting                             here=  11  also_in: 3(5), 3C(16), 3E(17), 3F(6), 3F4(13), 5(16)
+    tighten                              here=  10  also_in: 3(8), 3B(10), 3C(20), 3E(4), 3F(5), 3F4(6)
+    disconnect                           here=   7  also_in: 2(11), 3B(3), 3C(9), 3F(8), 3F4(8), 5(26)
+    correct                              here=   4  also_in: 3A(5), 3B(3), 3C(7), 3E(11), 3F(3), 3F4(4)
+    wheels                               here=   2  also_in: 3(5), 3A(10), 3B(4), 3C(10), 3E(27), 3F(3)
+    installation                         here=  13  also_in: 3B(32), 3C(23), 3F(15), 4D(4), 5(39), 7A(4)
+    end                                  here=  11  also_in: 3(25), 3B(44), 3C(25), 3F(3), 5(21), 7A(4)
+    torque                               here=   9  also_in: 3(5), 3B(34), 3E(6), 3F(12), 4D(7), 5(35)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    3C     (overlap= 1680)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    5      (overlap= 1186)  5
+    7B     (overlap= 1067)  TRANSAXLE — 7 > Manual Transaxle
+    7A1    (overlap= 1001)  TRANSAXLE — 7 > Unit Repair
+    7A     (overlap=  621)  TRANSAXLE — 7 > Automatic Transaxle
+    3B     (overlap=  616)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    3F     (overlap=  515)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+    3F4    (overlap=  435)  3F4
+
+================================================================================
+SECTION 3E: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Wheels and Tires
+  Chunks: 88, Total term occurrences: 7765
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    tire                            freq= 119  sections=13  tfidf=0.019812
+    wheel                           freq= 130  sections=22  tfidf=0.013332
+    tires                           freq=  50  sections=13  tfidf=0.008324
+    kpa                             freq=  42  sections=11  tfidf=0.007826
+    psi                             freq=  41  sections=12  tfidf=0.007217
+    chains                          freq=  14  sections= 1  tfidf=0.005839
+    beads                           freq=  13  sections= 1  tfidf=0.005422
+    rim                             freq=  15  sections= 4  tfidf=0.004486
+    balance                         freq=  16  sections= 5  tfidf=0.004410
+    bead                            freq=  13  sections= 3  tfidf=0.004262
+    tread                           freq=  13  sections= 4  tfidf=0.003888
+    metric                          freq=  15  sections= 6  tfidf=0.003836
+    balancing                       freq=  11  sections= 3  tfidf=0.003606
+    wheels                          freq=  27  sections=19  tfidf=0.003255
+    runout                          freq=  11  sections= 5  tfidf=0.003032
+    dynamic                         freq=   8  sections= 2  tfidf=0.002919
+    weights                         freq=   8  sections= 2  tfidf=0.002919
+    compact                         freq=   9  sections= 4  tfidf=0.002692
+    e-3                             freq=   8  sections= 3  tfidf=0.002623
+    spot                            freq=   8  sections= 3  tfidf=0.002623
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    kpa psi                                   freq=  39  sections= 5  tfidf=0.010749
+    kpa psi kpa                               freq=  21  sections= 1  tfidf=0.008759
+    psi kpa psi                               freq=  21  sections= 1  tfidf=0.008759
+    wheel nuts                                freq=  23  sections= 7  tfidf=0.005487
+    psi kpa                                   freq=  21  sections= 6  tfidf=0.005371
+    compact spare                             freq=   9  sections= 3  tfidf=0.002950
+    drum or disc                              freq=   7  sections= 1  tfidf=0.002920
+    wheel nuts and                            freq=   7  sections= 2  tfidf=0.002554
+    of the wheel                              freq=   7  sections= 2  tfidf=0.002554
+    paint dot                                 freq=   6  sections= 1  tfidf=0.002503
+    psi pressure                              freq=   6  sections= 1  tfidf=0.002503
+    kpa psi pressure                          freq=   6  sections= 1  tfidf=0.002503
+    the compact spare                         freq=   6  sections= 1  tfidf=0.002503
+    tire pressure                             freq=  11  sections= 9  tfidf=0.002308
+    nuts and wheel                            freq=   6  sections= 2  tfidf=0.002189
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=   3  also_in: 2(9), 3B(10), 3C(70), 3D(4), 3F(25), 3F4(24)
+    notice                               here=  11  also_in: 2(3), 3B(3), 3C(13), 3D(18), 3F(8), 3F4(5)
+    side                                 here=   8  also_in: 2(7), 3(17), 3A(4), 3B(14), 3C(5), 3D(12)
+    wheel                                here= 130  also_in: 2(10), 3(45), 3A(11), 3B(15), 3C(91), 3D(37)
+    damage                               here=  17  also_in: 2(3), 3B(12), 3C(8), 3D(7), 3F(7), 3F4(9)
+    nut                                  here=   8  also_in: 3B(30), 3C(62), 3D(66), 3F(6), 3F4(4), 4D(16)
+    front                                here=   7  also_in: 2(19), 3(41), 3A(13), 3B(7), 3C(32), 3D(19)
+    n m                                  here=   7  also_in: 3B(17), 3C(65), 3D(35), 3F(21), 3F4(12), 4D(12)
+    lb ft                                here=   7  also_in: 3B(17), 3C(62), 3D(34), 3F(21), 3F4(5), 4D(12)
+    lower                                here=   5  also_in: 2(14), 3(4), 3B(10), 3C(31), 3D(41), 3F(22)
+    nuts                                 here=  25  also_in: 2(4), 3(4), 3B(7), 3C(28), 3D(14), 3F(15)
+    mounting                             here=  17  also_in: 3(5), 3C(16), 3D(11), 3F(6), 3F4(13), 5(16)
+    correct                              here=  11  also_in: 3A(5), 3B(3), 3C(7), 3D(4), 3F(3), 3F4(4)
+    rear                                 here=   8  also_in: 2(5), 3(13), 3A(8), 3C(29), 3D(40), 3F4(6)
+    m lb                                 here=   7  also_in: 3B(9), 3C(65), 3D(34), 3F(19), 3F4(12), 4D(8)
+    n m lb                               here=   7  also_in: 3B(9), 3C(65), 3D(34), 3F(19), 3F4(12), 4D(8)
+    m lb ft                              here=   7  also_in: 3B(9), 3C(62), 3D(34), 3F(19), 3F4(5), 4D(8)
+    tighten                              here=   4  also_in: 3(8), 3B(10), 3C(20), 3D(10), 3F(5), 3F4(6)
+    wheels                               here=  27  also_in: 3(5), 3A(10), 3B(4), 3C(10), 3F(3), 3F4(3)
+    cause                                here=  25  also_in: 3(74), 3A(4), 3B(3), 3F(12), 3F4(3), 5(54)
+    position                             here=   7  also_in: 3B(7), 3C(13), 3F(5), 3F4(8), 5(3), 7A(39)
+    torque                               here=   6  also_in: 3(5), 3B(34), 3D(9), 3F(12), 4D(7), 5(35)
+    brake                                here=   8  also_in: 3(7), 3C(43), 3D(54), 3F4(7), 5(459), 5B(18)
+    proper                               here=   5  also_in: 2(7), 3(5), 3A(3), 3C(4), 3D(5), 3F4(7)
+    body                                 here=   4  also_in: 2(5), 3A(3), 3B(3), 3C(8), 3D(18), 5(63)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    5      (overlap=  920)  5
+    7A1    (overlap=  652)  TRANSAXLE — 7 > Unit Repair
+    3C     (overlap=  635)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    3      (overlap=  552)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Diagnosis
+    7B     (overlap=  500)  TRANSAXLE — 7 > Manual Transaxle
+    3D     (overlap=  462)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    7A     (overlap=  440)  TRANSAXLE — 7 > Automatic Transaxle
+    3F4    (overlap=  408)  3F4
+
+================================================================================
+SECTION 3F: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+  Chunks: 55, Total term occurrences: 4045
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    steering                        freq= 131  sections=22  tfidf=0.025790
+    column                          freq=  66  sections=12  tfidf=0.022303
+    shaft                           freq=  52  sections=21  tfidf=0.010809
+    horn                            freq=  22  sections= 6  tfidf=0.010801
+    joint                           freq=  40  sections=22  tfidf=0.007875
+    dimmer                          freq=  12  sections= 5  tfidf=0.006349
+    wheel                           freq=  30  sections=22  tfidf=0.005906
+    pad                             freq=  11  sections= 8  tfidf=0.004717
+    relay                           freq=  12  sections=13  tfidf=0.003835
+    switch                          freq=  31  sections=30  tfidf=0.003815
+    signal                          freq=  13  sections=15  tfidf=0.003726
+    upper                           freq=  22  sections=26  tfidf=0.003459
+    ignition                        freq=  18  sections=24  tfidf=0.003173
+    correction                      freq=  11  sections=15  tfidf=0.003152
+    lower                           freq=  22  sections=29  tfidf=0.002886
+    f-6                             freq=   4  sections= 2  tfidf=0.002802
+    f-9                             freq=   4  sections= 2  tfidf=0.002802
+    damper                          freq=   6  sections= 9  tfidf=0.002417
+    f-10                            freq=   3  sections= 1  tfidf=0.002402
+    turn                            freq=  17  sections=29  tfidf=0.002230
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    steering shaft                            freq=  37  sections= 6  tfidf=0.018165
+    steering column                           freq=  45  sections=10  tfidf=0.017065
+    steering wheel                            freq=  28  sections=11  tfidf=0.010016
+    steering shaft joint                      freq=  14  sections= 4  tfidf=0.008038
+    steering pad                              freq=  10  sections= 1  tfidf=0.008007
+    column assembly                           freq=  11  sections= 2  tfidf=0.007705
+    lower joint                               freq=  12  sections= 3  tfidf=0.007552
+    horn relay                                freq=  12  sections= 4  tfidf=0.006890
+    shaft joint                               freq=  14  sections= 6  tfidf=0.006873
+    joint upper                               freq=   8  sections= 1  tfidf=0.006405
+    side bolt                                 freq=   8  sections= 1  tfidf=0.006405
+    signal dimmer                             freq=  12  sections= 5  tfidf=0.006349
+    dimmer switch                             freq=  12  sections= 5  tfidf=0.006349
+    turn signal dimmer                        freq=  12  sections= 5  tfidf=0.006349
+    signal dimmer switch                      freq=  12  sections= 5  tfidf=0.006349
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=  25  also_in: 2(9), 3B(10), 3C(70), 3D(4), 3E(3), 3F4(24)
+    side                                 here=  14  also_in: 2(7), 3(17), 3A(4), 3B(14), 3C(5), 3D(12)
+    bolt                                 here=  12  also_in: 2(3), 3A(3), 3B(8), 3C(23), 3D(39), 3F4(15)
+    bolts                                here=  10  also_in: 2(22), 3(5), 3A(3), 3B(9), 3C(47), 3D(6)
+    notice                               here=   8  also_in: 2(3), 3B(3), 3C(13), 3D(18), 3E(11), 3F4(5)
+    wheel                                here=  30  also_in: 2(10), 3(45), 3A(11), 3B(15), 3C(91), 3D(37)
+    lower                                here=  22  also_in: 2(14), 3(4), 3B(10), 3C(31), 3D(41), 3E(5)
+    n m                                  here=  21  also_in: 3B(17), 3C(65), 3D(35), 3E(7), 3F4(12), 4D(12)
+    lb ft                                here=  21  also_in: 3B(17), 3C(62), 3D(34), 3E(7), 3F4(5), 4D(12)
+    damage                               here=   7  also_in: 2(3), 3B(12), 3C(8), 3D(7), 3E(17), 3F4(9)
+    nut                                  here=   6  also_in: 3B(30), 3C(62), 3D(66), 3E(8), 3F4(4), 4D(16)
+    front                                here=   3  also_in: 2(19), 3(41), 3A(13), 3B(7), 3C(32), 3D(19)
+    m lb                                 here=  19  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F4(12), 4D(8)
+    n m lb                               here=  19  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F4(12), 4D(8)
+    m lb ft                              here=  19  also_in: 3B(9), 3C(62), 3D(34), 3E(7), 3F4(5), 4D(8)
+    nuts                                 here=  15  also_in: 2(4), 3(4), 3B(7), 3C(28), 3D(14), 3E(25)
+    disconnect                           here=   8  also_in: 2(11), 3B(3), 3C(9), 3D(7), 3F4(8), 5(26)
+    mounting                             here=   6  also_in: 3(5), 3C(16), 3D(11), 3E(17), 3F4(13), 5(16)
+    tighten                              here=   5  also_in: 3(8), 3B(10), 3C(20), 3D(10), 3E(4), 3F4(6)
+    correct                              here=   3  also_in: 3A(5), 3B(3), 3C(7), 3D(4), 3E(11), 3F4(4)
+    shaft                                here=  52  also_in: 3(3), 3B(20), 3C(15), 3F4(33), 4D(12), 5(4)
+    installation                         here=  15  also_in: 3B(32), 3C(23), 3D(13), 4D(4), 5(39), 7A(4)
+    torque                               here=  12  also_in: 3(5), 3B(34), 3D(9), 3E(6), 4D(7), 5(35)
+    cause                                here=  12  also_in: 3(74), 3A(4), 3B(3), 3E(25), 3F4(3), 5(54)
+    connect                              here=   6  also_in: 2(11), 3C(10), 3D(7), 3F4(8), 5(23), 7A(13)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    3F4    (overlap= 1092)  3F4
+    7A1    (overlap=  716)  TRANSAXLE — 7 > Unit Repair
+    3B     (overlap=  685)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    7B     (overlap=  640)  TRANSAXLE — 7 > Manual Transaxle
+    5      (overlap=  620)  5
+    3C     (overlap=  588)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    7A     (overlap=  562)  TRANSAXLE — 7 > Automatic Transaxle
+    3D     (overlap=  509)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+
+================================================================================
+SECTION 3F4: 3F4
+  Chunks: 69, Total term occurrences: 6225
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    column                          freq=  88  sections=12  tfidf=0.019323
+    steering                        freq= 139  sections=22  tfidf=0.017782
+    sir                             freq=  59  sections= 8  tfidf=0.016440
+    inflator                        freq=  41  sections= 6  tfidf=0.013080
+    module                          freq=  39  sections=14  tfidf=0.007667
+    deployment                      freq=  16  sections= 6  tfidf=0.005104
+    wheel                           freq=  36  sections=22  tfidf=0.004605
+    shaft                           freq=  33  sections=21  tfidf=0.004457
+    inflatable                      freq=  15  sections= 8  tfidf=0.004180
+    restraint                       freq=  15  sections= 8  tfidf=0.004180
+    coil                            freq=  26  sections=19  tfidf=0.003910
+    supplemental                    freq=  14  sections= 8  tfidf=0.003901
+    earlier                         freq=  15  sections=10  tfidf=0.003696
+    column-to-steering              freq=   7  sections= 1  tfidf=0.003642
+    pinch                           freq=  10  sections= 5  tfidf=0.003438
+    bag                             freq=  11  sections= 7  tfidf=0.003273
+    sec                             freq=  15  sections=13  tfidf=0.003115
+    dimmer                          freq=   9  sections= 5  tfidf=0.003094
+    ignition                        freq=  24  sections=24  tfidf=0.002749
+    screws                          freq=  22  sections=23  tfidf=0.002664
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    steering column                           freq=  70  sections=10  tfidf=0.017249
+    inflator module                           freq=  38  sections= 5  tfidf=0.013064
+    steering wheel                            freq=  36  sections=11  tfidf=0.008368
+    steering shaft                            freq=  23  sections= 6  tfidf=0.007338
+    sir system                                freq=  23  sections= 7  tfidf=0.006844
+    the sir system                            freq=  19  sections= 5  tfidf=0.006532
+    shaft joint                               freq=  20  sections= 6  tfidf=0.006380
+    sir coil                                  freq=  17  sections= 4  tfidf=0.006342
+    pinch bolt                                freq=  10  sections= 1  tfidf=0.005203
+    the steering column                       freq=  14  sections= 5  tfidf=0.004813
+    dimmer switch assembly                    freq=   9  sections= 1  tfidf=0.004682
+    steering shaft joint                      freq=  12  sections= 4  tfidf=0.004477
+    inflatable restraint                      freq=  15  sections= 8  tfidf=0.004180
+    coil and turn                             freq=   9  sections= 2  tfidf=0.004096
+    the sir coil                              freq=  10  sections= 3  tfidf=0.004089
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=  24  also_in: 2(9), 3B(10), 3C(70), 3D(4), 3E(3), 3F(25)
+    bolt                                 here=  15  also_in: 2(3), 3A(3), 3B(8), 3C(23), 3D(39), 3F(12)
+    bolts                                here=   7  also_in: 2(22), 3(5), 3A(3), 3B(9), 3C(47), 3D(6)
+    notice                               here=   5  also_in: 2(3), 3B(3), 3C(13), 3D(18), 3E(11), 3F(8)
+    wheel                                here=  36  also_in: 2(10), 3(45), 3A(11), 3B(15), 3C(91), 3D(37)
+    n m                                  here=  12  also_in: 3B(17), 3C(65), 3D(35), 3E(7), 3F(21), 4D(12)
+    lower                                here=  12  also_in: 2(14), 3(4), 3B(10), 3C(31), 3D(41), 3E(5)
+    damage                               here=   9  also_in: 2(3), 3B(12), 3C(8), 3D(7), 3E(17), 3F(7)
+    lb ft                                here=   5  also_in: 3B(17), 3C(62), 3D(34), 3E(7), 3F(21), 4D(12)
+    nut                                  here=   4  also_in: 3B(30), 3C(62), 3D(66), 3E(8), 3F(6), 4D(16)
+    mounting                             here=  13  also_in: 3(5), 3C(16), 3D(11), 3E(17), 3F(6), 5(16)
+    m lb                                 here=  12  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F(19), 4D(8)
+    n m lb                               here=  12  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F(19), 4D(8)
+    nuts                                 here=  10  also_in: 2(4), 3(4), 3B(7), 3C(28), 3D(14), 3E(25)
+    disconnect                           here=   8  also_in: 2(11), 3B(3), 3C(9), 3D(7), 3F(8), 5(26)
+    rear                                 here=   6  also_in: 2(5), 3(13), 3A(8), 3C(29), 3D(40), 3E(8)
+    tighten                              here=   6  also_in: 3(8), 3B(10), 3C(20), 3D(10), 3E(4), 3F(5)
+    m lb ft                              here=   5  also_in: 3B(9), 3C(62), 3D(34), 3E(7), 3F(19), 4D(8)
+    correct                              here=   4  also_in: 3A(5), 3B(3), 3C(7), 3D(4), 3E(11), 3F(3)
+    shaft                                here=  33  also_in: 3(3), 3B(20), 3C(15), 3F(52), 4D(12), 5(4)
+    connect                              here=   8  also_in: 2(11), 3C(10), 3D(7), 3F(6), 5(23), 7A(13)
+    position                             here=   8  also_in: 3B(7), 3C(13), 3E(7), 3F(5), 5(3), 7A(39)
+    cause                                here=   3  also_in: 3(74), 3A(4), 3B(3), 3E(25), 3F(12), 5(54)
+    wheels                               here=   3  also_in: 3(5), 3A(10), 3B(4), 3C(10), 3E(27), 3F(3)
+    joint                                here=  20  also_in: 3(3), 3B(23), 3C(9), 3F(40), 4D(43), 5(7)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    3F     (overlap= 1097)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+    7A1    (overlap=  806)  TRANSAXLE — 7 > Unit Repair
+    7A     (overlap=  729)  TRANSAXLE — 7 > Automatic Transaxle
+    5      (overlap=  624)  5
+    3C     (overlap=  584)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    7B     (overlap=  565)  TRANSAXLE — 7 > Manual Transaxle
+    3B     (overlap=  524)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    3D     (overlap=  440)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+
+================================================================================
+SECTION 4D: 4D
+  Chunks: 23, Total term occurrences: 2003
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    differential-side               freq=  20  sections= 2  tfidf=0.028290
+    boot                            freq=  30  sections=11  tfidf=0.021671
+    wheel-side                      freq=  13  sections= 1  tfidf=0.021020
+    spider                          freq=  13  sections= 1  tfidf=0.021020
+    joint                           freq=  43  sections=22  tfidf=0.017095
+    band                            freq=  11  sections= 4  tfidf=0.012754
+    snap                            freq=  13  sections=13  tfidf=0.008390
+    d-3                             freq=   7  sections= 4  tfidf=0.008116
+    tripod                          freq=   5  sections= 1  tfidf=0.008085
+    gram                            freq=   5  sections= 1  tfidf=0.008085
+    man                             freq=   5  sections= 2  tfidf=0.007072
+    trans                           freq=   6  sections= 4  tfidf=0.006957
+    grease                          freq=  12  sections=15  tfidf=0.006945
+    differential                    freq=   7  sections= 7  tfidf=0.006474
+    driveshaft                      freq=   4  sections= 1  tfidf=0.006468
+    d-8                             freq=   4  sections= 1  tfidf=0.006468
+    axle                            freq=   7  sections= 8  tfidf=0.006062
+    boots                           freq=   7  sections= 8  tfidf=0.006062
+    ring                            freq=  12  sections=18  tfidf=0.005915
+    degreaser                       freq=   4  sections= 2  tfidf=0.005658
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    boot band                                 freq=  11  sections= 1  tfidf=0.017786
+    differential-side joint                   freq=   9  sections= 1  tfidf=0.014552
+    differential-side boot                    freq=   8  sections= 1  tfidf=0.012935
+    wheel-side joint                          freq=   7  sections= 1  tfidf=0.011318
+    snap ring                                 freq=  12  sections= 9  tfidf=0.009761
+    wheel-side boot                           freq=   6  sections= 1  tfidf=0.009701
+    the differential-side joint               freq=   6  sections= 1  tfidf=0.009701
+    joint grease                              freq=   6  sections= 1  tfidf=0.009701
+    joint assembly                            freq=   6  sections= 2  tfidf=0.008487
+    side joint                                freq=   6  sections= 2  tfidf=0.008487
+    tripod joint                              freq=   5  sections= 1  tfidf=0.008085
+    plug man                                  freq=   5  sections= 1  tfidf=0.008085
+    plug man trans                            freq=   5  sections= 1  tfidf=0.008085
+    differential side                         freq=   7  sections= 5  tfidf=0.007479
+    man trans                                 freq=   5  sections= 2  tfidf=0.007072
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=  11  also_in: 2(9), 3B(10), 3C(70), 3D(4), 3E(3), 3F(25)
+    side                                 here=  12  also_in: 2(7), 3(17), 3A(4), 3B(14), 3C(5), 3D(12)
+    bolt                                 here=   9  also_in: 2(3), 3A(3), 3B(8), 3C(23), 3D(39), 3F(12)
+    notice                               here=   3  also_in: 2(3), 3B(3), 3C(13), 3D(18), 3E(11), 3F(8)
+    front                                here=   2  also_in: 2(19), 3(41), 3A(13), 3B(7), 3C(32), 3D(19)
+    nut                                  here=  16  also_in: 3B(30), 3C(62), 3D(66), 3E(8), 3F(6), 3F4(4)
+    n m                                  here=  12  also_in: 3B(17), 3C(65), 3D(35), 3E(7), 3F(21), 3F4(12)
+    lb ft                                here=  12  also_in: 3B(17), 3C(62), 3D(34), 3E(7), 3F(21), 3F4(5)
+    wheel                                here=   9  also_in: 2(10), 3(45), 3A(11), 3B(15), 3C(91), 3D(37)
+    nuts                                 here=   2  also_in: 2(4), 3(4), 3B(7), 3C(28), 3D(14), 3E(25)
+    m lb                                 here=   8  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F(19), 3F4(12)
+    n m lb                               here=   8  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F(19), 3F4(12)
+    m lb ft                              here=   8  also_in: 3B(9), 3C(62), 3D(34), 3E(7), 3F(19), 3F4(5)
+    shaft                                here=  12  also_in: 3(3), 3B(20), 3C(15), 3F(52), 3F4(33), 5(4)
+    torque                               here=   7  also_in: 3(5), 3B(34), 3D(9), 3E(6), 3F(12), 5(35)
+    installation                         here=   4  also_in: 3B(32), 3C(23), 3D(13), 3F(15), 5(39), 7A(4)
+    joint                                here=  43  also_in: 3(3), 3B(23), 3C(9), 3F(40), 3F4(20), 5(7)
+    removal                              here=   3  also_in: 3B(25), 3C(23), 3D(24), 3F(15), 3F4(3), 5(32)
+    center                               here=   1  also_in: 3A(3), 3C(6), 3D(6), 3E(4), 3F(6), 3F4(6)
+    seal                                 here=   6  also_in: 3B(12), 3C(25), 5(35), 5B(4), 7A(5), 7A1(61)
+    bearing                              here=   5  also_in: 3(7), 3B(32), 3C(77), 3D(18), 5(3), 7A1(99)
+    parts                                here=   4  also_in: 3A(4), 3B(13), 3E(3), 3F(5), 5(55), 5B(6)
+    apply                                here=   4  also_in: 3B(6), 3C(9), 3D(3), 5(14), 7A(10), 7A1(32)
+    steering                             here=   3  also_in: 3(15), 3A(8), 3B(99), 3C(8), 3E(7), 3F(131)
+    pin                                  here=   2  also_in: 3B(13), 3C(9), 5(21), 5B(14), 7A(8), 7A1(23)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    7B     (overlap=  458)  TRANSAXLE — 7 > Manual Transaxle
+    7A1    (overlap=  397)  TRANSAXLE — 7 > Unit Repair
+    5      (overlap=  370)  5
+    3B     (overlap=  362)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    3C     (overlap=  318)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    7A     (overlap=  308)  TRANSAXLE — 7 > Automatic Transaxle
+    3F     (overlap=  253)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+    3D     (overlap=  237)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+
+================================================================================
+SECTION 5: 5
+  Chunks: 308, Total term occurrences: 22948
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    booster                         freq= 141  sections= 4  tfidf=0.014270
+    brake                           freq= 459  sections=24  tfidf=0.014260
+    piston                          freq= 180  sections= 9  tfidf=0.012779
+    shoe                            freq=  85  sections= 5  tfidf=0.007927
+    master                          freq=  67  sections= 3  tfidf=0.007432
+    cylinder                        freq= 152  sections=17  tfidf=0.006898
+    caliper                         freq=  71  sections= 5  tfidf=0.006621
+    drum                            freq=  63  sections= 7  tfidf=0.005085
+    fluid                           freq=  85  sections=14  tfidf=0.004533
+    valve                           freq= 100  sections=18  tfidf=0.004303
+    disc                            freq=  70  sections=12  tfidf=0.004169
+    lining                          freq=  36  sections= 5  tfidf=0.003357
+    pedal                           freq=  78  sections=18  tfidf=0.003356
+    parking                         freq=  63  sections=15  tfidf=0.003182
+    wheel                           freq=  91  sections=22  tfidf=0.003158
+    pad                             freq=  41  sections= 8  tfidf=0.003099
+    shoes                           freq=  23  sections= 2  tfidf=0.002840
+    chamber                         freq=  31  sections= 6  tfidf=0.002683
+    reservoir                       freq=  39  sections=10  tfidf=0.002607
+    rod                             freq=  47  sections=14  tfidf=0.002506
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    master cylinder                           freq=  67  sections= 3  tfidf=0.007432
+    brake shoe                                freq=  52  sections= 3  tfidf=0.005768
+    booster piston                            freq=  38  sections= 1  tfidf=0.005363
+    air valve                                 freq=  39  sections= 2  tfidf=0.004815
+    wheel cylinder                            freq=  40  sections= 4  tfidf=0.004048
+    brake drum                                freq=  39  sections= 5  tfidf=0.003637
+    parking brake                             freq=  60  sections=14  tfidf=0.003200
+    brake cable                               freq=  27  sections= 3  tfidf=0.002995
+    remove and install                        freq=  24  sections= 2  tfidf=0.002963
+    brake shoes                               freq=  19  sections= 1  tfidf=0.002681
+    brake fluid                               freq=  31  sections= 7  tfidf=0.002502
+    brake pedal                               freq=  44  sections=13  tfidf=0.002479
+    control valve                             freq=  24  sections= 4  tfidf=0.002429
+    rear brake                                freq=  17  sections= 1  tfidf=0.002399
+    booster air                               freq=  17  sections= 1  tfidf=0.002399
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=  50  also_in: 2(9), 3B(10), 3C(70), 3D(4), 3E(3), 3F(25)
+    notice                               here=  57  also_in: 2(3), 3B(3), 3C(13), 3D(18), 3E(11), 3F(8)
+    side                                 here=  29  also_in: 2(7), 3(17), 3A(4), 3B(14), 3C(5), 3D(12)
+    bolt                                 here=  27  also_in: 2(3), 3A(3), 3B(8), 3C(23), 3D(39), 3F(12)
+    bolts                                here=  24  also_in: 2(22), 3(5), 3A(3), 3B(9), 3C(47), 3D(6)
+    wheel                                here=  91  also_in: 2(10), 3(45), 3A(11), 3B(15), 3C(91), 3D(37)
+    nut                                  here=  52  also_in: 3B(30), 3C(62), 3D(66), 3E(8), 3F(6), 3F4(4)
+    front                                here=  38  also_in: 2(19), 3(41), 3A(13), 3B(7), 3C(32), 3D(19)
+    n m                                  here=  24  also_in: 3B(17), 3C(65), 3D(35), 3E(7), 3F(21), 3F4(12)
+    damage                               here=  20  also_in: 2(3), 3B(12), 3C(8), 3D(7), 3E(17), 3F(7)
+    lb ft                                here=   8  also_in: 3B(17), 3C(62), 3D(34), 3E(7), 3F(21), 3F4(5)
+    lower                                here=   6  also_in: 2(14), 3(4), 3B(10), 3C(31), 3D(41), 3E(5)
+    rear                                 here=  47  also_in: 2(5), 3(13), 3A(8), 3C(29), 3D(40), 3E(8)
+    disconnect                           here=  26  also_in: 2(11), 3B(3), 3C(9), 3D(7), 3F(8), 3F4(8)
+    nuts                                 here=  19  also_in: 2(4), 3(4), 3B(7), 3C(28), 3D(14), 3E(25)
+    mounting                             here=  16  also_in: 3(5), 3C(16), 3D(11), 3E(17), 3F(6), 3F4(13)
+    correct                              here=   9  also_in: 3A(5), 3B(3), 3C(7), 3D(4), 3E(11), 3F(3)
+    tighten                              here=   9  also_in: 3(8), 3B(10), 3C(20), 3D(10), 3E(4), 3F(5)
+    m lb                                 here=   7  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F(19), 3F4(12)
+    m lb ft                              here=   7  also_in: 3B(9), 3C(62), 3D(34), 3E(7), 3F(19), 3F4(5)
+    cause                                here=  54  also_in: 3(74), 3A(4), 3B(3), 3E(25), 3F(12), 3F4(3)
+    installation                         here=  39  also_in: 3B(32), 3C(23), 3D(13), 3F(15), 4D(4), 7A(4)
+    torque                               here=  35  also_in: 3(5), 3B(34), 3D(9), 3E(6), 3F(12), 4D(7)
+    connect                              here=  23  also_in: 2(11), 3C(10), 3D(7), 3F(6), 3F4(8), 7A(13)
+    end                                  here=  21  also_in: 3(25), 3B(44), 3C(25), 3D(11), 3F(3), 7A(4)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    7A1    (overlap= 3296)  TRANSAXLE — 7 > Unit Repair
+    7B     (overlap= 1957)  TRANSAXLE — 7 > Manual Transaxle
+    3C     (overlap= 1736)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    3D     (overlap= 1323)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    7A     (overlap= 1299)  TRANSAXLE — 7 > Automatic Transaxle
+    3B     (overlap= 1060)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    3E     (overlap=  919)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Wheels and Tires
+    3      (overlap=  851)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Diagnosis
+
+================================================================================
+SECTION 5B: Brakes Hydraulic
+  Chunks: 27, Total term occurrences: 2200
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    cell                            freq=  38  sections= 2  tfidf=0.048937
+    caliper                         freq=  44  sections= 5  tfidf=0.042801
+    carrier                         freq=  19  sections= 9  tfidf=0.014071
+    piston                          freq=  19  sections= 9  tfidf=0.014071
+    pads                            freq=   8  sections= 3  tfidf=0.009256
+    pin                             freq=  14  sections=16  tfidf=0.006991
+    sec                             freq=  10  sections=13  tfidf=0.005876
+    brake                           freq=  18  sections=24  tfidf=0.005833
+    flexible                        freq=   6  sections= 6  tfidf=0.005416
+    boot                            freq=   8  sections=11  tfidf=0.005262
+    sir                             freq=   5  sections= 8  tfidf=0.003942
+    asbestos                        freq=   3  sections= 2  tfidf=0.003863
+    tires                           freq=   6  sections=13  tfidf=0.003526
+    fibers                          freq=   3  sections= 3  tfidf=0.003471
+    fastener                        freq=   6  sections=15  tfidf=0.003162
+    bolts                           freq=  16  sections=33  tfidf=0.002949
+    shoe                            freq=   3  sections= 5  tfidf=0.002918
+    lining                          freq=   3  sections= 5  tfidf=0.002918
+    suitably                        freq=   3  sections= 6  tfidf=0.002708
+    compressed                      freq=   4  sections=11  tfidf=0.002631
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    pin bolts                                 freq=  12  sections= 1  tfidf=0.017666
+    caliper pin                               freq=  10  sections= 1  tfidf=0.014721
+    caliper pin bolts                         freq=   8  sections= 1  tfidf=0.011777
+    caliper assembly                          freq=   8  sections= 3  tfidf=0.009256
+    flexible brake                            freq=   6  sections= 1  tfidf=0.008833
+    caliper housing                           freq=   6  sections= 1  tfidf=0.008833
+    pin bolts caliper                         freq=   5  sections= 1  tfidf=0.007361
+    wheels sec                                freq=   6  sections= 3  tfidf=0.006942
+    refer to tires                            freq=   6  sections= 3  tfidf=0.006942
+    to tires and                              freq=   6  sections= 3  tfidf=0.006942
+    and wheels sec                            freq=   6  sections= 3  tfidf=0.006942
+    wheels sec e                              freq=   6  sections= 3  tfidf=0.006942
+    bracket carrier                           freq=   4  sections= 1  tfidf=0.005889
+    caliper mounting bracket                  freq=   4  sections= 1  tfidf=0.005889
+    mounting bracket carrier                  freq=   4  sections= 1  tfidf=0.005889
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=  10  also_in: 2(9), 3B(10), 3C(70), 3D(4), 3E(3), 3F(25)
+    bolts                                here=  16  also_in: 2(22), 3(5), 3A(3), 3B(9), 3C(47), 3D(6)
+    bolt                                 here=   4  also_in: 2(3), 3A(3), 3B(8), 3C(23), 3D(39), 3F(12)
+    notice                               here=   3  also_in: 2(3), 3B(3), 3C(13), 3D(18), 3E(11), 3F(8)
+    n m                                  here=   9  also_in: 3B(17), 3C(65), 3D(35), 3E(7), 3F(21), 3F4(12)
+    lb ft                                here=   9  also_in: 3B(17), 3C(62), 3D(34), 3E(7), 3F(21), 3F4(5)
+    wheel                                here=   6  also_in: 2(10), 3(45), 3A(11), 3B(15), 3C(91), 3D(37)
+    damage                               here=   4  also_in: 2(3), 3B(12), 3C(8), 3D(7), 3E(17), 3F(7)
+    lower                                here=   3  also_in: 2(14), 3(4), 3B(10), 3C(31), 3D(41), 3E(5)
+    tighten                              here=   2  also_in: 3(8), 3B(10), 3C(20), 3D(10), 3E(4), 3F(5)
+    m lb                                 here=   9  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F(19), 3F4(12)
+    n m lb                               here=   9  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F(19), 3F4(12)
+    m lb ft                              here=   9  also_in: 3B(9), 3C(62), 3D(34), 3E(7), 3F(19), 3F4(5)
+    mounting                             here=   4  also_in: 3(5), 3C(16), 3D(11), 3E(17), 3F(6), 3F4(13)
+    correct                              here=   3  also_in: 3A(5), 3B(3), 3C(7), 3D(4), 3E(11), 3F(3)
+    cause                                here=   2  also_in: 3(74), 3A(4), 3B(3), 3E(25), 3F(12), 3F4(3)
+    torque                               here=   1  also_in: 3(5), 3B(34), 3D(9), 3E(6), 3F(12), 4D(7)
+    wheels                               here=   6  also_in: 3(5), 3A(10), 3B(4), 3C(10), 3E(27), 3F(3)
+    brake                                here=  18  also_in: 3(7), 3C(43), 3D(54), 3E(8), 3F4(7), 5(459)
+    fasteners                            here=   3  also_in: 3A(3), 3B(3), 3C(4), 3D(4), 3E(3), 3F(3)
+    removed                              here=   2  also_in: 3B(4), 3E(5), 3F(5), 3F4(4), 5(17), 7A(3)
+    part                                 here=   2  also_in: 2(4), 3B(12), 3D(10), 3E(3), 3F(5), 3F4(5)
+    steering                             here=   2  also_in: 3(15), 3A(8), 3B(99), 3C(8), 3E(7), 3F(131)
+    parts                                here=   6  also_in: 3A(4), 3B(13), 3E(3), 3F(5), 4D(4), 5(55)
+    bracket                              here=   4  also_in: 3C(67), 3D(12), 3F(11), 5(3), 7A(12), 7B(10)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    5      (overlap=  465)  5
+    3C     (overlap=  414)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    7A1    (overlap=  320)  TRANSAXLE — 7 > Unit Repair
+    7A     (overlap=  317)  TRANSAXLE — 7 > Automatic Transaxle
+    7B     (overlap=  253)  TRANSAXLE — 7 > Manual Transaxle
+    3F4    (overlap=  252)  3F4
+    3D     (overlap=  245)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    3E     (overlap=  237)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Wheels and Tires
+
+================================================================================
+SECTION 7A: TRANSAXLE — 7 > Automatic Transaxle
+  Chunks: 103, Total term occurrences: 9176
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    transaxle                       freq=  92  sections=17  tfidf=0.010442
+    selector                        freq=  53  sections= 9  tfidf=0.009410
+    lever                           freq=  73  sections=19  tfidf=0.007447
+    oil                             freq= 105  sections=26  tfidf=0.007278
+    pan                             freq=  36  sections= 7  tfidf=0.007267
+    solenoid                        freq=  44  sections=11  tfidf=0.006938
+    cable                           freq= 109  sections=29  tfidf=0.006303
+    fluid                           freq=  46  sections=14  tfidf=0.006135
+    select                          freq=  36  sections=11  tfidf=0.005677
+    interlock                       freq=  21  sections= 5  tfidf=0.004898
+    shift                           freq=  38  sections=17  tfidf=0.004313
+    cooler                          freq=  15  sections= 5  tfidf=0.003498
+    plate                           freq=  38  sections=22  tfidf=0.003298
+    earlier                         freq=  19  sections=10  tfidf=0.003176
+    axle                            freq=  15  sections= 8  tfidf=0.002836
+    shifted                         freq=  11  sections= 4  tfidf=0.002784
+    lock                            freq=  39  sections=26  tfidf=0.002703
+    level                           freq=  31  sections=22  tfidf=0.002690
+    switch                          freq=  48  sections=30  tfidf=0.002604
+    range                           freq=  19  sections=14  tfidf=0.002534
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    selector lever                            freq=  44  sections= 4  tfidf=0.011136
+    oil pan                                   freq=  35  sections= 5  tfidf=0.008163
+    select cable                              freq=  32  sections= 4  tfidf=0.008099
+    pressure control                          freq=  26  sections= 4  tfidf=0.006580
+    oil pressure control                      freq=  26  sections= 4  tfidf=0.006580
+    pressure control cable                    freq=  26  sections= 4  tfidf=0.006580
+    control cable                             freq=  26  sections= 6  tfidf=0.005627
+    interlock cable                           freq=  17  sections= 2  tfidf=0.005249
+    oil pressure                              freq=  26  sections= 8  tfidf=0.004915
+    neutral safety                            freq=  19  sections= 6  tfidf=0.004112
+    neutral safety switch                     freq=  18  sections= 6  tfidf=0.003896
+    p position                                freq=  12  sections= 2  tfidf=0.003705
+    shift lock                                freq=  13  sections= 3  tfidf=0.003606
+    lock solenoid                             freq=  13  sections= 3  tfidf=0.003606
+    shift lock solenoid                       freq=  13  sections= 3  tfidf=0.003606
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=  16  also_in: 2(9), 3B(10), 3C(70), 3D(4), 3E(3), 3F(25)
+    bolts                                here=  21  also_in: 2(22), 3(5), 3A(3), 3B(9), 3C(47), 3D(6)
+    bolt                                 here=  10  also_in: 2(3), 3A(3), 3B(8), 3C(23), 3D(39), 3F(12)
+    side                                 here=  10  also_in: 2(7), 3(17), 3A(4), 3B(14), 3C(5), 3D(12)
+    n m                                  here=  20  also_in: 3B(17), 3C(65), 3D(35), 3E(7), 3F(21), 3F4(12)
+    nut                                  here=  17  also_in: 3B(30), 3C(62), 3D(66), 3E(8), 3F(6), 3F4(4)
+    lb ft                                here=  15  also_in: 3B(17), 3C(62), 3D(34), 3E(7), 3F(21), 3F4(5)
+    lower                                here=  13  also_in: 2(14), 3(4), 3B(10), 3C(31), 3D(41), 3E(5)
+    damage                               here=   4  also_in: 2(3), 3B(12), 3C(8), 3D(7), 3E(17), 3F(7)
+    front                                here=   4  also_in: 2(19), 3(41), 3A(13), 3B(7), 3C(32), 3D(19)
+    m lb                                 here=  20  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F(19), 3F4(12)
+    n m lb                               here=  20  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F(19), 3F4(12)
+    disconnect                           here=  17  also_in: 2(11), 3B(3), 3C(9), 3D(7), 3F(8), 3F4(8)
+    m lb ft                              here=  15  also_in: 3B(9), 3C(62), 3D(34), 3E(7), 3F(19), 3F4(5)
+    nuts                                 here=  14  also_in: 2(4), 3(4), 3B(7), 3C(28), 3D(14), 3E(25)
+    tighten                              here=  10  also_in: 3(8), 3B(10), 3C(20), 3D(10), 3E(4), 3F(5)
+    rear                                 here=  10  also_in: 2(5), 3(13), 3A(8), 3C(29), 3D(40), 3E(8)
+    mounting                             here=   5  also_in: 3(5), 3C(16), 3D(11), 3E(17), 3F(6), 3F4(13)
+    position                             here=  39  also_in: 3B(7), 3C(13), 3E(7), 3F(5), 3F4(8), 5(3)
+    torque                               here=  13  also_in: 3(5), 3B(34), 3D(9), 3E(6), 3F(12), 4D(7)
+    connect                              here=  13  also_in: 2(11), 3C(10), 3D(7), 3F(6), 3F4(8), 5(23)
+    shaft                                here=  12  also_in: 3(3), 3B(20), 3C(15), 3F(52), 3F4(33), 4D(12)
+    end                                  here=   4  also_in: 3(25), 3B(44), 3C(25), 3D(11), 3F(3), 5(21)
+    installation                         here=   4  also_in: 3B(32), 3C(23), 3D(13), 3F(15), 4D(4), 5(39)
+    wheels                               here=   3  also_in: 3(5), 3A(10), 3B(4), 3C(10), 3E(27), 3F(3)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    7A1    (overlap= 2611)  TRANSAXLE — 7 > Unit Repair
+    7B     (overlap= 1520)  TRANSAXLE — 7 > Manual Transaxle
+    5      (overlap= 1211)  5
+    3C     (overlap=  846)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    3F4    (overlap=  733)  3F4
+    3D     (overlap=  629)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    3F     (overlap=  556)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+    7C     (overlap=  553)  TRANSAXLE — 7 > Clutch
+
+================================================================================
+SECTION 7A1: TRANSAXLE — 7 > Unit Repair
+  Chunks: 388, Total term occurrences: 33667
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    clutch                          freq= 314  sections=17  tfidf=0.009713
+    gear                            freq= 313  sections=18  tfidf=0.009180
+    planetary                       freq= 106  sections= 3  tfidf=0.008015
+    valve                           freq= 244  sections=18  tfidf=0.007156
+    direct                          freq= 127  sections= 7  tfidf=0.006988
+    solenoid                        freq= 138  sections=11  tfidf=0.005931
+    piston                          freq= 110  sections= 9  tfidf=0.005323
+    st-reverse                      freq=  55  sections= 1  tfidf=0.005291
+    one-way                         freq=  54  sections= 1  tfidf=0.005195
+    brake                           freq= 242  sections=24  tfidf=0.005125
+    ring                            freq= 165  sections=18  tfidf=0.004839
+    shaft                           freq= 183  sections=21  tfidf=0.004570
+    range                           freq= 125  sections=14  tfidf=0.004544
+    oil                             freq= 230  sections=26  tfidf=0.004345
+    pawl                            freq=  44  sections= 1  tfidf=0.004233
+    shift                           freq= 133  sections=17  tfidf=0.004114
+    input                           freq=  77  sections= 8  tfidf=0.003967
+    sun                             freq=  39  sections= 2  tfidf=0.003282
+    race                            freq=  45  sections= 4  tfidf=0.003104
+    flange                          freq=  55  sections= 8  tfidf=0.002834
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    direct clutch                             freq= 126  sections= 4  tfidf=0.008692
+    forward clutch                            freq=  74  sections= 2  tfidf=0.006227
+    nd brake                                  freq=  82  sections= 4  tfidf=0.005656
+    output shaft                              freq=  56  sections= 1  tfidf=0.005387
+    st-reverse brake                          freq=  55  sections= 1  tfidf=0.005291
+    one-way clutch                            freq=  54  sections= 1  tfidf=0.005195
+    ring gear                                 freq=  75  sections= 4  tfidf=0.005174
+    second brake                              freq=  61  sections= 2  tfidf=0.005133
+    input shaft                               freq=  70  sections= 4  tfidf=0.004829
+    shift valve                               freq=  50  sections= 1  tfidf=0.004810
+    planetary gear                            freq=  57  sections= 2  tfidf=0.004797
+    rear planetary                            freq=  49  sections= 1  tfidf=0.004714
+    line pressure                             freq=  59  sections= 3  tfidf=0.004461
+    lock pawl                                 freq=  42  sections= 1  tfidf=0.004040
+    front planetary                           freq=  40  sections= 1  tfidf=0.003848
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=  61  also_in: 2(9), 3B(10), 3C(70), 3D(4), 3E(3), 3F(25)
+    bolts                                here=  60  also_in: 2(22), 3(5), 3A(3), 3B(9), 3C(47), 3D(6)
+    bolt                                 here=  55  also_in: 2(3), 3A(3), 3B(8), 3C(23), 3D(39), 3F(12)
+    side                                 here=  54  also_in: 2(7), 3(17), 3A(4), 3B(14), 3C(5), 3D(12)
+    notice                               here=  14  also_in: 2(3), 3B(3), 3C(13), 3D(18), 3E(11), 3F(8)
+    front                                here=  46  also_in: 2(19), 3(41), 3A(13), 3B(7), 3C(32), 3D(19)
+    nut                                  here=  44  also_in: 3B(30), 3C(62), 3D(66), 3E(8), 3F(6), 3F4(4)
+    n m                                  here=  37  also_in: 3B(17), 3C(65), 3D(35), 3E(7), 3F(21), 3F4(12)
+    lower                                here=  36  also_in: 2(14), 3(4), 3B(10), 3C(31), 3D(41), 3E(5)
+    damage                               here=  13  also_in: 2(3), 3B(12), 3C(8), 3D(7), 3E(17), 3F(7)
+    lb ft                                here=  10  also_in: 3B(17), 3C(62), 3D(34), 3E(7), 3F(21), 3F4(5)
+    rear                                 here=  79  also_in: 2(5), 3(13), 3A(8), 3C(29), 3D(40), 3E(8)
+    tighten                              here=  19  also_in: 3(8), 3B(10), 3C(20), 3D(10), 3E(4), 3F(5)
+    disconnect                           here=  14  also_in: 2(11), 3B(3), 3C(9), 3D(7), 3F(8), 3F4(8)
+    nuts                                 here=  13  also_in: 2(4), 3(4), 3B(7), 3C(28), 3D(14), 3E(25)
+    m lb                                 here=   9  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F(19), 3F4(12)
+    n m lb                               here=   9  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F(19), 3F4(12)
+    m lb ft                              here=   9  also_in: 3B(9), 3C(62), 3D(34), 3E(7), 3F(19), 3F4(5)
+    shaft                                here= 183  also_in: 3(3), 3B(20), 3C(15), 3F(52), 3F4(33), 4D(12)
+    torque                               here=  57  also_in: 3(5), 3B(34), 3D(9), 3E(6), 3F(12), 4D(7)
+    position                             here=  49  also_in: 3B(7), 3C(13), 3E(7), 3F(5), 3F4(8), 5(3)
+    installation                         here=  31  also_in: 3B(32), 3C(23), 3D(13), 3F(15), 4D(4), 5(39)
+    cause                                here=  22  also_in: 3(74), 3A(4), 3B(3), 3E(25), 3F(12), 3F4(3)
+    connect                              here=  18  also_in: 2(11), 3C(10), 3D(7), 3F(6), 3F4(8), 5(23)
+    end                                  here=  13  also_in: 3(25), 3B(44), 3C(25), 3D(11), 3F(3), 5(21)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    7B     (overlap= 3798)  TRANSAXLE — 7 > Manual Transaxle
+    5      (overlap= 3322)  5
+    7A     (overlap= 2735)  TRANSAXLE — 7 > Automatic Transaxle
+    3C     (overlap= 1640)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    3D     (overlap= 1083)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    7C     (overlap= 1059)  TRANSAXLE — 7 > Clutch
+    3B     (overlap= 1031)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    3F4    (overlap=  860)  3F4
+
+================================================================================
+SECTION 7B: TRANSAXLE — 7 > Manual Transaxle
+  Chunks: 280, Total term occurrences: 17411
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    gear                            freq= 397  sections=18  tfidf=0.022514
+    shift                           freq= 254  sections=17  tfidf=0.015193
+    synchronizer                    freq=  57  sections= 1  tfidf=0.010603
+    shaft                           freq= 217  sections=21  tfidf=0.010479
+    countershaft                    freq=  46  sections= 4  tfidf=0.006136
+    case                            freq= 127  sections=22  tfidf=0.005809
+    reverse                         freq=  76  sections=13  tfidf=0.005643
+    input                           freq=  55  sections= 8  tfidf=0.005479
+    sleeve                          freq=  48  sections= 7  tfidf=0.005107
+    differential                    freq=  44  sections= 7  tfidf=0.004681
+    rev                             freq=  24  sections= 1  tfidf=0.004464
+    guide                           freq=  59  sections=13  tfidf=0.004381
+    oil                             freq= 113  sections=26  tfidf=0.004128
+    filler                          freq=  41  sections= 8  tfidf=0.004085
+    ring                            freq=  70  sections=18  tfidf=0.003970
+    fork                            freq=  27  sections= 3  tfidf=0.003947
+    hub                             freq=  44  sections=11  tfidf=0.003657
+    lever                           freq=  68  sections=19  tfidf=0.003656
+    bearing                         freq=  84  sections=23  tfidf=0.003637
+    plug                            freq=  56  sections=17  tfidf=0.003350
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    gear shift                                freq= 200  sections= 7  tfidf=0.021278
+    th gear                                   freq=  47  sections= 1  tfidf=0.008743
+    gear shift shaft                          freq=  41  sections= 1  tfidf=0.007627
+    shift shaft                               freq=  44  sections= 2  tfidf=0.007160
+    input shaft                               freq=  51  sections= 4  tfidf=0.006803
+    filler level                              freq=  34  sections= 1  tfidf=0.006324
+    specifications oil filler                 freq=  34  sections= 1  tfidf=0.006324
+    oil filler level                          freq=  34  sections= 1  tfidf=0.006324
+    filler level plug                         freq=  34  sections= 1  tfidf=0.006324
+    reverse gear                              freq=  43  sections= 3  tfidf=0.006287
+    control lever                             freq=  41  sections= 3  tfidf=0.005994
+    specifications oil                        freq=  34  sections= 2  tfidf=0.005533
+    level plug                                freq=  34  sections= 2  tfidf=0.005533
+    torque specifications oil                 freq=  34  sections= 2  tfidf=0.005533
+    synchronizer ring                         freq=  29  sections= 1  tfidf=0.005394
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=  66  also_in: 2(9), 3B(10), 3C(70), 3D(4), 3E(3), 3F(25)
+    bolt                                 here=  90  also_in: 2(3), 3A(3), 3B(8), 3C(23), 3D(39), 3F(12)
+    bolts                                here=  56  also_in: 2(22), 3(5), 3A(3), 3B(9), 3C(47), 3D(6)
+    side                                 here=  46  also_in: 2(7), 3(17), 3A(4), 3B(14), 3C(5), 3D(12)
+    notice                               here=  38  also_in: 2(3), 3B(3), 3C(13), 3D(18), 3E(11), 3F(8)
+    lb ft                                here= 104  also_in: 3B(17), 3C(62), 3D(34), 3E(7), 3F(21), 3F4(5)
+    n m                                  here= 103  also_in: 3B(17), 3C(65), 3D(35), 3E(7), 3F(21), 3F4(12)
+    nut                                  here=  44  also_in: 3B(30), 3C(62), 3D(66), 3E(8), 3F(6), 3F4(4)
+    front                                here=   8  also_in: 2(19), 3(41), 3A(13), 3B(7), 3C(32), 3D(19)
+    lower                                here=   8  also_in: 2(14), 3(4), 3B(10), 3C(31), 3D(41), 3E(5)
+    m lb                                 here= 103  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F(19), 3F4(12)
+    n m lb                               here= 103  also_in: 3B(9), 3C(65), 3D(34), 3E(7), 3F(19), 3F4(12)
+    m lb ft                              here= 103  also_in: 3B(9), 3C(62), 3D(34), 3E(7), 3F(19), 3F4(5)
+    nuts                                 here=  24  also_in: 2(4), 3(4), 3B(7), 3C(28), 3D(14), 3E(25)
+    tighten                              here=  17  also_in: 3(8), 3B(10), 3C(20), 3D(10), 3E(4), 3F(5)
+    mounting                             here=  11  also_in: 3(5), 3C(16), 3D(11), 3E(17), 3F(6), 3F4(13)
+    disconnect                           here=   9  also_in: 2(11), 3B(3), 3C(9), 3D(7), 3F(8), 3F4(8)
+    rear                                 here=   9  also_in: 2(5), 3(13), 3A(8), 3C(29), 3D(40), 3E(8)
+    correct                              here=   6  also_in: 3A(5), 3B(3), 3C(7), 3D(4), 3E(11), 3F(3)
+    shaft                                here= 217  also_in: 3(3), 3B(20), 3C(15), 3F(52), 3F4(33), 4D(12)
+    torque                               here=  38  also_in: 3(5), 3B(34), 3D(9), 3E(6), 3F(12), 4D(7)
+    position                             here=  19  also_in: 3B(7), 3C(13), 3E(7), 3F(5), 3F4(8), 5(3)
+    cause                                here=  19  also_in: 3(74), 3A(4), 3B(3), 3E(25), 3F(12), 3F4(3)
+    installation                         here=  18  also_in: 3B(32), 3C(23), 3D(13), 3F(15), 4D(4), 5(39)
+    end                                  here=  10  also_in: 3(25), 3B(44), 3C(25), 3D(11), 3F(3), 5(21)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    7A1    (overlap= 3741)  TRANSAXLE — 7 > Unit Repair
+    3C     (overlap= 1933)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    5      (overlap= 1917)  5
+    7A     (overlap= 1573)  TRANSAXLE — 7 > Automatic Transaxle
+    3D     (overlap= 1110)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    3B     (overlap=  969)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    7C     (overlap=  822)  TRANSAXLE — 7 > Clutch
+    3F     (overlap=  661)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+
+================================================================================
+SECTION 7C: TRANSAXLE — 7 > Clutch
+  Chunks: 52, Total term occurrences: 4551
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    clutch                          freq= 128  sections=17  tfidf=0.029292
+    release                         freq=  50  sections=20  tfidf=0.009748
+    pedal                           freq=  44  sections=18  tfidf=0.009546
+    pilot                           freq=  18  sections= 4  tfidf=0.009185
+    shaft                           freq=  43  sections=21  tfidf=0.007944
+    flywheel                        freq=  18  sections= 6  tfidf=0.007855
+    disc                            freq=  26  sections=12  tfidf=0.007809
+    tightening                      freq=  31  sections=16  tfidf=0.007483
+    fastening                       freq=  17  sections= 7  tfidf=0.006919
+    transaxle                       freq=  28  sections=17  tfidf=0.006408
+    bearing                         freq=  38  sections=23  tfidf=0.006294
+    bushing                         freq=  18  sections=11  tfidf=0.005723
+    j37761                          freq=   8  sections= 1  tfidf=0.005693
+    portion                         freq=  18  sections=12  tfidf=0.005406
+    travel                          freq=  13  sections= 7  tfidf=0.005291
+    outlined                        freq=  13  sections= 9  tfidf=0.004654
+    spring                          freq=  24  sections=22  tfidf=0.004200
+    arm                             freq=  16  sections=16  tfidf=0.003862
+    col3                            freq=   7  sections= 4  tfidf=0.003572
+    j35271                          freq=   5  sections= 1  tfidf=0.003558
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    clutch pedal                              freq=  34  sections= 6  tfidf=0.014837
+    tightening torque                         freq=  31  sections= 7  tfidf=0.012618
+    release shaft                             freq=  22  sections= 3  tfidf=0.012305
+    release bearing                           freq=  17  sections= 1  tfidf=0.012098
+    fastening portion                         freq=  17  sections= 1  tfidf=0.012098
+    clutch cover                              freq=  19  sections= 2  tfidf=0.011828
+    torque lb                                 freq=  16  sections= 2  tfidf=0.009961
+    tightening torque lb                      freq=  16  sections= 2  tfidf=0.009961
+    torque lb ft                              freq=  16  sections= 2  tfidf=0.009961
+    clutch release                            freq=  17  sections= 3  tfidf=0.009509
+    clutch cable                              freq=  15  sections= 4  tfidf=0.007655
+    clutch disc                               freq=  13  sections= 3  tfidf=0.007271
+    tightening torque n                       freq=  15  sections= 5  tfidf=0.007054
+    pilot bearing                             freq=  12  sections= 3  tfidf=0.006712
+    clutch release bearing                    freq=   8  sections= 1  tfidf=0.005693
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=   6  also_in: 2(9), 3B(10), 3C(70), 3D(4), 3E(3), 3F(25)
+    bolts                                here=  12  also_in: 2(22), 3(5), 3A(3), 3B(9), 3C(47), 3D(6)
+    bolt                                 here=   7  also_in: 2(3), 3A(3), 3B(8), 3C(23), 3D(39), 3F(12)
+    notice                               here=   3  also_in: 2(3), 3B(3), 3C(13), 3D(18), 3E(11), 3F(8)
+    lb ft                                here=  16  also_in: 3B(17), 3C(62), 3D(34), 3E(7), 3F(21), 3F4(5)
+    n m                                  here=  15  also_in: 3B(17), 3C(65), 3D(35), 3E(7), 3F(21), 3F4(12)
+    nut                                  here=   9  also_in: 3B(30), 3C(62), 3D(66), 3E(8), 3F(6), 3F4(4)
+    damage                               here=   3  also_in: 2(3), 3B(12), 3C(8), 3D(7), 3E(17), 3F(7)
+    disconnect                           here=   7  also_in: 2(11), 3B(3), 3C(9), 3D(7), 3F(8), 3F4(8)
+    tighten                              here=   5  also_in: 3(8), 3B(10), 3C(20), 3D(10), 3E(4), 3F(5)
+    shaft                                here=  43  also_in: 3(3), 3B(20), 3C(15), 3F(52), 3F4(33), 4D(12)
+    torque                               here=  32  also_in: 3(5), 3B(34), 3D(9), 3E(6), 3F(12), 4D(7)
+    cause                                here=  11  also_in: 3(74), 3A(4), 3B(3), 3E(25), 3F(12), 3F4(3)
+    connect                              here=   9  also_in: 2(11), 3C(10), 3D(7), 3F(6), 3F4(8), 5(23)
+    position                             here=   8  also_in: 3B(7), 3C(13), 3E(7), 3F(5), 3F4(8), 5(3)
+    end                                  here=   4  also_in: 3(25), 3B(44), 3C(25), 3D(11), 3F(3), 5(21)
+    installation                         here=   4  also_in: 3B(32), 3C(23), 3D(13), 3F(15), 4D(4), 5(39)
+    cover                                here=  22  also_in: 2(10), 3C(8), 3F(12), 3F4(13), 5(3), 7A(31)
+    joint                                here=   5  also_in: 3(3), 3B(23), 3C(9), 3F(40), 3F4(20), 4D(43)
+    removal                              here=   5  also_in: 3B(25), 3C(23), 3D(24), 3F(15), 3F4(3), 4D(3)
+    brake                                here=   3  also_in: 3(7), 3C(43), 3D(54), 3E(8), 3F4(7), 5(459)
+    install or connect                   here=   3  also_in: 2(11), 3C(10), 3D(7), 3F4(7), 5(15), 7A(13)
+    parts                                here=   2  also_in: 3A(4), 3B(13), 3E(3), 3F(5), 4D(4), 5(55)
+    bearing                              here=  38  also_in: 3(7), 3B(32), 3C(77), 3D(18), 4D(5), 5(3)
+    cable                                here=  29  also_in: 2(10), 3F(6), 3F4(11), 5(37), 7A(109), 7A1(21)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    7A1    (overlap=  948)  TRANSAXLE — 7 > Unit Repair
+    7B     (overlap=  789)  TRANSAXLE — 7 > Manual Transaxle
+    5      (overlap=  727)  5
+    3B     (overlap=  555)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    7A     (overlap=  530)  TRANSAXLE — 7 > Automatic Transaxle
+    3C     (overlap=  514)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    3F     (overlap=  365)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+    3D     (overlap=  338)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+
+================================================================================
+SECTION 9A: ACCESSORIES > Radio
+  Chunks: 62, Total term occurrences: 6662
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    button                          freq=  53  sections= 4  tfidf=0.018476
+    station                         freq=  37  sections= 2  tfidf=0.015735
+    press                           freq=  75  sections=12  tfidf=0.015388
+    radio                           freq=  65  sections=11  tfidf=0.014117
+    speaker                         freq=  36  sections= 4  tfidf=0.012550
+    antenna                         freq=  33  sections= 4  tfidf=0.011504
+    tune                            freq=  18  sections= 1  tfidf=0.008751
+    preset                          freq=  18  sections= 1  tfidf=0.008751
+    bass                            freq=  17  sections= 1  tfidf=0.008264
+    tape                            freq=  33  sections= 9  tfidf=0.008070
+    buttons                         freq=  14  sections= 1  tfidf=0.006806
+    rcl                             freq=  14  sections= 1  tfidf=0.006806
+    stereo                          freq=  16  sections= 2  tfidf=0.006804
+    speakers                        freq=  17  sections= 3  tfidf=0.006496
+    seek                            freq=  16  sections= 3  tfidf=0.006114
+    display                         freq=  17  sections= 4  tfidf=0.005926
+    frequency                       freq=  16  sections= 4  tfidf=0.005578
+    treble                          freq=  11  sections= 1  tfidf=0.005348
+    volume                          freq=  15  sections= 4  tfidf=0.005229
+    knob                            freq=  16  sections= 5  tfidf=0.005140
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    press and hold                            freq=  12  sections= 1  tfidf=0.005834
+    press rcl                                 freq=  11  sections= 1  tfidf=0.005348
+    push button                               freq=   9  sections= 1  tfidf=0.004375
+    turn radio                                freq=   8  sections= 1  tfidf=0.003889
+    press seek                                freq=   8  sections= 1  tfidf=0.003889
+    push buttons                              freq=   8  sections= 1  tfidf=0.003889
+    fm stereo                                 freq=   9  sections= 2  tfidf=0.003828
+    radio correction                          freq=   7  sections= 1  tfidf=0.003403
+    will be displayed                         freq=   8  sections= 2  tfidf=0.003402
+    ground base                               freq=   8  sections= 2  tfidf=0.003402
+    possible cause                            freq=  20  sections=16  tfidf=0.003298
+    am fm                                     freq=   8  sections= 3  tfidf=0.003057
+    defective radio                           freq=   6  sections= 1  tfidf=0.002917
+    cause defective radio                     freq=   6  sections= 1  tfidf=0.002917
+    hold tune                                 freq=   6  sections= 1  tfidf=0.002917
+
+  CONFUSION TERMS (shared with other target sections):
+    assembly                             here=   5  also_in: 2(9), 3B(10), 3C(70), 3D(4), 3E(3), 3F(25)
+    notice                               here=  12  also_in: 2(3), 3B(3), 3C(13), 3D(18), 3E(11), 3F(8)
+    side                                 here=   8  also_in: 2(7), 3(17), 3A(4), 3B(14), 3C(5), 3D(12)
+    front                                here=  11  also_in: 2(19), 3(41), 3A(13), 3B(7), 3C(32), 3D(19)
+    damage                               here=   4  also_in: 2(3), 3B(12), 3C(8), 3D(7), 3E(17), 3F(7)
+    rear                                 here=  15  also_in: 2(5), 3(13), 3A(8), 3C(29), 3D(40), 3E(8)
+    mounting                             here=   7  also_in: 3(5), 3C(16), 3D(11), 3E(17), 3F(6), 3F4(13)
+    correct                              here=   5  also_in: 3A(5), 3B(3), 3C(7), 3D(4), 3E(11), 3F(3)
+    disconnect                           here=   4  also_in: 2(11), 3B(3), 3C(9), 3D(7), 3F(8), 3F4(8)
+    cause                                here=  22  also_in: 3(74), 3A(4), 3B(3), 3E(25), 3F(12), 3F4(3)
+    position                             here=  11  also_in: 3B(7), 3C(13), 3E(7), 3F(5), 3F4(8), 5(3)
+    connect                              here=   4  also_in: 2(11), 3C(10), 3D(7), 3F(6), 3F4(8), 5(23)
+    installation                         here=   3  also_in: 3B(32), 3C(23), 3D(13), 3F(15), 4D(4), 5(39)
+    end                                  here=   3  also_in: 3(25), 3B(44), 3C(25), 3D(11), 3F(3), 5(21)
+    control                              here=  20  also_in: 3(7), 3A(7), 3C(32), 3D(63), 3E(4), 5(25)
+    body                                 here=   4  also_in: 2(5), 3A(3), 3B(3), 3C(8), 3D(18), 3E(4)
+    install or connect                   here=   4  also_in: 2(11), 3C(10), 3D(7), 3F4(7), 5(15), 7A(13)
+    cover                                here=   4  also_in: 2(10), 3C(8), 3F(12), 3F4(13), 5(3), 7A(31)
+    fasteners                            here=   4  also_in: 3A(3), 3B(3), 3C(4), 3D(4), 3E(3), 3F(3)
+    cable                                here=  21  also_in: 2(10), 3F(6), 3F4(11), 5(37), 7A(109), 7A1(21)
+    center                               here=   9  also_in: 3A(3), 3C(6), 3D(6), 3E(4), 3F(6), 3F4(6)
+    two                                  here=   6  also_in: 3C(10), 3E(6), 3F4(11), 5(12), 5B(4), 7A(4)
+    remove or disconnect                 here=   4  also_in: 2(11), 3C(9), 3D(7), 3F4(8), 5(12), 7A(15)
+    removed                              here=   3  also_in: 3B(4), 3E(5), 3F(5), 3F4(4), 5(17), 7A(3)
+    bracket                              here=   3  also_in: 3C(67), 3D(12), 3F(11), 5(3), 5B(4), 7A(12)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    5      (overlap=  657)  5
+    7A1    (overlap=  648)  TRANSAXLE — 7 > Unit Repair
+    7B     (overlap=  467)  TRANSAXLE — 7 > Manual Transaxle
+    7A     (overlap=  443)  TRANSAXLE — 7 > Automatic Transaxle
+    3F4    (overlap=  377)  3F4
+    3F     (overlap=  349)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+    3C     (overlap=  304)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    3E     (overlap=  285)  STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Wheels and Tires
+
+================================================================================
+GLOBAL CONFUSION MATRIX — Top shared terms between section pairs
+================================================================================
+
+  7A1 <-> 7B  (overlap=3252)
+    7A1: TRANSAXLE — 7 > Unit Repair
+    7B: TRANSAXLE — 7 > Manual Transaxle
+    Top shared: gear(313/397), shaft(183/217), shift(133/254), oil(230/113), clutch(314/18)
+
+  5 <-> 7A1  (overlap=2838)
+    5: 5
+    7A1: TRANSAXLE — 7 > Unit Repair
+    Top shared: brake(459/242), valve(100/244), piston(180/110), oil(28/230), shaft(4/183)
+
+  7A <-> 7A1  (overlap=2244)
+    7A: TRANSAXLE — 7 > Automatic Transaxle
+    7A1: TRANSAXLE — 7 > Unit Repair
+    Top shared: oil(105/230), clutch(9/314), gear(6/313), brake(28/242), valve(7/244)
+
+  5 <-> 7B  (overlap=1601)
+    5: 5
+    7B: TRANSAXLE — 7 > Manual Transaxle
+    Top shared: shaft(4/217), oil(28/113), case(4/127), n m(24/103), bolt(27/90)
+
+  3C <-> 7B  (overlap=1590)
+    3C: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    7B: TRANSAXLE — 7 > Manual Transaxle
+    Top shared: shaft(15/217), m lb(65/103), n m(65/103), n m lb(65/103), lb ft(62/104)
+
+  3C <-> 5  (overlap=1398)
+    3C: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    5: 5
+    Top shared: brake(43/459), strut(203/8), wheel(91/91), assembly(70/50), nut(62/52)
+
+  3C <-> 3D  (overlap=1319)
+    3C: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    3D: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    Top shared: strut(203/64), arm(82/47), wheel(91/37), nut(62/66), suspension(56/65)
+
+  3C <-> 7A1  (overlap=1310)
+    3C: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    7A1: TRANSAXLE — 7 > Unit Repair
+    Top shared: brake(43/242), oil(7/230), shaft(15/183), bearing(77/99), spring(51/92)
+
+  7A <-> 7B  (overlap=1295)
+    7A: TRANSAXLE — 7 > Automatic Transaxle
+    7B: TRANSAXLE — 7 > Manual Transaxle
+    Top shared: gear(6/397), shift(38/254), shaft(12/217), oil(105/113), lever(73/68)
+
+  5 <-> 7A  (overlap=1017)
+    5: 5
+    7A: TRANSAXLE — 7 > Automatic Transaxle
+    Top shared: brake(459/28), cable(37/109), oil(28/105), fluid(85/46), lever(47/73)
+
+  3D <-> 5  (overlap=1004)
+    3D: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    5: 5
+    Top shared: brake(54/459), cylinder(4/152), wheel(37/91), nut(66/52), rod(64/47)
+
+  3F <-> 3F4  (overlap=917)
+    3F: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+    3F4: 3F4
+    Top shared: steering(131/139), column(66/88), steering column(45/70), shaft(52/33), wheel(30/36)
+
+  3D <-> 7B  (overlap=841)
+    3D: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    7B: TRANSAXLE — 7 > Manual Transaxle
+    Top shared: lb ft(34/104), n m(35/103), m lb ft(34/103), m lb(34/103), n m lb(34/103)
+
+  3B <-> 7A1  (overlap=814)
+    3B: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    7A1: TRANSAXLE — 7 > Unit Repair
+    Top shared: gear(43/313), oil(6/230), shaft(20/183), ring(5/165), bearing(32/99)
+
+  3D <-> 7A1  (overlap=814)
+    3D: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Rear Suspension
+    7A1: TRANSAXLE — 7 > Unit Repair
+    Top shared: brake(54/242), rear(40/79), bearing(18/99), control(63/53), nut(66/44)
+
+  3B <-> 5  (overlap=809)
+    3B: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    5: 5
+    Top shared: rod(75/47), wheel(15/91), nut(30/52), installation(32/39), torque(34/35)
+
+  7A1 <-> 7C  (overlap=776)
+    7A1: TRANSAXLE — 7 > Unit Repair
+    7C: TRANSAXLE — 7 > Clutch
+    Top shared: clutch(314/128), brake(242/3), shaft(183/43), bearing(99/38), pressure(120/8)
+
+  3B <-> 7B  (overlap=766)
+    3B: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    7B: TRANSAXLE — 7 > Manual Transaxle
+    Top shared: gear(43/397), shaft(20/217), case(43/127), lb ft(17/104), n m(17/103)
+
+  3C <-> 7A  (overlap=714)
+    3C: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    7A: TRANSAXLE — 7 > Automatic Transaxle
+    Top shared: oil(7/105), assembly(70/16), m lb(65/20), n m lb(65/20), n m(65/20)
+
+  3B <-> 3C  (overlap=712)
+    3B: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    3C: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Front Suspension
+    Top shared: rod(75/39), bearing(32/77), steering(99/8), wheel(15/91), tie(79/13)
+
+  3 <-> 5  (overlap=661)
+    3: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Diagnosis
+    5: 5
+    Top shared: brake(7/459), cylinder(3/152), wheel(45/91), cause(74/54), correction(72/43)
+
+  3F4 <-> 7A1  (overlap=644)
+    3F4: 3F4
+    7A1: TRANSAXLE — 7 > Unit Repair
+    Top shared: brake(7/242), shaft(33/183), shift(5/133), assembly(24/61), transaxle(14/71)
+
+  3E <-> 5  (overlap=634)
+    3E: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Wheels and Tires
+    5: 5
+    Top shared: brake(8/459), wheel(130/91), valve(4/100), cause(25/54), disc(7/70)
+
+  3F4 <-> 7A  (overlap=618)
+    3F4: 3F4
+    7A: TRANSAXLE — 7 > Automatic Transaxle
+    Top shared: steering(139/11), cable(11/109), transaxle(14/92), column(88/5), switch(29/48)
+
+  7B <-> 7C  (overlap=607)
+    7B: TRANSAXLE — 7 > Manual Transaxle
+    7C: TRANSAXLE — 7 > Clutch
+    Top shared: shaft(217/43), clutch(18/128), bearing(84/38), lb ft(104/16), n m(103/15)
+
+  3F <-> 7A1  (overlap=592)
+    3F: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+    7A1: TRANSAXLE — 7 > Unit Repair
+    Top shared: shaft(52/183), assembly(25/61), switch(31/50), cover(12/63), bolts(10/60)
+
+  5 <-> 7C  (overlap=582)
+    5: 5
+    7C: TRANSAXLE — 7 > Clutch
+    Top shared: brake(459/3), pedal(78/44), disc(70/26), spring(53/24), torque(35/32)
+
+  5 <-> 9A  (overlap=549)
+    5: 5
+    9A: ACCESSORIES > Radio
+    Top shared: wheel(91/3), cause(54/22), notice(57/12), body(63/4), correction(43/20)
+
+  3B <-> 3F  (overlap=528)
+    3B: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Manual Rack and Pinion
+    3F: STEERING, SUSPENSION, WHEELS AND TIRES — 3 > Steering Wheel and Column
+    Top shared: steering(99/131), shaft(20/52), joint(23/40), steering shaft(15/37), end(44/3)
+
+  7A1 <-> 9A  (overlap=523)
+    7A1: TRANSAXLE — 7 > Unit Repair
+    9A: ACCESSORIES > Radio
+    Top shared: rear(79/15), press(9/75), forward(75/5), control(53/20), cover(63/4)

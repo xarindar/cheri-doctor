@@ -11,15 +11,20 @@ Usage:
 """
 
 import asyncio
+import base64
 import inspect
 import sys
 import json
 import hashlib
 import hmac
 import os
+import re
 import secrets
 import sqlite3
 import time
+import urllib.error
+import urllib.parse
+import urllib.request
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Awaitable, Callable
@@ -232,6 +237,17 @@ def _init_db():
                 created INTEGER NOT NULL,
                 data    TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS notes (
+                id         TEXT PRIMARY KEY,
+                project_id TEXT,
+                session_id TEXT,
+                created    INTEGER NOT NULL,
+                updated    INTEGER NOT NULL,
+                title      TEXT NOT NULL DEFAULT '',
+                content    TEXT NOT NULL DEFAULT '',
+                tags       TEXT NOT NULL DEFAULT '[]',
+                source     TEXT NOT NULL DEFAULT 'user'
+            );
         """)
 
 _init_db()
@@ -294,6 +310,244 @@ async def delete_project(project_id: str):
     with _get_db() as conn:
         conn.execute("DELETE FROM projects WHERE id = ?", (project_id,))
     return JSONResponse({"ok": True})
+
+# ── Notes API ─────────────────────────────────────────────────────────────
+
+@app.get("/api/notes")
+async def get_notes(project_id: str | None = None, session_id: str | None = None):
+    """List notes for the current project or chat scope."""
+    return JSONResponse(_load_notes_for_scope(project_id=project_id, session_id=session_id)[0])
+
+@app.post("/api/notes")
+async def create_note(request: Request):
+    """Create a new note."""
+    data = await request.json()
+    project_id = _clean_scope_id(data.get("project_id"))
+    session_id = _clean_scope_id(data.get("session_id"))
+    if not project_id and not session_id:
+        raise HTTPException(400, "Notes must belong to a chat or project.")
+    note_id = data.get("id") or f"note_{int(time.time()*1000)}_{secrets.token_hex(4)}"
+    now = int(time.time() * 1000)
+    with _get_db() as conn:
+        conn.execute(
+            "INSERT INTO notes (id, project_id, session_id, created, updated, title, content, tags, source) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                note_id,
+                project_id,
+                session_id,
+                now,
+                now,
+                data.get("title", ""),
+                data.get("content", ""),
+                json.dumps(data.get("tags", [])),
+                data.get("source", "user"),
+            )
+        )
+    return JSONResponse({"ok": True, "id": note_id})
+
+@app.put("/api/notes/{note_id}")
+async def update_note(note_id: str, request: Request):
+    """Update an existing note."""
+    data = await request.json()
+    now = int(time.time() * 1000)
+    with _get_db() as conn:
+        conn.execute(
+            "UPDATE notes SET title = ?, content = ?, tags = ?, updated = ? WHERE id = ?",
+            (
+                data.get("title", ""),
+                data.get("content", ""),
+                json.dumps(data.get("tags", [])),
+                now,
+                note_id,
+            )
+        )
+    return JSONResponse({"ok": True})
+
+@app.delete("/api/notes/{note_id}")
+async def delete_note(note_id: str):
+    with _get_db() as conn:
+        conn.execute("DELETE FROM notes WHERE id = ?", (note_id,))
+    return JSONResponse({"ok": True})
+
+
+_NOTES_CONTEXT_LIMIT = 4
+_NOTES_CONTEXT_CHARS = 220
+_NOTES_TOOL_LIMIT = 6
+_NOTES_TOOL_CHARS = 320
+
+
+def _row_to_note(row: sqlite3.Row) -> dict:
+    return {
+        "id": row["id"],
+        "project_id": row["project_id"],
+        "session_id": row["session_id"],
+        "created": row["created"],
+        "updated": row["updated"],
+        "title": row["title"],
+        "content": row["content"],
+        "tags": json.loads(row["tags"]),
+        "source": row["source"],
+    }
+
+
+def _clean_scope_id(value: str | None) -> str | None:
+    cleaned = (value or "").strip()
+    return cleaned or None
+
+
+def _resolve_notes_scope(
+    project_id: str | None,
+    session_id: str | None,
+    requested_scope: str = "auto",
+) -> tuple[str | None, str]:
+    project_id = _clean_scope_id(project_id)
+    session_id = _clean_scope_id(session_id)
+    scope = (requested_scope or "auto").strip().lower()
+
+    if scope == "project":
+        return project_id, "project"
+    if scope == "chat":
+        return session_id, "chat"
+    if project_id:
+        return project_id, "project"
+    if session_id:
+        return session_id, "chat"
+    return None, "none"
+
+
+def _load_notes_for_scope(
+    project_id: str | None = None,
+    session_id: str | None = None,
+    requested_scope: str = "auto",
+) -> tuple[list[dict], str]:
+    scope_id, scope_kind = _resolve_notes_scope(project_id, session_id, requested_scope)
+    if not scope_id or scope_kind == "none":
+        return [], scope_kind
+
+    with _get_db() as conn:
+        if scope_kind == "project":
+            rows = conn.execute(
+                "SELECT * FROM notes WHERE project_id = ? ORDER BY updated DESC",
+                (scope_id,),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT * FROM notes WHERE session_id = ? ORDER BY updated DESC",
+                (scope_id,),
+            ).fetchall()
+    return [_row_to_note(row) for row in rows], scope_kind
+
+
+def _note_scope_label(scope_kind: str) -> str:
+    if scope_kind == "project":
+        return "project notebook"
+    if scope_kind == "chat":
+        return "chat notebook"
+    return "notebook"
+
+
+def _truncate_note_text(text: str | None, limit: int) -> str:
+    compact = " ".join((text or "").split())
+    if len(compact) <= limit:
+        return compact
+    return compact[: limit - 1].rstrip() + "..."
+
+
+def _note_timestamp_label(note: dict) -> str:
+    raw = note.get("updated") or note.get("created")
+    if not isinstance(raw, int) or raw <= 0:
+        return "unknown date"
+    return time.strftime("%Y-%m-%d", time.gmtime(raw / 1000))
+
+
+def _format_note_entry(note: dict, content_limit: int) -> str:
+    title = (note.get("title") or "Untitled").strip()
+    content = _truncate_note_text(note.get("content"), content_limit)
+    tags = [str(tag).strip() for tag in (note.get("tags") or []) if str(tag).strip()]
+    tag_text = f" [tags: {', '.join(tags)}]" if tags else ""
+    return f"- {title} ({_note_timestamp_label(note)}){tag_text}\n  {content}"
+
+
+def _build_notes_context(project_id: str | None, session_id: str | None) -> str | None:
+    notes, scope_kind = _load_notes_for_scope(project_id=project_id, session_id=session_id)
+    if not notes:
+        return None
+
+    scope_label = _note_scope_label(scope_kind)
+    lines = [f"Saved notes from the current {scope_label}:"]
+    for note in notes[:_NOTES_CONTEXT_LIMIT]:
+        lines.append(_format_note_entry(note, _NOTES_CONTEXT_CHARS))
+    remaining = len(notes) - _NOTES_CONTEXT_LIMIT
+    if remaining > 0:
+        lines.append(f"...and {remaining} more saved note(s) in this {scope_label}.")
+    return "\n".join(lines)
+
+
+def _filter_notes(notes: list[dict], keywords: str | None, tags: list[str] | None) -> list[dict]:
+    tokens = re.findall(r"[a-z0-9]+", (keywords or "").lower())
+    required_tags = {str(tag).strip().lower() for tag in (tags or []) if str(tag).strip()}
+
+    filtered: list[dict] = []
+    for note in notes:
+        note_tags = {str(tag).strip().lower() for tag in (note.get("tags") or []) if str(tag).strip()}
+        haystack = " ".join(
+            [
+                str(note.get("title") or ""),
+                str(note.get("content") or ""),
+                " ".join(note_tags),
+            ]
+        ).lower()
+        if tokens and not all(token in haystack for token in tokens):
+            continue
+        if required_tags and not required_tags.issubset(note_tags):
+            continue
+        filtered.append(note)
+    return filtered
+
+
+def _retrieve_notes_result(
+    project_id: str | None,
+    session_id: str | None,
+    tool_input: dict,
+) -> tuple[str, bool]:
+    requested_scope = (tool_input.get("scope") or "auto").strip().lower()
+    notes, scope_kind = _load_notes_for_scope(
+        project_id=project_id,
+        session_id=session_id,
+        requested_scope=requested_scope,
+    )
+    scope_label = _note_scope_label(scope_kind)
+
+    if scope_kind == "none":
+        return "No chat or project notebook is active in this request.", True
+    if requested_scope == "project" and not _clean_scope_id(project_id):
+        return "No project notebook is available in this chat.", True
+    if requested_scope == "chat" and not _clean_scope_id(session_id):
+        return "No chat notebook is available in this request.", True
+    if not notes:
+        return f"No saved notes are available in the current {scope_label}.", False
+
+    limit = tool_input.get("limit")
+    if not isinstance(limit, int):
+        limit = _NOTES_TOOL_LIMIT
+    limit = max(1, min(limit, _NOTES_TOOL_LIMIT))
+
+    filtered = _filter_notes(
+        notes,
+        keywords=tool_input.get("keywords"),
+        tags=tool_input.get("tags"),
+    )
+    if not filtered:
+        return f"No saved notes matched that search in the current {scope_label}.", False
+
+    lines = [f"Saved notes from the current {scope_label}:"]
+    for note in filtered[:limit]:
+        lines.append(_format_note_entry(note, _NOTES_TOOL_CHARS))
+    remaining = len(filtered) - limit
+    if remaining > 0:
+        lines.append(f"...and {remaining} more matching note(s).")
+    return "\n".join(lines), False
 
 # ── Serve static resources ────────────────────────────────────────────────
 
@@ -567,11 +821,13 @@ def _build_settings_context(settings: dict) -> str:
 config     = load_config(PROJECT_ROOT / "configs" / "default.yaml")
 index      = None
 fig_lookup: dict[str, dict] = {}
+chunk_fig_map: dict[str, str] = {}  # chunk-style fig ID → asset-style fig ID
+chunk_text_lookup: dict[str, dict] = {}  # chunk_id → {type, text, section_path, ...}
 
 
 @app.on_event("startup")
 async def startup():
-    global index, fig_lookup
+    global index, fig_lookup, chunk_fig_map
     print("Loading retrieval index...")
     index = load_index(config)
     print(f"Index loaded: {len(index.chunk_ids)} chunks")
@@ -588,6 +844,42 @@ async def startup():
                     fig_lookup[fig["figure_id"]] = fig
             print(f"  Loaded {len(fig_lookup) - before} figures from {fig_path.parent.name}/figures.jsonl")
     print(f"Figures loaded: {len(fig_lookup)} total")
+
+    # Build comprehensive figure ID mapping for resolving any citation style
+    import re as _startup_re
+    for chunk_path in [PROJECT_ROOT / "build" / "chunks.jsonl",
+                       PROJECT_ROOT / "build_supplement" / "chunks.jsonl"]:
+        if chunk_path.exists():
+            for chunk in load_jsonl(chunk_path):
+                if chunk.get("type") == "figure" and chunk.get("figure_refs"):
+                    asset_id = chunk["figure_refs"][0]
+                    # chunk_id → asset_id
+                    chunk_fig_map[chunk["chunk_id"]] = asset_id
+                    # source_label → asset_id (e.g. "7A-1")
+                    sl = chunk.get("source_label", "")
+                    if sl:
+                        chunk_fig_map[sl] = asset_id
+                    # Caption "Figure 7A-1" → asset_id
+                    text = chunk.get("text", "")
+                    cap = _startup_re.match(r"(?:Figure|Fig\.?)\s+(\S+)", text)
+                    if cap:
+                        chunk_fig_map[cap.group(1)] = asset_id
+    print(f"Chunk→figure map: {len(chunk_fig_map)} entries")
+
+    # Load chunk text for citation previews
+    global chunk_text_lookup
+    for chunk_path in [PROJECT_ROOT / "build" / "chunks.jsonl",
+                       PROJECT_ROOT / "build_supplement" / "chunks.jsonl"]:
+        if chunk_path.exists():
+            for chunk in load_jsonl(chunk_path):
+                cid = chunk.get("chunk_id")
+                if cid:
+                    chunk_text_lookup[cid] = {
+                        "type": chunk.get("type", "text"),
+                        "text": chunk.get("text", ""),
+                        "section_path": chunk.get("section_path", ""),
+                    }
+    print(f"Chunk text lookup: {len(chunk_text_lookup)} entries")
 
 
 # ── Web fetch / search / RockAuto utilities ───────────────────────────────
@@ -1542,10 +1834,18 @@ class ChatRequest(BaseModel):
   shop_mode_hint: bool = False
   shop_part_hint: str | None = None
   tech_mode_hint: bool = False
+  deep_research: bool = False
+  session_id: str | None = None
+  project_id: str | None = None
 
 
 class TitleRequest(BaseModel):
   message: str
+
+
+class TTSRequest(BaseModel):
+  text: str
+  voice: str | None = None
 
 
 class WorksheetRequest(BaseModel):
@@ -1557,9 +1857,114 @@ class ChatAPIResponse(BaseModel):
     citations: list[dict]
     figure_refs: list[str]
     figures: list[dict]  # {figure_id, page, caption_text, url}
+    mode: str = "normal"
+    deep_research_summary: str | None = None
 
 
 # ── Routes ────────────────────────────────────────────────────────────────
+
+
+_DEFAULT_TTS_VOICE = "en-US-Studio-Q"
+_MAX_TTS_TEXT_CHARS = 5000
+
+
+def _tts_api_key() -> str:
+    return (
+        os.environ.get("GOOGLE_TTS_API_KEY")
+        or os.environ.get("GEMINI_API_KEY")
+        or ""
+    ).strip()
+
+
+def _tts_language_code(voice_name: str) -> str:
+    parts = [part for part in (voice_name or "").split("-") if part]
+    if len(parts) >= 2:
+        return "-".join(parts[:2])
+    return "en-US"
+
+
+# Named voices (Enceladus, Puck, Charon, Kore, etc.) use the Gemini TTS model
+_NAMED_VOICES = {
+    "Enceladus", "Puck", "Charon", "Kore", "Fenrir", "Leda", "Orus",
+    "Pegasus", "Perseus", "Schedar", "Sulafat", "Umbriel", "Zephyr",
+    "Achernar", "Autonoe", "Callirrhoe", "Desdema", "Elara", "Gacrux",
+}
+
+
+def _is_named_voice(voice_name: str) -> bool:
+    return voice_name.split("-")[-1] in _NAMED_VOICES or voice_name in _NAMED_VOICES
+
+
+def _synthesize_google_tts(text: str, voice: str | None = None) -> bytes:
+    api_key = _tts_api_key()
+    if not api_key:
+        raise HTTPException(500, "Google TTS API key is not configured")
+
+    clean_text = (text or "").strip()
+    if not clean_text:
+        raise HTTPException(400, "Text is required")
+    if len(clean_text) > _MAX_TTS_TEXT_CHARS:
+        raise HTTPException(400, f"Text exceeds {_MAX_TTS_TEXT_CHARS} characters")
+
+    voice_name = (voice or _DEFAULT_TTS_VOICE).strip() or _DEFAULT_TTS_VOICE
+
+    if _is_named_voice(voice_name):
+        # Gemini TTS model voices — use v1beta1 with modelName and prompt
+        payload = {
+            "input": {
+                "text": clean_text,
+                "prompt": _DEFAULT_TTS_PROMPT,
+            },
+            "voice": {
+                "languageCode": "en-us",
+                "modelName": _DEFAULT_TTS_MODEL,
+                "name": voice_name,
+            },
+            "audioConfig": {
+                "audioEncoding": "LINEAR16",
+                "pitch": 0,
+                "speakingRate": 1,
+            },
+        }
+        api_version = "v1beta1"
+    else:
+        # Standard Cloud TTS voices (Neural2, Studio, etc.)
+        payload = {
+            "input": {"text": clean_text},
+            "voice": {
+                "languageCode": _tts_language_code(voice_name),
+                "name": voice_name,
+            },
+            "audioConfig": {"audioEncoding": "MP3"},
+        }
+        api_version = "v1"
+
+    request = urllib.request.Request(
+        url=(
+            f"https://texttospeech.googleapis.com/{api_version}/text:synthesize?"
+            + urllib.parse.urlencode({"key": api_key})
+        ),
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            response_payload = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise HTTPException(502, f"Google TTS request failed: {detail}") from exc
+    except urllib.error.URLError as exc:
+        raise HTTPException(502, f"Google TTS request failed: {exc.reason}") from exc
+
+    audio_content = response_payload.get("audioContent")
+    if not audio_content:
+        raise HTTPException(502, "Google TTS response did not include audio content")
+    try:
+        return base64.b64decode(audio_content)
+    except Exception as exc:
+        raise HTTPException(502, "Google TTS response contained invalid audio data") from exc
 
 
 @app.get("/api/settings")
@@ -1577,6 +1982,14 @@ async def put_settings(request: Request):
     cleaned = {k: v for k, v in data.items() if k in allowed}
     _save_settings(cleaned)
     return JSONResponse({"ok": True})
+
+
+@app.post("/api/tts")
+async def api_tts(req: TTSRequest):
+    voice_name = (req.voice or _DEFAULT_TTS_VOICE).strip() or _DEFAULT_TTS_VOICE
+    audio_bytes = await asyncio.to_thread(_synthesize_google_tts, req.text, req.voice)
+    media_type = "audio/wav" if _is_named_voice(voice_name) else "audio/mpeg"
+    return Response(content=audio_bytes, media_type=media_type)
 
 
 @app.post("/api/generate-title")
@@ -1666,34 +2079,61 @@ def _last_shop_user_query(conversation: list[dict] | None) -> str:
     return ""
 
 
-def _to_chat_payload(response, web_sources: list[str], shopping_results: list[dict], shopping_part_name: str | None) -> dict:
+def _to_chat_payload(response, web_sources: list[str], shopping_results: list[dict], shopping_part_name: str | None, saved_notes: list[dict] | None = None) -> dict:
     figures_out = []
+    print(f"  [figures] figure_refs from response: {response.figure_refs}")
+    # Also check what figure citations are in the answer text
+    import re as _fig_re
+    fig_cites_in_answer = _fig_re.findall(r'\[p(\d+)\s*\|\s*fig:\s*([^\]]+)\]', response.answer, _fig_re.IGNORECASE)
+    print(f"  [figures] fig citations in answer text: {fig_cites_in_answer}")
     for fig_id in response.figure_refs:
-        fig = fig_lookup.get(fig_id, {})
+        # Try direct lookup first (asset-style ID like fig_p0477_000)
+        fig = fig_lookup.get(fig_id)
+        # Fallback: resolve chunk-style ID (fig_7a_p477_0) → asset-style
+        resolved_id = fig_id
+        if not fig and fig_id in chunk_fig_map:
+            resolved_id = chunk_fig_map[fig_id]
+            fig = fig_lookup.get(resolved_id)
         if fig:
             figures_out.append({
-                "figure_id":    fig_id,
+                "figure_id":    resolved_id,
                 "page":         fig.get("page"),
                 "caption_text": fig.get("caption_text", ""),
-                "url":          f"/api/figures/{fig_id}",
+                "url":          f"/api/figures/{resolved_id}",
             })
+
+    enriched_citations = []
+    for c in response.citations:
+        cite = {
+            "chunk_id":     c.chunk_id,
+            "page":         c.page,
+            "source_label": c.source_label,
+            "section_path": c.section_path,
+        }
+        # Enrich with type and text preview from chunk lookup
+        chunk_info = chunk_text_lookup.get(c.chunk_id)
+        if chunk_info:
+            cite["type"] = chunk_info["type"]
+            text = chunk_info["text"] or ""
+            cite["text_preview"] = text[:250] + ("…" if len(text) > 250 else "")
+            if chunk_info["section_path"]:
+                cite["section_path"] = chunk_info["section_path"]
+        else:
+            cite["type"] = "text"
+            cite["text_preview"] = ""
+        enriched_citations.append(cite)
 
     return {
         "answer":      response.answer,
-        "citations":   [
-            {
-                "chunk_id":     c.chunk_id,
-                "page":         c.page,
-                "source_label": c.source_label,
-                "section_path": c.section_path,
-            }
-            for c in response.citations
-        ],
+        "citations":   enriched_citations,
         "figure_refs":         response.figure_refs,
         "figures":             figures_out,
+        "mode":                response.mode,
+        "deep_research_summary": response.deep_research_summary,
         "web_sources":         web_sources,
         "shopping_results":    shopping_results,
         "shopping_part_name":  shopping_part_name,
+        "saved_notes":         saved_notes or [],
     }
 
 
@@ -1748,6 +2188,39 @@ async def _run_chat_request(
     if progress_cb:
         await progress_cb({"type": "thinking", "label": "Thinking"})
 
+    notes_context = _build_notes_context(req.project_id, req.session_id)
+
+    def retrieve_notes(tool_input: dict) -> tuple[str, bool]:
+        return _retrieve_notes_result(req.project_id, req.session_id, tool_input)
+
+    # Note-saving callback: when the LLM calls save_note, persist to DB
+    saved_notes: list[dict] = []
+
+    def note_callback(note_data: dict) -> None:
+        if not _clean_scope_id(req.project_id) and not _clean_scope_id(req.session_id):
+            print(f"  [note] Skipped unscoped note: \"{note_data.get('title')}\"")
+            return
+        note_id = f"note_{int(time.time()*1000)}_{secrets.token_hex(4)}"
+        now_ms = int(time.time() * 1000)
+        with _get_db() as conn:
+            conn.execute(
+                "INSERT INTO notes (id, project_id, session_id, created, updated, title, content, tags, source) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    note_id,
+                    req.project_id,
+                    req.session_id,
+                    now_ms,
+                    now_ms,
+                    note_data.get("title", ""),
+                    note_data.get("content", ""),
+                    json.dumps(note_data.get("tags", [])),
+                    note_data.get("source", "cheri_doctor"),
+                )
+            )
+        saved_notes.append({"id": note_id, **note_data})
+        print(f"  [note] Saved: \"{note_data.get('title')}\" (id={note_id})")
+
     response = await asyncio.to_thread(
         chat,
         query=enriched_query,
@@ -1755,10 +2228,14 @@ async def _run_chat_request(
         index=index,
         config=chat_config,
         skip_vision=False,
+        deep_research=req.deep_research,
         project_context=req.project_context,
+        notes_context=notes_context,
         vehicle_settings=vehicle_settings,
         images=req.images,
         progress_cb=chat_progress_cb,
+        note_callback=note_callback,
+        retrieve_notes=retrieve_notes,
     )
 
     shopping_part_name: str | None = None
@@ -1790,6 +2267,8 @@ async def _run_chat_request(
                 answer=(response.answer or "").rstrip() + "\n\n" + auto_tag,
                 citations=response.citations,
                 figure_refs=response.figure_refs,
+                mode=response.mode,
+                deep_research_summary=response.deep_research_summary,
             )
 
     # Parse all [SHOP_SEARCH] tags in the response and execute each once.
@@ -1822,6 +2301,8 @@ async def _run_chat_request(
                 answer=_SHOP_SEARCH_RE.sub('', response.answer).strip(),
                 citations=response.citations,
                 figure_refs=response.figure_refs,
+                mode=response.mode,
+                deep_research_summary=response.deep_research_summary,
             )
 
         if search_specs:
@@ -1905,8 +2386,10 @@ async def _run_chat_request(
                     config=chat_config,
                     skip_vision=True,
                     project_context=req.project_context,
+                    notes_context=notes_context,
                     vehicle_settings=vehicle_settings,
                     progress_cb=chat_progress_cb,
+                    retrieve_notes=retrieve_notes,
                 )
 
                 offered_sources = _extract_offered_sources(response.answer)
@@ -1943,6 +2426,8 @@ async def _run_chat_request(
                         answer=pre_search_text + "\n\n" + response.answer,
                         citations=response.citations,
                         figure_refs=response.figure_refs,
+                        mode=response.mode,
+                        deep_research_summary=response.deep_research_summary,
                     )
             except Exception as exc:
                 from src.models import ChatResponse
@@ -1951,9 +2436,11 @@ async def _run_chat_request(
                         + f"\n\n*Parts search failed: {exc}*",
                     citations=response.citations,
                     figure_refs=response.figure_refs,
+                    mode=response.mode,
+                    deep_research_summary=response.deep_research_summary,
                 )
 
-    return _to_chat_payload(response, web_sources, shopping_results, shopping_part_name)
+    return _to_chat_payload(response, web_sources, shopping_results, shopping_part_name, saved_notes)
 
 
 def _sse_event(event: str, data: dict) -> str:
@@ -2034,7 +2521,8 @@ async def api_generate_worksheet(req: WorksheetRequest):
 
 @app.get("/api/figures/{figure_id}")
 async def serve_figure(figure_id: str):
-    fig = fig_lookup.get(figure_id)
+    resolved_id = chunk_fig_map.get(figure_id, figure_id)
+    fig = fig_lookup.get(resolved_id)
     if not fig:
         raise HTTPException(404, f"Figure {figure_id} not found")
     asset_path = PROJECT_ROOT / fig.get("asset_path", "")
@@ -2043,6 +2531,51 @@ async def serve_figure(figure_id: str):
     media_type = "image/webp" if asset_path.suffix == ".webp" else "image/png"
     return FileResponse(str(asset_path), media_type=media_type)
 
+
+@app.get("/api/manual/page/{page_num}")
+async def serve_manual_page(page_num: int):
+    """Serve a rasterized manual page image."""
+    page_path = PROJECT_ROOT / "build" / "pages" / f"page_{page_num:04d}.png"
+    if not page_path.exists():
+        raise HTTPException(404, f"Page {page_num} not found")
+    return FileResponse(str(page_path), media_type="image/png")
+
+@app.get("/api/manual/toc")
+async def get_manual_toc():
+    """Return the table of contents with section codes and page numbers."""
+    section_names = config.get("structure", {}).get("section_names", {})
+    # Build section → first page mapping from chunk data
+    section_pages: dict[str, int] = {}
+    for cid, info in chunk_text_lookup.items():
+        sp = info.get("section_path", "")
+        # Extract section code from chunk_id (e.g., proc_6a1_p241_0 → 6a1 → 6A1)
+        parts = cid.split("_")
+        if len(parts) >= 3:
+            try:
+                page = int(parts[-2].lstrip("p"))
+                # Try to find section code from section_path or chunk_id
+                for code in section_names:
+                    if code.lower() in cid.lower() or sp.startswith(section_names[code]):
+                        if code not in section_pages or page < section_pages[code]:
+                            section_pages[code] = page
+            except (ValueError, IndexError):
+                pass
+
+    toc = []
+    for code, name in section_names.items():
+        toc.append({
+            "code": code,
+            "name": name,
+            "start_page": section_pages.get(code, 0),
+        })
+    return JSONResponse(toc)
+
+@app.get("/api/manual/info")
+async def get_manual_info():
+    """Return manual metadata (total pages, etc.)."""
+    pages_dir = PROJECT_ROOT / "build" / "pages"
+    total = len(list(pages_dir.glob("page_*.png"))) if pages_dir.exists() else 0
+    return JSONResponse({"total_pages": total, "title": "1990 Geo Metro Service Manual"})
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_ui():

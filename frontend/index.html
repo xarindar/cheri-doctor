@@ -626,6 +626,495 @@
       color: var(--text-3);
     }
 
+    /* ── Memory Modal ─────────────────────────────────────────── */
+    #memory-btn {
+      position: relative;
+      flex-shrink: 0;
+    }
+    #memory-btn.hidden { display: none; }
+    #memory-btn:disabled {
+      opacity: 0.45;
+      cursor: default;
+      pointer-events: none;
+    }
+    .memory-badge {
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.62rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      border: 2px solid var(--bg);
+    }
+    .memory-badge.hidden { display: none; }
+    .memory-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 9998;
+      backdrop-filter: blur(8px);
+    }
+    .memory-modal-overlay.open { display: flex; }
+    .memory-modal {
+      width: min(860px, 100%);
+      max-height: min(86vh, 920px);
+      background: linear-gradient(180deg, rgba(24,24,27,0.98), rgba(15,15,17,0.98));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .memory-modal-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 20px 22px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .memory-modal-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(59,130,246,0.12);
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .memory-modal-heading {
+      flex: 1;
+      min-width: 0;
+    }
+    .memory-modal-heading h2 {
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: var(--text-1);
+      margin-bottom: 4px;
+    }
+    .memory-modal-heading p {
+      font-size: 0.78rem;
+      color: var(--text-3);
+      line-height: 1.5;
+    }
+    .memory-modal-close {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-3);
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.12s;
+    }
+    .memory-modal-close:hover {
+      background: var(--surface);
+      color: var(--text-1);
+    }
+    .memory-modal-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 22px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-wrap: wrap;
+    }
+    .memory-modal-summary {
+      font-size: 0.74rem;
+      color: var(--text-3);
+      line-height: 1.5;
+    }
+    .memory-tabs {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .memory-tab {
+      border: none;
+      background: transparent;
+      color: var(--text-2);
+      border-radius: 999px;
+      padding: 7px 12px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.76rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.12s;
+    }
+    .memory-tab:hover { color: var(--text-1); }
+    .memory-tab.active {
+      background: var(--surface);
+      color: var(--text-1);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+    }
+    .memory-tab-count {
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text-3);
+      font-size: 0.66rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .memory-tab.active .memory-tab-count {
+      background: rgba(59,130,246,0.16);
+      color: var(--accent);
+    }
+    .memory-modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .memory-modal-empty {
+      padding: 36px 18px;
+      border: 1px dashed rgba(255,255,255,0.08);
+      border-radius: 14px;
+      text-align: center;
+      color: var(--text-3);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      background: rgba(255,255,255,0.02);
+    }
+    .note-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      transition: border-color 0.15s;
+    }
+    .note-card:hover { border-color: var(--accent); }
+    .note-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .note-card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-1);
+      flex: 1;
+      cursor: text;
+    }
+    .note-card-source {
+      font-size: 0.65rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .note-card-source.user-source {
+      background: rgba(34,197,94,0.12);
+      color: var(--green);
+    }
+    .note-card-source.scope-source {
+      background: rgba(255,255,255,0.06);
+      color: var(--text-2);
+    }
+    .note-card-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+      flex-shrink: 0;
+    }
+    .note-card-content {
+      font-size: 0.82rem;
+      color: var(--text-2);
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .note-card-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.7rem;
+      color: var(--text-3);
+    }
+    .note-card-tags {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .note-tag {
+      background: var(--surface-2);
+      color: var(--text-2);
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+    }
+    .note-card-actions {
+      display: flex;
+      gap: 4px;
+    }
+    .note-card-actions button {
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+    }
+    .note-card-actions button:hover { background: var(--surface-2); color: var(--text-1); }
+    .note-card-actions button.delete-note:hover { color: var(--red); }
+    .note-empty {
+      text-align: center;
+      color: var(--text-3);
+      padding: 40px 20px;
+      font-size: 0.85rem;
+    }
+    .note-add-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 7px 16px;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .note-add-btn:hover { background: var(--accent-hover); }
+    /* Note saved indicator in chat messages */
+    .note-saved-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 6px;
+      padding: 4px 10px;
+      margin-top: 8px;
+      font-size: 0.72rem;
+      color: var(--accent);
+      cursor: pointer;
+    }
+    .note-saved-indicator:hover { background: rgba(59,130,246,0.15); }
+    /* Edit note modal */
+    .note-edit-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .note-edit-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      width: 90%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .note-edit-modal h3 {
+      font-size: 1rem;
+      color: var(--text-1);
+      margin: 0;
+    }
+    .note-edit-modal input,
+    .note-edit-modal textarea {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-1);
+      padding: 8px 12px;
+      border-radius: 7px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      resize: vertical;
+    }
+    .note-edit-modal textarea { min-height: 120px; }
+    .note-edit-modal .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .note-edit-modal .modal-actions button {
+      padding: 7px 16px;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-1);
+    }
+    .note-edit-modal .modal-actions button.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    @media (max-width: 768px) {
+      .memory-modal-overlay { padding: 0; }
+      .memory-modal {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        border-radius: 0;
+      }
+      .memory-modal-header,
+      .memory-modal-toolbar,
+      .memory-modal-body {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+      .memory-modal-toolbar {
+        align-items: stretch;
+      }
+      .memory-tabs {
+        width: 100%;
+        justify-content: stretch;
+      }
+      .memory-tab {
+        flex: 1;
+        justify-content: center;
+      }
+      .note-card-header {
+        flex-direction: column;
+      }
+      .note-card-badges {
+        justify-content: flex-start;
+      }
+    }
+
+    /* ── Manual Viewer ──────────────────────────────────────────── */
+    .manual-viewer {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .manual-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .manual-toolbar button {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.78rem;
+    }
+    .manual-toolbar button:hover { background: var(--surface-3); color: var(--text-1); }
+    .manual-page-input {
+      width: 55px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-1);
+      text-align: center;
+      padding: 5px 4px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-family: inherit;
+    }
+    .manual-page-label {
+      color: var(--text-3);
+      font-size: 0.78rem;
+    }
+    .manual-toolbar .spacer { flex: 1; }
+    .manual-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .manual-toc-panel {
+      width: 240px;
+      min-width: 240px;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      background: var(--sidebar-bg);
+      padding: 8px 0;
+    }
+    .manual-toc-item {
+      display: block;
+      width: 100%;
+      padding: 6px 14px;
+      background: none;
+      border: none;
+      text-align: left;
+      color: var(--text-2);
+      font-size: 0.75rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .manual-toc-item:hover { background: var(--surface); color: var(--text-1); }
+    .manual-toc-item .toc-code {
+      color: var(--text-3);
+      font-size: 0.68rem;
+      margin-right: 6px;
+    }
+    .manual-page-container {
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+      background: var(--bg);
+    }
+    .manual-page-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+    @media (max-width: 768px) {
+      .manual-toc-panel { display: none; }
+    }
+
     /* ── Settings Workspace ────────────────────────────────────── */
     .settings-view {
       display: flex;
@@ -766,7 +1255,7 @@
       height: 56px;
     }
 
-    #toggle-sidebar-btn, #toggle-pane-btn {
+    #toggle-sidebar-btn, #toggle-pane-btn, #memory-btn {
       background: none;
       border: none;
       color: var(--text-3);
@@ -780,7 +1269,7 @@
       flex-shrink: 0;
     }
 
-    #toggle-sidebar-btn:hover, #toggle-pane-btn:hover { color: var(--text-1); background: var(--surface); }
+    #toggle-sidebar-btn:hover, #toggle-pane-btn:hover, #memory-btn:hover { color: var(--text-1); background: var(--surface); }
 
     .header-title {
       flex: 1;
@@ -915,6 +1404,11 @@
     .input-icon-btn:hover { color: var(--text-1); }
     .input-icon-btn.active { color: #f97316; }
     .input-icon-btn.active:hover { color: #fb923c; }
+    .input-icon-btn:disabled {
+      color: var(--text-3);
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
 
     /* Plus dropdown */
     #plus-wrap { position: relative; flex-shrink: 0; }
@@ -963,6 +1457,11 @@
     body.tech-mode-active #input-shell:focus-within {
       border-color: #f97316;
       box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+    }
+    body.deep-research-active #input-shell { border-color: rgba(8, 145, 178, 0.34); }
+    body.deep-research-active #input-shell:focus-within {
+      border-color: #0891b2;
+      box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.15);
     }
     body.tech-mode-active .avatar.asst {
       background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
@@ -1371,6 +1870,214 @@
       border-bottom-style: solid;
     }
 
+    .inline-figure-card {
+      appearance: none;
+      font: inherit;
+      border: 1px solid rgba(244, 114, 182, 0.28);
+      background:
+        linear-gradient(135deg, rgba(244, 114, 182, 0.14), rgba(251, 191, 36, 0.1)),
+        rgba(255, 255, 255, 0.02);
+      color: inherit;
+      border-radius: 12px;
+      padding: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      max-width: min(100%, 340px);
+      margin: 6px 0;
+      cursor: pointer;
+      vertical-align: middle;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+      transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+      text-align: left;
+    }
+
+    .inline-figure-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(244, 114, 182, 0.42);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
+    }
+
+    .inline-figure-card.compact {
+      padding: 4px 6px;
+      gap: 8px;
+      max-width: 240px;
+      margin: 2px 4px;
+      border-radius: 10px;
+      box-shadow: none;
+      vertical-align: middle;
+      background:
+        linear-gradient(135deg, rgba(244, 114, 182, 0.1), rgba(251, 191, 36, 0.06)),
+        rgba(255, 255, 255, 0.015);
+    }
+
+    .inline-figure-card.compact:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    }
+
+    .inline-figure-thumb {
+      width: 108px;
+      height: 78px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .inline-figure-card.compact .inline-figure-thumb {
+      width: 64px;
+      height: 46px;
+      border-radius: 6px;
+    }
+
+    .inline-figure-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .inline-figure-copy {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .inline-figure-label {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #f9a8d4;
+      font-weight: 700;
+    }
+
+    .inline-figure-title {
+      font-size: 0.82rem;
+      line-height: 1.3;
+      color: var(--text-1);
+      font-weight: 600;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .inline-figure-meta {
+      font-size: 0.72rem;
+      color: var(--text-3);
+    }
+
+    .inline-figure-card.compact .inline-figure-label {
+      display: none;
+    }
+
+    .inline-figure-card.compact .inline-figure-title {
+      font-size: 0.76rem;
+      -webkit-line-clamp: 1;
+    }
+
+    .inline-figure-card.compact .inline-figure-meta {
+      font-size: 0.68rem;
+    }
+
+    .figure-attachment-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0 4px;
+    }
+
+    .figure-attachment-chip {
+      appearance: none;
+      font: inherit;
+      border: 1px solid rgba(244, 114, 182, 0.22);
+      background:
+        linear-gradient(135deg, rgba(244, 114, 182, 0.1), rgba(251, 191, 36, 0.06)),
+        rgba(255, 255, 255, 0.018);
+      color: inherit;
+      border-radius: 12px;
+      padding: 6px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      max-width: min(100%, 300px);
+      cursor: pointer;
+      text-align: left;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+      transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .figure-attachment-chip:hover {
+      transform: translateY(-1px);
+      border-color: rgba(244, 114, 182, 0.34);
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
+    }
+
+    .figure-attachment-chip .inline-figure-thumb {
+      width: 64px;
+      height: 46px;
+      border-radius: 7px;
+    }
+
+    .figure-attachment-chip .inline-figure-label {
+      display: none;
+    }
+
+    .figure-attachment-chip .inline-figure-title {
+      font-size: 0.76rem;
+      -webkit-line-clamp: 1;
+    }
+
+    .figure-attachment-chip .inline-figure-meta {
+      font-size: 0.68rem;
+    }
+
+    .spec-card {
+      margin: 10px 0;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(251, 191, 36, 0.28);
+      background:
+        linear-gradient(135deg, rgba(251, 191, 36, 0.08), rgba(249, 115, 22, 0.05)),
+        rgba(255, 255, 255, 0.02);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .spec-card-kicker {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #fbbf24;
+      margin-bottom: 6px;
+    }
+
+    .spec-card-value {
+      font-size: 0.96rem;
+      line-height: 1.2;
+      color: #fff4d6;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .spec-card-label {
+      font-size: 0.82rem;
+      color: var(--text-2);
+      font-weight: 600;
+    }
+
+    .spec-card-detail {
+      font-size: 0.76rem;
+      color: var(--text-3);
+      margin-top: 4px;
+      line-height: 1.35;
+    }
+
     /* Message actions (copy) */
     .msg-actions {
       opacity: 0;
@@ -1398,6 +2105,10 @@
     }
 
     .msg-action-btn:hover { color: var(--text-1); border-color: var(--surface-3); }
+    .msg-action-btn:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
 
     /* Citations */
     .citations {
@@ -1420,26 +2131,50 @@
     }
 
     .cite-tag {
-      background: var(--green-dim);
-      border: 1px solid var(--green-border);
-      color: var(--green);
-      font-size: 0.7rem;
-      padding: 3px 9px;
-      border-radius: 5px;
-      font-family: 'Menlo', 'Monaco', monospace;
-      cursor: default;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      cursor: pointer;
       white-space: nowrap;
-      transition: background 0.15s;
+      transition: background 0.15s, border-color 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
     }
-
-    .cite-tag:hover { background: #064e3b; }
+    .cite-tag:hover { background: var(--surface-3); border-color: var(--accent); color: var(--text-1); }
+    .cite-tag .cite-icon { font-size: 0.75rem; flex-shrink: 0; }
+    .cite-tag .cite-page { color: var(--text-3); font-size: 0.65rem; }
     .cite-tag.web-tag {
       background: #1e1b4b;
       border-color: #3730a3;
       color: #818cf8;
-      font-family: inherit;
     }
     .cite-tag.web-tag:hover { background: #312e81; }
+    .cite-preview {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: var(--text-2);
+      line-height: 1.5;
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .cite-preview.open { display: block; }
+    .cite-preview-header {
+      font-size: 0.68rem;
+      color: var(--text-3);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
 
     /* ── REFERENCE PANE ───────────────────────────────────────────── */
     #reference-pane {
@@ -1858,6 +2593,63 @@
     #send-btn:disabled { background: var(--surface-2); opacity: 0.45; cursor: default; }
     body.tech-mode-active #send-btn { background: #ea580c; }
     body.tech-mode-active #send-btn:hover:not(:disabled) { background: #c2410c; }
+    body.deep-research-active #send-btn { background: #0891b2; }
+    body.deep-research-active #send-btn:hover:not(:disabled) { background: #0e7490; }
+
+    /* ── Voice Mode ─────────────────────────────────────────── */
+    #voice-btn {
+      width: 36px; height: 36px; flex-shrink: 0; border-radius: 9px;
+      border: none; background: var(--surface-2); color: var(--text-2);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s, transform 0.1s;
+    }
+    #voice-btn:hover { background: var(--surface-3); color: var(--text-1); transform: scale(1.05); }
+    #voice-btn.listening { background: #dc2626; color: #fff; animation: voice-pulse 1.5s ease-in-out infinite; }
+    #voice-btn.disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+    @keyframes voice-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(220,38,38,0); }
+    }
+
+    #voice-overlay {
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+    }
+    #voice-overlay.active { display: flex; }
+
+    .voice-orb {
+      width: 120px; height: 120px; border-radius: 50%;
+      background: radial-gradient(circle, #3b82f6 0%, #1d4ed8 100%);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .voice-orb.listening {
+      background: radial-gradient(circle, #dc2626 0%, #991b1b 100%);
+      animation: orb-pulse 1.5s ease-in-out infinite;
+    }
+    .voice-orb.speaking {
+      background: radial-gradient(circle, #22c55e 0%, #15803d 100%);
+      animation: orb-speak 0.6s ease-in-out infinite;
+    }
+    .voice-orb svg { width: 48px; height: 48px; color: #fff; }
+    @keyframes orb-pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220,38,38,0.4); }
+      50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(220,38,38,0); }
+    }
+    @keyframes orb-speak {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    #voice-status { color: var(--text-2); font-size: 0.9rem; text-align: center; max-width: 400px; }
+    #voice-transcript { color: var(--text-1); font-size: 1.1rem; text-align: center; max-width: 500px; min-height: 1.5em; }
+    #voice-close-btn {
+      margin-top: 16px; padding: 10px 28px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text-1);
+      cursor: pointer; font-size: 0.9rem; transition: background 0.15s;
+    }
+    #voice-close-btn:hover { background: var(--surface-2); }
 
     /* Tech mode chip in header */
     #tech-mode-chip {
@@ -1888,11 +2680,98 @@
     }
     body.tech-mode-active #tech-mode-chip { display: flex; }
 
+    #deep-research-chip {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: rgba(8, 145, 178, 0.14);
+      border: 1px solid rgba(8, 145, 178, 0.4);
+      color: #0891b2;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    #deep-research-chip::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #0891b2;
+      flex-shrink: 0;
+      animation: chipPulse 1.8s ease-in-out infinite;
+    }
+    body.deep-research-active #deep-research-chip { display: flex; }
+
     .input-hint {
       font-size: 0.68rem;
       color: var(--text-3);
       margin-top: 8px;
       text-align: center;
+    }
+
+    .input-suggestion {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      color: var(--text-2);
+    }
+    .input-suggestion.hidden { display: none; }
+    .input-suggestion button {
+      border: 1px solid rgba(8, 145, 178, 0.35);
+      background: rgba(8, 145, 178, 0.1);
+      color: #0891b2;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .input-suggestion button:hover {
+      background: rgba(8, 145, 178, 0.16);
+    }
+
+    .research-indicator {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .research-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(8, 145, 178, 0.1);
+      border: 1px solid rgba(8, 145, 178, 0.28);
+      color: #0891b2;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .research-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .research-summary {
+      flex: 1 1 220px;
+      color: var(--text-2);
+      font-size: 0.76rem;
+      line-height: 1.45;
     }
 
     /* Scrollbar */
@@ -1932,6 +2811,7 @@
 
       /* Messages */
       .msg-inner { padding: 0 14px; }
+      .msg-actions { opacity: 1; }
 
       /* Input area */
       #input-area { padding: 10px 12px 14px; }
@@ -1988,6 +2868,10 @@
     <div id="history-list"></div>
 
     <div class="sidebar-footer">
+      <button id="manual-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;background:none;border:none;border-radius:8px;color:var(--text-2);font-size:0.8rem;font-weight:500;cursor:pointer;font-family:inherit;transition:background 0.12s,color 0.12s;margin-bottom:2px;" onmouseover="this.style.background='var(--surface)';this.style.color='var(--text-1)'" onmouseout="this.style.background='none';this.style.color='var(--text-2)'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        View Manual
+      </button>
       <button id="settings-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;background:none;border:none;border-radius:8px;color:var(--text-2);font-size:0.8rem;font-weight:500;cursor:pointer;font-family:inherit;transition:background 0.12s,color 0.12s;" onmouseover="this.style.background='var(--surface)';this.style.color='var(--text-1)'" onmouseout="this.style.background='none';this.style.color='var(--text-2)'">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         Vehicle Settings
@@ -2013,7 +2897,18 @@
         <h1 id="header-title-text">Cheri Doctor</h1>
       </div>
 
+      <button id="memory-btn" class="hidden" title="Open memory" aria-label="Open memory">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 3 14 8 19 8"/>
+          <line x1="9" y1="13" x2="15" y2="13"/>
+          <line x1="9" y1="17" x2="13" y2="17"/>
+        </svg>
+        <span id="memory-badge" class="memory-badge hidden">0</span>
+      </button>
+
       <div id="tech-mode-chip">TECH MODE</div>
+      <div id="deep-research-chip">DEEP RESEARCH</div>
 
       <select id="model-select">
         <option value="claude-sonnet-4-6">Claude Sonnet</option>
@@ -2074,9 +2969,17 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
                 Tech Mode
               </button>
+              <button class="plus-menu-item" id="deepresearch-item">
+                <span class="item-dot"></span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><path d="M8 11h6"></path><path d="M11 8v6"></path></svg>
+                Deep Research
+              </button>
             </div>
           </div>
           <textarea id="query" placeholder="Ask about your Geo Metro…" rows="1" spellcheck="true" autocomplete="off"></textarea>
+          <button id="mic-btn" class="input-icon-btn" type="button" title="Start voice input" aria-label="Start voice input" aria-pressed="false">
+            <i class="bx bx-microphone" aria-hidden="true"></i>
+          </button>
           <button id="send-btn" title="Send (Enter)">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <line x1="22" y1="2" x2="11" y2="13"/>
@@ -2086,9 +2989,27 @@
         </div>
       </div>
       <div class="input-hint">Enter to send &nbsp;·&nbsp; Shift+Enter for new line</div>
+      <div class="input-suggestion hidden" id="deep-research-suggestion">
+        <span id="deep-research-suggestion-text">This looks like a deep research question.</span>
+        <button type="button" id="deep-research-suggestion-btn">Enable Deep Research</button>
+      </div>
     </div>
 
   </div><!-- /main -->
+
+  <!-- ── VOICE MODE OVERLAY ──────────────────────────────────────── -->
+  <div id="voice-overlay">
+    <div class="voice-orb" id="voice-orb">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+        <line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+      </svg>
+    </div>
+    <div id="voice-status">Tap to start talking</div>
+    <div id="voice-transcript"></div>
+    <button id="voice-close-btn">End Voice Mode</button>
+  </div>
 
   <!-- ── REFERENCE PANE ───────────────────────────────────────────── -->
   <aside id="reference-pane" class="collapsed">
@@ -2129,6 +3050,8 @@
 
 <div class="settings-saved-toast" id="settings-toast">Settings saved</div>
 
+<div class="memory-modal-overlay" id="memory-modal" aria-hidden="true"></div>
+
 <!-- Lightbox -->
 <div id="lightbox">
   <div class="lightbox-header">
@@ -2161,7 +3084,15 @@ let activeId     = null;
 let activeProjectId = null;
 let conversation = [];
 let isLoading    = false;
+let orphanRetryTimer = null;
 let techModeActive = false;
+let deepResearchActive = false;
+let ttsRequestNonce = 0;
+let activeAudio = null;
+let activeAudioUrl = null;
+let activeTtsButton = null;
+let speechRecognition = null;
+let micListening = false;
 
 // Context-aware diagrams state
 let msgFiguresMap = {}; // msgId -> figures array
@@ -2180,6 +3111,7 @@ const historyList     = document.getElementById('history-list');
 const messagesEl      = document.getElementById('messages');
 const emptyState      = document.getElementById('empty-state');
 const queryEl         = document.getElementById('query');
+const micBtn          = document.getElementById('mic-btn');
 const sendBtn         = document.getElementById('send-btn');
 const lightbox        = document.getElementById('lightbox');
 const lightboxImg     = document.getElementById('lightbox-img');
@@ -2188,6 +3120,9 @@ const modelSelect     = document.getElementById('model-select');
 const refPane         = document.getElementById('reference-pane');
 const paneContent     = document.getElementById('pane-content');
 const togglePaneBtn   = document.getElementById('toggle-pane-btn');
+const deepResearchSuggestion = document.getElementById('deep-research-suggestion');
+const deepResearchSuggestionText = document.getElementById('deep-research-suggestion-text');
+const deepResearchSuggestionBtn = document.getElementById('deep-research-suggestion-btn');
 
 // ── Session / Project sync (server-side) ──────────────────────────────────
 function syncSession(id) {
@@ -2237,6 +3172,7 @@ function deleteProject(id) {
   removeProjectRemote(id);
   if (activeProjectId === id) activeProjectId = null;
   renderSidebar();
+  refreshMemoryState();
 }
 
 function editProject(id, name, description) {
@@ -2245,6 +3181,7 @@ function editProject(id, name, description) {
   projects[id].description = description;
   syncProject(id);
   renderSidebar();
+  if (activeProjectId === id && memoryModal.classList.contains('open')) renderMemoryModal();
 }
 
 function createSession(projectId) {
@@ -2282,6 +3219,32 @@ function updateSessionTimestamp(id) {
     syncSession(id);
     renderSidebar();
   }
+}
+
+function clearOrphanRetry() {
+  if (orphanRetryTimer) {
+    clearTimeout(orphanRetryTimer);
+    orphanRetryTimer = null;
+  }
+}
+
+function scheduleOrphanRetry(sessionId) {
+  clearOrphanRetry();
+  const msgs = sessions[sessionId]?.messages || [];
+  const lastMsg = msgs[msgs.length - 1];
+  if (!lastMsg || lastMsg.role !== 'user') return;
+  const retryText = (lastMsg.text || '').trim();
+  if (!retryText) return;
+
+  orphanRetryTimer = window.setTimeout(() => {
+    orphanRetryTimer = null;
+    if (isLoading || activeId !== sessionId || !sessions[sessionId]) return;
+    const currentMsgs = sessions[sessionId].messages || [];
+    const currentLast = currentMsgs[currentMsgs.length - 1];
+    if (!currentLast || currentLast.role !== 'user') return;
+    if ((currentLast.text || '').trim() !== retryText) return;
+    sendMessage({ text: retryText, skipUserMessage: true });
+  }, 500);
 }
 
 // ── Sidebar rendering ──────────────────────────────────────────────────────
@@ -2497,34 +3460,37 @@ function showProjectView(projectId) {
 
   headerTitleText.textContent = proj.name;
   renderSidebar();
+  refreshMemoryState();
 }
 
 // ── Session load / new ─────────────────────────────────────────────────────
 function startNewChat() {
   if (window.innerWidth <= 768) closeSidebarMobile();
+  clearOrphanRetry();
   activeId = null;
   sessionStorage.removeItem(TAB_KEY);
   conversation = [];
   msgFiguresMap = {};
   currentlyViewingMsgId = null;
   techModeActive = false;
-  document.body.classList.remove('tech-mode-active');
-  plusBtn.classList.remove('active');
-  techmodeItem.classList.remove('active');
+  deepResearchActive = false;
   pendingImages = [];
   renderImagePreviews();
-  queryEl.placeholder = 'Ask about your Geo Metro…';
+  _syncModeUi();
+  refreshDeepResearchSuggestion();
   document.getElementById('input-area').style.display = '';
   clearMessages();
   paneContent.innerHTML = '<div style="padding:40px 20px; text-align:center; color:var(--text-3); font-size:0.85rem;">Figures mentioned in the chat will appear here for easy reference.</div>';
   renderSidebar();
   headerTitleText.textContent = 'Cheri Doctor';
+  refreshMemoryState();
   queryEl.focus();
 }
 
 function loadSession(id) {
   if (!sessions[id]) return;
   if (window.innerWidth <= 768) closeSidebarMobile();
+  clearOrphanRetry();
   activeId = id;
   sessionStorage.setItem(TAB_KEY, id);
   activeProjectId = sessions[id].projectId || null;
@@ -2538,7 +3504,15 @@ function loadSession(id) {
   if (sessions[id].messages.length) {
     for (const msg of sessions[id].messages) {
       if (msg.role === 'user') renderUserMessage(msg.text);
-      else renderAssistantMessage(msg.text, msg.citations || [], msg.figures || [], msg.web_sources || []);
+      else renderAssistantMessage(
+        msg.text,
+        msg.citations || [],
+        msg.figures || [],
+        msg.web_sources || [],
+        msg.saved_notes || [],
+        msg.mode || 'normal',
+        msg.deep_research_summary || null,
+      );
     }
     scrollToBottom();
   }
@@ -2551,10 +3525,9 @@ function loadSession(id) {
     }
   }
   techModeActive = wasTechMode;
-  document.body.classList.toggle('tech-mode-active', wasTechMode);
-  plusBtn.classList.toggle('active', wasTechMode);
-  techmodeItem.classList.toggle('active', wasTechMode);
-  queryEl.placeholder = wasTechMode ? 'Tech Mode \u2014 describe what you see or enter readings\u2026' : 'Ask about your Geo Metro\u2026';
+  deepResearchActive = !!sessions[id].deepResearchActive;
+  _syncModeUi();
+  refreshDeepResearchSuggestion();
 
   // Restore shopping pane data if this session had a parts search,
   // but don't open the pane — user opens it themselves.
@@ -2563,6 +3536,8 @@ function loadSession(id) {
   }
 
   renderSidebar();
+  refreshMemoryState();
+  scheduleOrphanRetry(id);
 }
 
 function clearMessages() {
@@ -2573,6 +3548,115 @@ function clearMessages() {
 }
 
 // ── Message rendering ──────────────────────────────────────────────────────
+function _assistantSpeakButtonHtml(state = 'idle') {
+  if (state === 'loading') return `<i class="bx bx-loader-alt bx-spin" aria-hidden="true"></i> Voice`;
+  if (state === 'playing') return `<i class="bx bx-stop" aria-hidden="true"></i> Stop`;
+  if (state === 'error') return `<i class="bx bx-error-circle" aria-hidden="true"></i> Retry`;
+  return `<i class="bx bx-volume-full" aria-hidden="true"></i> Speak`;
+}
+
+function setAssistantSpeakButtonState(button, state = 'idle') {
+  if (!button) return;
+  button.dataset.ttsState = state;
+  button.disabled = state === 'loading';
+  button.innerHTML = _assistantSpeakButtonHtml(state);
+}
+
+function clearActiveAudioState() {
+  if (activeAudio) {
+    activeAudio.onended = null;
+    activeAudio.onerror = null;
+    activeAudio = null;
+  }
+  if (activeAudioUrl) {
+    URL.revokeObjectURL(activeAudioUrl);
+    activeAudioUrl = null;
+  }
+  if (activeTtsButton) {
+    setAssistantSpeakButtonState(activeTtsButton, 'idle');
+    activeTtsButton = null;
+  }
+}
+
+function stopActiveAudio() {
+  ttsRequestNonce += 1;
+  if (activeAudio) {
+    try {
+      activeAudio.pause();
+      activeAudio.currentTime = 0;
+    } catch (err) {
+      console.warn('Failed to stop active audio', err);
+    }
+  }
+  clearActiveAudioState();
+}
+
+function extractSpeechText(text) {
+  const temp = document.createElement('div');
+  temp.innerHTML = parseMarkdown(text || '');
+  return (temp.textContent || temp.innerText || '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakAssistantMessage(button, text) {
+  const speechText = extractSpeechText(text);
+  if (!speechText) return;
+
+  if (button === activeTtsButton && button.dataset.ttsState === 'playing') {
+    stopActiveAudio();
+    return;
+  }
+
+  stopActiveAudio();
+  const requestNonce = ++ttsRequestNonce;
+  setAssistantSpeakButtonState(button, 'loading');
+
+  try {
+    const res = await fetch('/api/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: speechText }),
+    });
+    if (res.status === 401) {
+      window.location.href = '/login';
+      return;
+    }
+    if (!res.ok) {
+      const detail = await res.text().catch(() => '');
+      throw new Error(detail || `TTS failed (${res.status})`);
+    }
+
+    const audioBlob = await res.blob();
+    if (requestNonce !== ttsRequestNonce) {
+      setAssistantSpeakButtonState(button, 'idle');
+      return;
+    }
+
+    const audioUrl = URL.createObjectURL(audioBlob);
+    const audio = new Audio(audioUrl);
+    activeAudio = audio;
+    activeAudioUrl = audioUrl;
+    activeTtsButton = button;
+    setAssistantSpeakButtonState(button, 'playing');
+
+    audio.onended = () => clearActiveAudioState();
+    audio.onerror = () => {
+      clearActiveAudioState();
+      setAssistantSpeakButtonState(button, 'error');
+      window.setTimeout(() => setAssistantSpeakButtonState(button, 'idle'), 1500);
+    };
+    await audio.play();
+  } catch (err) {
+    if (requestNonce === ttsRequestNonce) {
+      clearActiveAudioState();
+      setAssistantSpeakButtonState(button, 'error');
+      window.setTimeout(() => setAssistantSpeakButtonState(button, 'idle'), 1500);
+    }
+    console.error('TTS playback failed', err);
+  }
+}
+
 function renderUserMessage(text, images = []) {
   emptyState.style.display = 'none';
   const row = document.createElement('div');
@@ -2592,24 +3676,59 @@ function renderUserMessage(text, images = []) {
   return row;
 }
 
-function renderAssistantMessage(text, citations = [], figures = [], webSources = []) {
+function renderAssistantMessage(text, citations = [], figures = [], webSources = [], savedNotes = [], mode = 'normal', deepResearchSummary = null) {
   emptyState.style.display = 'none';
   const row = document.createElement('div');
   row.className = 'msg-row assistant';
   const msgId = 'msg-' + Date.now() + '-' + Math.floor(Math.random()*1000);
   row.dataset.msgId = msgId;
-  
+
   if (figures && figures.length) {
     msgFiguresMap[msgId] = figures;
   }
 
   const bubbleHtml = parseMarkdown(text);
+  const researchHtml = mode === 'deep_research'
+    ? `<div class="research-indicator">` +
+        `<div class="research-badge">DEEP RESEARCH</div>` +
+        (deepResearchSummary ? `<div class="research-summary">${escHtml(deepResearchSummary)}</div>` : '') +
+      `</div>`
+    : '';
 
   let citeHtml = '';
   if (citations.length || webSources.length) {
-    const manualTags = citations.map(c => `<span class="cite-tag" title="${escHtml(c.section_path)}">p${c.page}${c.source_label ? ' ' + escHtml(c.source_label) : ''} · ${escHtml(c.chunk_id)}</span>`).join('');
+    const manualTags = citations.map((c, i) => {
+      // Show just the section name on the pill; page/source_label in expanded preview
+      const section = c.section_path || c.source_label || `Page ${c.page}`;
+      return `<span class="cite-tag" data-cite-idx="${i}" title="${escHtml(c.text_preview || c.chunk_id)}">` +
+        `${escHtml(section)}` +
+        `</span>`;
+    }).join('');
     const webTags = webSources.map(s => `<span class="cite-tag web-tag" title="${escHtml(s)}">🌐 ${escHtml(s.length > 50 ? s.slice(0,50)+'…' : s)}</span>`).join('');
-    citeHtml = `<div class="citations"><div class="citations-label">Sources</div><div class="citation-tags">${manualTags}${webTags}</div></div>`;
+    const previewDivs = citations.map((c, i) => {
+      if (!c.text_preview) return '';
+      const section = c.section_path || '';
+      const srcLabel = c.source_label || '';
+      let headerParts = [`Page ${c.page}`];
+      if (section) headerParts.push(section);
+      if (srcLabel && srcLabel !== section) headerParts.push(`(${srcLabel})`);
+      return `<div class="cite-preview" data-cite-idx="${i}">` +
+        `<div class="cite-preview-header">${escHtml(headerParts.join(' · '))}</div>` +
+        `${escHtml(c.text_preview)}` +
+        `<button class="cite-view-manual" data-page="${c.page}" style="margin-top:8px;background:var(--surface-3);border:1px solid var(--border);color:var(--text-2);padding:4px 12px;border-radius:5px;font-size:0.72rem;cursor:pointer;font-family:inherit;">View in Manual</button>` +
+        `</div>`;
+    }).join('');
+    citeHtml = `<div class="citations"><div class="citations-label">Sources</div><div class="citation-tags">${manualTags}${webTags}</div>${previewDivs}</div>`;
+  }
+
+  let notesHtml = '';
+  if (savedNotes && savedNotes.length) {
+    notesHtml = savedNotes.map(n =>
+      `<div class="note-saved-indicator" title="${escHtml(n.content || '')}">` +
+      `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>` +
+      `Saved note: ${escHtml(n.title || 'Untitled')}` +
+      `</div>`
+    ).join('');
   }
 
   row.innerHTML = `
@@ -2617,9 +3736,14 @@ function renderAssistantMessage(text, citations = [], figures = [], webSources =
       <div class="avatar asst">CD</div>
       <div class="msg-body">
         <div class="msg-label">Cheri Doctor</div>
+        ${researchHtml}
         <div class="bubble">${bubbleHtml}</div>
+        ${notesHtml}
         ${citeHtml}
         <div class="msg-actions">
+           <button class="msg-action-btn speak-btn" type="button" title="Read aloud">
+             ${_assistantSpeakButtonHtml()}
+           </button>
            <button class="msg-action-btn copy-btn">
              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
              Copy
@@ -2628,7 +3752,42 @@ function renderAssistantMessage(text, citations = [], figures = [], webSources =
       </div>
     </div>`;
   
+  row.querySelector('.speak-btn').onclick = (e) => speakAssistantMessage(e.currentTarget, text);
   row.querySelector('.copy-btn').onclick = (e) => copyText(e.currentTarget, text);
+  enhanceAssistantBubble(row.querySelector('.bubble'), figures);
+
+  // Wire note indicators to open memory
+  row.querySelectorAll('.note-saved-indicator').forEach(el => {
+    el.onclick = () => showMemoryModal(activeId ? 'chat' : 'project');
+  });
+
+  // Wire citation click-to-expand preview
+  row.querySelectorAll('.cite-tag[data-cite-idx]').forEach(tag => {
+    tag.onclick = () => {
+      const idx = tag.dataset.citeIdx;
+      const preview = row.querySelector(`.cite-preview[data-cite-idx="${idx}"]`);
+      if (preview) {
+        row.querySelectorAll('.cite-preview.open').forEach(p => {
+          if (p !== preview) p.classList.remove('open');
+        });
+        preview.classList.toggle('open');
+        if (preview.classList.contains('open')) {
+          requestAnimationFrame(() => {
+            preview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          });
+        }
+      }
+    };
+  });
+
+  // Wire "View in Manual" buttons
+  row.querySelectorAll('.cite-view-manual').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const page = parseInt(btn.dataset.page);
+      if (page > 0) showManualViewer(page);
+    };
+  });
 
   messagesEl.appendChild(row);
   return row;
@@ -2664,6 +3823,9 @@ function addFigureToPane(f) {
     skeleton.remove();
     img.classList.remove('hidden');
   };
+  img.onerror = () => {
+    skeleton.innerHTML = '<span style="font-size:10px; color:var(--red);">FIGURE NOT FOUND</span>';
+  };
   card.appendChild(img);
 
   const cap = document.createElement('div');
@@ -2693,6 +3855,49 @@ function _detectPartsSearch(query) {
   // Explicit manual lookups without shopping verbs should not pre-trigger.
   if (hasManualLookup && !hasBuyVerb) return null;
   return '__explicit_shop__';
+}
+
+const _DEEP_RESEARCH_TRIGGER_RE = /\b(?:all|every|compare|full|complete|deep(?: research| dive)?|signal characteristics|voltage ranges?|under various operating conditions|pinout|connector pinout|detailed)\b/i;
+const _DEEP_RESEARCH_TOPIC_RE = /\b(?:cts|coolant temperature sensor|tps|throttle position sensor|map sensor|manifold absolute pressure|o2 sensor|oxygen sensor|iac|idle air control|injector|alternator|starter|caliper|master cylinder|brake booster|strut|tie[-\s]?rod|aldl|airbag|sir|derm)\b/ig;
+
+function _syncModeUi() {
+  document.body.classList.toggle('tech-mode-active', techModeActive);
+  document.body.classList.toggle('deep-research-active', deepResearchActive);
+  plusBtn.classList.toggle('active', techModeActive || deepResearchActive);
+  techmodeItem.classList.toggle('active', techModeActive);
+  deepresearchItem.classList.toggle('active', deepResearchActive);
+  if (techModeActive) queryEl.placeholder = 'Tech Mode — describe what you see or enter readings…';
+  else if (deepResearchActive) queryEl.placeholder = 'Deep Research — ask a broad or multi-part manual question…';
+  else queryEl.placeholder = 'Ask about your Geo Metro…';
+}
+
+function setDeepResearchMode(on, { persist = true } = {}) {
+  deepResearchActive = !!on;
+  _syncModeUi();
+  if (persist && activeId && sessions[activeId]) {
+    sessions[activeId].deepResearchActive = deepResearchActive;
+    syncSession(activeId);
+  }
+  refreshDeepResearchSuggestion();
+}
+
+function _detectDeepResearchSuggestion(text) {
+  const q = (text || '').trim();
+  if (!q) return false;
+  const topics = Array.from(new Set((q.match(_DEEP_RESEARCH_TOPIC_RE) || []).map(t => t.toLowerCase())));
+  if (topics.length >= 2) return true;
+  if (_DEEP_RESEARCH_TRIGGER_RE.test(q) && (q.includes(',') || /\b(?:and|or)\b/i.test(q))) return true;
+  if (_DEEP_RESEARCH_TRIGGER_RE.test(q) && q.length >= 140) return true;
+  return false;
+}
+
+function refreshDeepResearchSuggestion() {
+  if (!deepResearchSuggestion) return;
+  const shouldSuggest = !deepResearchActive && _detectDeepResearchSuggestion(queryEl.value);
+  deepResearchSuggestion.classList.toggle('hidden', !shouldSuggest);
+  if (shouldSuggest) {
+    deepResearchSuggestionText.textContent = 'This looks like a deep research question.';
+  }
 }
 
 const _BAG_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`;
@@ -3005,13 +4210,22 @@ function buildShopCard(item) {
 }
 
 // ── Send ───────────────────────────────────────────────────────────────────
-async function sendMessage() {
+async function sendMessage(options = {}) {
   if (isLoading) return;
-  const q = queryEl.value.trim();
-  if (!q && !pendingImages.length) return;
+  const forcedText = typeof options.text === 'string' ? options.text : null;
+  const skipUserMessage = !!options.skipUserMessage;
+  const q = (forcedText ?? queryEl.value).trim();
+  const imagesToSend = skipUserMessage ? [] : pendingImages.map(i => i.dataUrl);
+  if (!q && !imagesToSend.length) return;
 
+  clearOrphanRetry();
+  stopActiveAudio();
+  if (micListening && speechRecognition) {
+    speechRecognition.stop();
+  }
   queryEl.value = '';
   queryEl.style.height = 'auto';
+  refreshDeepResearchSuggestion();
   sendBtn.disabled = true;
   isLoading = true;
 
@@ -3021,34 +4235,36 @@ async function sendMessage() {
     sessionStorage.setItem(TAB_KEY, activeId);
     renderSidebar();
   }
+  const requestSessionId = activeId;
 
   // Auto-detect Tech Mode activation/deactivation from natural language
   if (/\[tech_mode:\s*on\]|tech mode|let'?s (do this|get to work|start)|ready to (start|work)|heading to the garage/i.test(q)) {
     techModeActive = true;
-    document.body.classList.add('tech-mode-active');
-    plusBtn.classList.add('active');
-    techmodeItem.classList.add('active');
-    queryEl.placeholder = 'Tech Mode — describe what you see or enter readings…';
+    _syncModeUi();
   } else if (/\[tech_mode:\s*off\]|i'?m done|that'?s enough|back inside|exit tech mode|stop tech mode/i.test(q)) {
     techModeActive = false;
-    document.body.classList.remove('tech-mode-active');
-    plusBtn.classList.remove('active');
-    techmodeItem.classList.remove('active');
-    queryEl.placeholder = 'Ask about your Geo Metro…';
+    _syncModeUi();
   }
 
-  const isFirstMessage = activeId && !sessions[activeId].messages.length;
+  const isFirstMessage = requestSessionId && !sessions[requestSessionId].messages.length;
   if (isFirstMessage) {
-    setSessionTitle(activeId, '\u2026');
+    setSessionTitle(requestSessionId, '\u2026');
   }
-  updateSessionTimestamp(activeId);
+  if (requestSessionId && sessions[requestSessionId]) {
+    sessions[requestSessionId].deepResearchActive = deepResearchActive;
+  }
+  updateSessionTimestamp(requestSessionId);
   // Snapshot and clear pending images
-  const imagesToSend = pendingImages.map(i => i.dataUrl);
   pendingImages = [];
   renderImagePreviews();
-  renderUserMessage(q, imagesToSend);
-  conversation.push({ role: "user", text: q });
-  if (activeId) sessions[activeId].messages.push({ role: "user", text: q });
+  if (!skipUserMessage) {
+    renderUserMessage(q, imagesToSend);
+    conversation.push({ role: "user", text: q });
+    if (requestSessionId) {
+      sessions[requestSessionId].messages.push({ role: "user", text: q });
+      syncSession(requestSessionId);
+    }
+  }
 
   const preShopHint = _detectPartsSearch(q);
   const typingRow = appendTypingRow(preShopHint ? 'shop' : null);
@@ -3057,7 +4273,7 @@ async function sendMessage() {
     const model = modelSelect?.value || 'claude-sonnet-4-6';
     // Build project context if chat belongs to a project
     let projectContext = null;
-    const sess = sessions[activeId];
+    const sess = sessions[requestSessionId];
     if (sess && sess.projectId && projects[sess.projectId]) {
       const proj = projects[sess.projectId];
       projectContext = `Project: ${proj.name}\n${proj.description}`;
@@ -3072,33 +4288,56 @@ async function sendMessage() {
         shop_mode_hint: !!preShopHint,
         shop_part_hint: null,
         tech_mode_hint: !!techModeActive,
+        deep_research: !!deepResearchActive,
+        session_id: activeId || null,
+        project_id: activeProjectId || null,
       },
       (status) => handleProgressStatus(typingRow, status),
     );
     typingRow.remove();
 
-    renderAssistantMessage(data.answer, data.citations || [], data.figures || [], data.web_sources || []);
+    const requestStillActive = activeId === requestSessionId;
+    if (requestStillActive) {
+      renderAssistantMessage(
+        data.answer,
+        data.citations || [],
+        data.figures || [],
+        data.web_sources || [],
+        data.saved_notes || [],
+        data.mode || 'normal',
+        data.deep_research_summary || null,
+      );
+    }
     const resolvedPartName = data.shopping_part_name || null;
     if (resolvedPartName) {
-      showShoppingPane(data.shopping_results || [], resolvedPartName);
+      if (requestStillActive) {
+        showShoppingPane(data.shopping_results || [], resolvedPartName);
+      }
       // Persist results on the session so they survive refresh
-      if (activeId) {
-        sessions[activeId].shopping_results  = data.shopping_results || [];
-        sessions[activeId].shopping_part_name = resolvedPartName;
+      if (requestSessionId && sessions[requestSessionId]) {
+        sessions[requestSessionId].shopping_results  = data.shopping_results || [];
+        sessions[requestSessionId].shopping_part_name = resolvedPartName;
       }
     }
-    conversation.push({ role: "assistant", text: data.answer });
-    if (activeId) {
-      sessions[activeId].messages.push({
+    if (requestStillActive) {
+      conversation.push({ role: "assistant", text: data.answer });
+    }
+    if (requestSessionId && sessions[requestSessionId]) {
+      sessions[requestSessionId].messages.push({
         role: "assistant", text: data.answer,
         citations: data.citations || [], figures: data.figures || [],
         web_sources: data.web_sources || [],
+        saved_notes: data.saved_notes || [],
+        mode: data.mode || 'normal',
+        deep_research_summary: data.deep_research_summary || null,
       });
-      syncSession(activeId);
+      syncSession(requestSessionId);
     }
+    if ((data.saved_notes || []).length) refreshMemoryState();
+    refreshDeepResearchSuggestion();
     // Generate a smart title for new chats
-    if (isFirstMessage && activeId) {
-      const titleSessionId = activeId;
+    if (isFirstMessage && requestSessionId) {
+      const titleSessionId = requestSessionId;
       fetch('/api/generate-title', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -3122,14 +4361,16 @@ async function sendMessage() {
     }
   } catch (err) {
     typingRow.remove();
-    const errRow = document.createElement('div');
-    errRow.className = 'msg-row assistant';
-    errRow.innerHTML = `<div class="msg-inner"><div class="avatar asst">CD</div><div class="msg-body"><div class="msg-label">Error</div><div class="bubble" style="color:var(--red)">${escHtml(err.message)}</div></div></div>`;
-    messagesEl.appendChild(errRow);
+    if (activeId === requestSessionId) {
+      const errRow = document.createElement('div');
+      errRow.className = 'msg-row assistant';
+      errRow.innerHTML = `<div class="msg-inner"><div class="avatar asst">CD</div><div class="msg-body"><div class="msg-label">Error</div><div class="bubble" style="color:var(--red)">${escHtml(err.message)}</div></div></div>`;
+      messagesEl.appendChild(errRow);
+    }
   }
   sendBtn.disabled = false;
   isLoading = false;
-  scrollToBottom();
+  if (activeId === requestSessionId) scrollToBottom();
 }
 
 // ── Lightbox Logic (Zoom & Pan) ───────────────────────────────────────────
@@ -3198,7 +4439,7 @@ function parseMarkdown(text) {
   const figPlaceholders = [];
   text = text.replace(/\[p(\d+)\s*\|\s*fig:\s*([^\]]+)\]/gi, (match, page, figId) => {
     const idx = figPlaceholders.length;
-    figPlaceholders.push(`<a class="fig-link" onclick="jumpToFig('${figId.trim()}')">\u{1F4F7} Figure (p${page})</a>`);
+    figPlaceholders.push(`<a class="fig-link" href="#" data-fig-id="${escAttr(figId.trim())}" data-fig-page="${parseInt(page, 10) || 0}">\u{1F4F7} Figure (p${page})</a>`);
     return `%%FIG_${idx}%%`;
   });
   let html = marked.parse(text, { breaks: true, gfm: true });
@@ -3332,7 +4573,7 @@ function printChecklist(checklistId) {
   }
 }
 
-function jumpToFig(figId) {
+function jumpToFig(figId, page = 0) {
   let targetFig = null;
   // Search for the figure data in our map
   for (const figs of Object.values(msgFiguresMap)) {
@@ -3340,18 +4581,202 @@ function jumpToFig(figId) {
     if (targetFig) break;
   }
 
-  if (targetFig) {
-    refreshPaneContent(targetFig); // refreshPaneContent handles single or array
-    openRefPane();
-    // Since it's the only figure, it will be at the top
-    paneContent.scrollTop = 0;
-  } else {
-    console.warn("Figure data not found in session context:", figId);
+  if (!targetFig) {
+    targetFig = {
+      figure_id: figId,
+      url: `/api/figures/${encodeURIComponent(figId)}`,
+      page: page || null,
+      caption_text: '',
+    };
   }
+
+  refreshPaneContent(targetFig);
+  openRefPane();
+  paneContent.scrollTop = 0;
 }
 
 function escHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function escAttr(str) {
+  return escHtml(str).replace(/'/g, '&#39;');
+}
+
+const SPEC_VALUE_RE = /([0-9][0-9,]*(?:\.\d+)?(?:\s*[–-]\s*[0-9][0-9,]*(?:\.\d+)?)?\s*(?:Ω|kΩ|MΩ|ohms?|N·m|lb\.?\s*ft|lb-ft|psi|kPa|V|volts?|mm|cm|in(?:\.|ches)?|qt(?:s)?|quarts?|L|liters?|rpm|°(?:F|C)?)(?:\s*\([^)]*\))?)/i;
+const SPEC_KEYWORD_RE = /\b(?:torque|tighten|clearance|capacity|spec|range|reading|resistance|voltage|pressure|vacuum|gap|timing|idle speed|temperature|length|diameter)\b/i;
+
+function enhanceAssistantBubble(bubble, figures = []) {
+  if (!bubble) return;
+  enhanceFigureLinks(bubble, figures);
+  enhanceSpecCards(bubble);
+}
+
+function enhanceFigureLinks(bubble, figures = []) {
+  const figureMap = new Map((figures || []).map(fig => [fig.figure_id, fig]));
+  const attachmentRows = new Map();
+  bubble.querySelectorAll('.fig-link[data-fig-id]').forEach(link => {
+    const figId = link.dataset.figId || '';
+    const page = parseInt(link.dataset.figPage || '0', 10) || 0;
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      jumpToFig(figId, page);
+    });
+
+    const fig = figureMap.get(figId);
+    if (!fig) return;
+    if (shouldRenderStandaloneFigureCard(link)) {
+      link.replaceWith(buildFigureCard(fig, figId, page || fig.page || 0, 'inline-figure-card'));
+      return;
+    }
+
+    const host = getFigureAttachmentHost(link, bubble);
+    const row = getOrCreateFigureAttachmentRow(host, attachmentRows);
+    if (!row || Array.from(row.children).some(el => el.dataset.figId === figId)) return;
+    row.appendChild(buildFigureCard(fig, figId, page || fig.page || 0, 'figure-attachment-chip'));
+  });
+}
+
+function enhanceSpecCards(bubble) {
+  let converted = 0;
+  const candidates = Array.from(bubble.querySelectorAll('p'));
+  for (const el of candidates) {
+    if (converted >= 6) break;
+    if (el.closest('.checklist, table, blockquote, .citations, .spec-card')) continue;
+    if (el.querySelector('img, table, .inline-figure-card, .figure-attachment-chip, .fig-link, .checklist, .spec-card')) continue;
+
+    const spec = extractSpecCard(el.textContent || '');
+    if (!spec) continue;
+
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = buildSpecCardHtml(spec);
+    const card = wrapper.firstElementChild;
+    if (!card) continue;
+
+    if (el.tagName === 'LI') {
+      el.innerHTML = '';
+      el.appendChild(card);
+    } else {
+      el.replaceWith(card);
+    }
+    converted += 1;
+  }
+}
+
+function extractSpecCard(rawText) {
+  const text = String(rawText || '').replace(/\s+/g, ' ').trim();
+  if (!text || text.length < 8 || text.length > 220) return null;
+  if (!SPEC_VALUE_RE.test(text)) return null;
+
+  const colonMatch = text.match(/^(?:[✅⚠️❌]\s*)?([^:]{1,48}):\s*(.+)$/);
+  const startsLikeSpec = /^(?:[✅⚠️❌]\s*)?(?:good|spec|result|reading|your reading|tighten(?: to)?|set(?: to)?|capacity|clearance|pressure|vacuum|voltage|resistance|gap|timing)\b/i.test(text);
+  if (!colonMatch && !startsLikeSpec && !SPEC_KEYWORD_RE.test(text)) return null;
+  if (!colonMatch && /[.!?].+[.!?]/.test(text)) return null;
+
+  const category = inferSpecCategory(text);
+  let label = '';
+  let value = '';
+  let detail = '';
+
+  if (colonMatch) {
+    label = colonMatch[1].trim();
+    const remainder = colonMatch[2].trim();
+    const valueMatch = remainder.match(SPEC_VALUE_RE);
+    value = valueMatch ? valueMatch[1].trim() : remainder;
+    detail = remainder.replace(value, '').replace(/^[—–\-:,;)\s]+|[—–\-:,;(\s]+$/g, '').trim();
+  } else {
+    const valueMatch = text.match(SPEC_VALUE_RE);
+    if (!valueMatch) return null;
+    value = valueMatch[1].trim();
+    const valueIdx = text.indexOf(value);
+    label = text.slice(0, valueIdx).replace(/[—–\-:]+$/g, '').trim();
+    detail = text.slice(valueIdx + value.length).replace(/^[—–\-:,;)\s]+|[—–\-:,;(\s]+$/g, '').trim();
+  }
+
+  if (!label) label = category;
+  if (!value) return null;
+  if (label.length > 60) label = category;
+  if (detail.length > 110) detail = '';
+
+  return { category, label, value, detail };
+}
+
+function shouldRenderStandaloneFigureCard(link) {
+  const parent = link.parentElement;
+  if (!parent) return false;
+  if (parent.tagName === 'LI') return false;
+
+  const cloned = parent.cloneNode(true);
+  cloned.querySelectorAll('.fig-link').forEach(el => el.remove());
+  const surroundingText = (cloned.textContent || '').replace(/\s+/g, ' ').trim();
+  if (!surroundingText) return true;
+
+  const normalized = surroundingText
+    .replace(/^[—–\-:;,\s]+|[—–\-:;,\s]+$/g, '')
+    .toLowerCase();
+
+  return /^(here( it is)?|shown here|diagram|figure|manual diagram|see diagram|see figure|illustrated here)$/.test(normalized);
+}
+
+function getFigureAttachmentHost(link, bubble) {
+  return link.closest('p, li, blockquote') || link.parentElement || bubble;
+}
+
+function getOrCreateFigureAttachmentRow(host, attachmentRows) {
+  if (!host) return null;
+  const existing = attachmentRows.get(host);
+  if (existing) return existing;
+
+  const row = document.createElement('div');
+  row.className = 'figure-attachment-row';
+  if (host.tagName === 'LI') {
+    host.appendChild(row);
+  } else {
+    host.insertAdjacentElement('afterend', row);
+  }
+  attachmentRows.set(host, row);
+  return row;
+}
+
+function buildFigureCard(fig, figId, page, className) {
+  const card = document.createElement('button');
+  card.type = 'button';
+  card.className = className;
+  card.dataset.figId = figId;
+  card.dataset.figPage = String(page || 0);
+  card.title = fig.caption_text || `Figure ${figId}`;
+  card.innerHTML = `
+    <span class="inline-figure-thumb">
+      <img src="${escAttr(fig.url)}" alt="${escAttr(fig.caption_text || 'Figure')}" loading="lazy">
+    </span>
+    <span class="inline-figure-copy">
+      <span class="inline-figure-label">Diagram</span>
+      <span class="inline-figure-title">${escHtml(fig.caption_text || `Figure ${figId}`)}</span>
+      <span class="inline-figure-meta">Page ${fig.page || page || '?'}</span>
+    </span>`;
+  card.addEventListener('click', () => jumpToFig(figId, page || fig.page || 0));
+  return card;
+}
+
+function inferSpecCategory(text) {
+  if (/\btorque|tighten\b/i.test(text)) return 'Torque Spec';
+  if (/\bcapacity|quarts?\b|\bqt\b|\bliters?\b|\bL\b/i.test(text)) return 'Capacity';
+  if (/\bresistance|ohms?|Ω|kΩ|MΩ\b/i.test(text)) return 'Resistance';
+  if (/\bvoltage|volts?\b|\bV\b/i.test(text)) return 'Voltage';
+  if (/\bpressure|psi|kPa\b/i.test(text)) return 'Pressure';
+  if (/\bclearance|gap|diameter|length|mm|cm|in(?:\.|ches)?\b/i.test(text)) return 'Measurement';
+  if (/\brpm|idle speed|timing|temperature|°/i.test(text)) return 'Operating Spec';
+  return 'Spec';
+}
+
+function buildSpecCardHtml(spec) {
+  return `
+    <div class="spec-card">
+      <div class="spec-card-kicker">${escHtml(spec.category)}</div>
+      <div class="spec-card-value">${escHtml(spec.value)}</div>
+      <div class="spec-card-label">${escHtml(spec.label)}</div>
+      ${spec.detail ? `<div class="spec-card-detail">${escHtml(spec.detail)}</div>` : ''}
+    </div>`;
 }
 
 function scrollToBottom() { messagesEl.scrollTop = messagesEl.scrollHeight; }
@@ -3660,6 +5085,481 @@ async function saveSettingsFromView() {
 
 document.getElementById('settings-btn').onclick = showSettingsView;
 
+// ── Memory / Notes Modal ───────────────────────────────────────────────────
+const MEMORY_ICON = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>`;
+const memoryBtn = document.getElementById('memory-btn');
+const memoryBadge = document.getElementById('memory-badge');
+const memoryModal = document.getElementById('memory-modal');
+let _memoryState = {
+  activeTab: 'project',
+  counts: { project: 0, chat: 0 },
+  notesByTab: { project: [], chat: [] },
+  scopeKey: '',
+};
+
+async function fetchNotes(projectId, sessionId) {
+  if (!projectId && !sessionId) return [];
+  const params = new URLSearchParams();
+  if (projectId) params.set('project_id', projectId);
+  else if (sessionId) params.set('session_id', sessionId);
+  try {
+    const res = await fetch(`/api/notes?${params}`);
+    if (res.ok) return await res.json();
+  } catch {}
+  return [];
+}
+
+async function createNote(data) {
+  try {
+    const res = await fetch('/api/notes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return res.ok ? await res.json() : null;
+  } catch { return null; }
+}
+
+async function updateNote(noteId, data) {
+  try {
+    await fetch(`/api/notes/${noteId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  } catch {}
+}
+
+async function deleteNote(noteId) {
+  try {
+    await fetch(`/api/notes/${noteId}`, { method: 'DELETE' });
+  } catch {}
+}
+
+function formatNoteDate(ms) {
+  const d = new Date(ms);
+  const now = new Date();
+  const diff = now - d;
+  if (diff < 60000) return 'just now';
+  if (diff < 3600000) return `${Math.floor(diff/60000)}m ago`;
+  if (diff < 86400000) return `${Math.floor(diff/3600000)}h ago`;
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function showNoteEditModal(note, onSave) {
+  const overlay = document.createElement('div');
+  overlay.className = 'note-edit-overlay';
+  overlay.innerHTML = `
+    <div class="note-edit-modal">
+      <h3>${note ? 'Edit Note' : 'New Note'}</h3>
+      <input id="note-edit-title" type="text" placeholder="Note title" value="${note ? note.title.replace(/"/g, '&quot;') : ''}">
+      <textarea id="note-edit-content" placeholder="Note content...">${note ? note.content : ''}</textarea>
+      <input id="note-edit-tags" type="text" placeholder="Tags (comma-separated)" value="${note && note.tags ? note.tags.join(', ') : ''}">
+      <div class="modal-actions">
+        <button id="note-edit-cancel">Cancel</button>
+        <button id="note-edit-save" class="primary">Save</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  overlay.querySelector('#note-edit-cancel').onclick = () => overlay.remove();
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  overlay.querySelector('#note-edit-save').onclick = () => {
+    const title = overlay.querySelector('#note-edit-title').value.trim();
+    const content = overlay.querySelector('#note-edit-content').value.trim();
+    const tagsStr = overlay.querySelector('#note-edit-tags').value.trim();
+    const tags = tagsStr ? tagsStr.split(',').map(t => t.trim()).filter(Boolean) : [];
+    if (!title && !content) { overlay.remove(); return; }
+    onSave({ title: title || 'Untitled', content, tags });
+    overlay.remove();
+  };
+  overlay.querySelector('#note-edit-title').focus();
+}
+
+function getMemoryTabs() {
+  const tabs = [];
+  if (activeProjectId) tabs.push('project');
+  if (activeId) tabs.push('chat');
+  return tabs;
+}
+
+function getMemoryDefaultTab(preferredTab) {
+  const tabs = getMemoryTabs();
+  if (!tabs.length) return null;
+  if (preferredTab && tabs.includes(preferredTab)) return preferredTab;
+  if (_memoryState.activeTab && tabs.includes(_memoryState.activeTab)) return _memoryState.activeTab;
+  return tabs[0];
+}
+
+function getMemoryScopeKey() {
+  return `${activeProjectId || ''}:${activeId || ''}`;
+}
+
+function getMemoryCountLabel(count) {
+  return count > 99 ? '99+' : String(count);
+}
+
+function getMemoryButtonCount() {
+  if (activeProjectId) return _memoryState.counts.project;
+  if (activeId) return _memoryState.counts.chat;
+  return 0;
+}
+
+function getMemoryTabLabel(tab) {
+  return tab === 'project' ? 'Project Memory' : 'Chat Memory';
+}
+
+function getMemoryTabHint(tab) {
+  if (tab === 'project') {
+    if (activeProjectId && projects[activeProjectId]?.name) {
+      return `Notes shared across the ${projects[activeProjectId].name} project.`;
+    }
+    return 'Notes shared across this project.';
+  }
+  return 'Notes saved only in this conversation.';
+}
+
+function getMemoryNoteOrigin(note) {
+  if (!note.session_id) return 'Project-wide';
+  if (activeId && String(note.session_id) === String(activeId)) return 'This chat';
+  const session = sessions[note.session_id];
+  if (session?.title && session.title !== 'New Chat') return session.title;
+  return 'Project chat';
+}
+
+function renderMemoryButton() {
+  const tabs = getMemoryTabs();
+  if (!tabs.length) {
+    closeMemoryModal();
+    memoryBtn.classList.add('hidden');
+    memoryBtn.disabled = true;
+    memoryBadge.classList.add('hidden');
+    return;
+  }
+  memoryBtn.classList.remove('hidden');
+  memoryBtn.disabled = false;
+  const label = activeProjectId ? 'Open project memory' : 'Open chat memory';
+  memoryBtn.title = label;
+  memoryBtn.setAttribute('aria-label', label);
+
+  const count = getMemoryButtonCount();
+  if (count > 0) {
+    memoryBadge.textContent = getMemoryCountLabel(count);
+    memoryBadge.classList.remove('hidden');
+  } else {
+    memoryBadge.classList.add('hidden');
+  }
+}
+
+async function refreshMemoryState() {
+  const tabs = getMemoryTabs();
+  const scopeKey = getMemoryScopeKey();
+  if (!tabs.length) {
+    _memoryState = {
+      activeTab: 'project',
+      counts: { project: 0, chat: 0 },
+      notesByTab: { project: [], chat: [] },
+      scopeKey: '',
+    };
+    renderMemoryButton();
+    return;
+  }
+
+  const [projectNotes, chatNotes] = await Promise.all([
+    tabs.includes('project') ? fetchNotes(activeProjectId, null) : Promise.resolve([]),
+    tabs.includes('chat') ? fetchNotes(null, activeId) : Promise.resolve([]),
+  ]);
+
+  if (scopeKey !== getMemoryScopeKey()) return;
+
+  _memoryState.scopeKey = scopeKey;
+  _memoryState.counts = {
+    project: projectNotes.length,
+    chat: chatNotes.length,
+  };
+  _memoryState.notesByTab = {
+    project: projectNotes,
+    chat: chatNotes,
+  };
+  _memoryState.activeTab = getMemoryDefaultTab(_memoryState.activeTab) || 'project';
+  renderMemoryButton();
+  if (memoryModal.classList.contains('open')) renderMemoryModal();
+}
+
+function closeMemoryModal() {
+  memoryModal.classList.remove('open');
+  memoryModal.setAttribute('aria-hidden', 'true');
+  memoryModal.innerHTML = '';
+}
+
+function buildMemoryNoteCard(note, tab) {
+  const title = escHtml(note.title || 'Untitled');
+  const content = escHtml(note.content || '');
+  const tags = (note.tags || []).map(tag => `<span class="note-tag">${escHtml(tag)}</span>`).join('');
+  const sourceLabel = note.source === 'cheri_doctor' ? 'Cheri Doctor' : 'You';
+  const sourceClass = note.source === 'user' ? 'user-source' : '';
+  const originLabel = tab === 'project' ? getMemoryNoteOrigin(note) : 'This chat';
+  return `
+    <div class="note-card" data-note-id="${note.id}">
+      <div class="note-card-header">
+        <div class="note-card-title">${title}</div>
+        <div class="note-card-badges">
+          <span class="note-card-source ${sourceClass}">${sourceLabel}</span>
+          <span class="note-card-source scope-source">${escHtml(originLabel)}</span>
+        </div>
+      </div>
+      <div class="note-card-content">${content}</div>
+      <div class="note-card-meta">
+        <div class="note-card-tags">${tags}</div>
+        <span>${formatNoteDate(note.updated || note.created)}</span>
+        <div class="note-card-actions">
+          <button class="edit-note" title="Edit">Edit</button>
+          <button class="delete-note" title="Delete">Del</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderMemoryModal() {
+  const tabs = getMemoryTabs();
+  const activeTab = getMemoryDefaultTab(_memoryState.activeTab);
+  if (!activeTab) {
+    closeMemoryModal();
+    return;
+  }
+
+  _memoryState.activeTab = activeTab;
+  const notes = _memoryState.notesByTab[activeTab] || [];
+  const tabsHtml = tabs.length > 1
+    ? `<div class="memory-tabs">${
+        tabs.map(tab => `
+          <button class="memory-tab ${tab === activeTab ? 'active' : ''}" data-memory-tab="${tab}">
+            <span>${getMemoryTabLabel(tab)}</span>
+            <span class="memory-tab-count">${getMemoryCountLabel(_memoryState.counts[tab] || 0)}</span>
+          </button>
+        `).join('')
+      }</div>`
+    : '';
+  const notesHtml = notes.length
+    ? notes.map(note => buildMemoryNoteCard(note, activeTab)).join('')
+    : `<div class="memory-modal-empty">${
+        activeTab === 'project'
+          ? 'No project memory yet. Cheri Doctor will drop notes here as you work across chats, and you can add your own.'
+          : 'No chat memory yet. Notes saved in this conversation will show up here.'
+      }</div>`;
+
+  memoryModal.innerHTML = `
+    <div class="memory-modal" role="dialog" aria-modal="true" aria-labelledby="memory-modal-title">
+      <div class="memory-modal-header">
+        <div class="memory-modal-icon">${MEMORY_ICON}</div>
+        <div class="memory-modal-heading">
+          <h2 id="memory-modal-title">Memory</h2>
+          <p>${escHtml(getMemoryTabHint(activeTab))}</p>
+        </div>
+        <button class="memory-modal-close" id="memory-close-btn" aria-label="Close memory">×</button>
+      </div>
+      <div class="memory-modal-toolbar">
+        ${tabsHtml}
+        <button class="note-add-btn" id="memory-add-btn">+ Add Note</button>
+      </div>
+      <div class="memory-modal-body">
+        <div class="memory-modal-summary">
+          ${escHtml(getMemoryTabLabel(activeTab))} · ${_memoryState.counts[activeTab] || 0} note${(_memoryState.counts[activeTab] || 0) === 1 ? '' : 's'}
+        </div>
+        ${notesHtml}
+      </div>
+    </div>
+  `;
+  memoryModal.classList.add('open');
+  memoryModal.setAttribute('aria-hidden', 'false');
+
+  memoryModal.querySelector('#memory-close-btn').onclick = closeMemoryModal;
+
+  memoryModal.querySelectorAll('[data-memory-tab]').forEach(btn => {
+    btn.onclick = () => {
+      _memoryState.activeTab = btn.dataset.memoryTab;
+      renderMemoryModal();
+    };
+  });
+
+  memoryModal.querySelector('#memory-add-btn').onclick = () => {
+    showNoteEditModal(null, async (data) => {
+      data.source = 'user';
+      if (_memoryState.activeTab === 'project') {
+        data.project_id = activeProjectId || null;
+        data.session_id = null;
+      } else {
+        data.project_id = activeProjectId || null;
+        data.session_id = activeId || null;
+      }
+      const result = await createNote(data);
+      if (result) await refreshMemoryState();
+    });
+  };
+
+  memoryModal.querySelectorAll('.edit-note').forEach(btn => {
+    btn.onclick = () => {
+      const noteId = btn.closest('.note-card').dataset.noteId;
+      const note = (_memoryState.notesByTab[_memoryState.activeTab] || []).find(n => String(n.id) === String(noteId));
+      if (!note) return;
+      showNoteEditModal(note, async (data) => {
+        await updateNote(noteId, data);
+        await refreshMemoryState();
+      });
+    };
+  });
+
+  memoryModal.querySelectorAll('.delete-note').forEach(btn => {
+    btn.onclick = async () => {
+      const noteId = btn.closest('.note-card').dataset.noteId;
+      await deleteNote(noteId);
+      await refreshMemoryState();
+    };
+  });
+}
+
+async function showMemoryModal(preferredTab) {
+  if (!getMemoryTabs().length) return;
+  _memoryState.activeTab = getMemoryDefaultTab(preferredTab) || 'project';
+  if (_memoryState.scopeKey !== getMemoryScopeKey()) {
+    await refreshMemoryState();
+  }
+  renderMemoryModal();
+}
+
+memoryBtn.onclick = () => { showMemoryModal(); };
+memoryModal.addEventListener('click', (e) => {
+  if (e.target === memoryModal) closeMemoryModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && memoryModal.classList.contains('open')) closeMemoryModal();
+});
+
+// ── Manual Viewer ──────────────────────────────────────────────────────────
+let _manualPrevState = null;
+let _manualTotalPages = 771;
+let _manualCurrentPage = 1;
+let _manualToc = [];
+
+async function loadManualInfo() {
+  try {
+    const res = await fetch('/api/manual/info');
+    if (res.ok) {
+      const info = await res.json();
+      _manualTotalPages = info.total_pages || 771;
+    }
+  } catch {}
+}
+
+async function loadManualToc() {
+  if (_manualToc.length) return;
+  try {
+    const res = await fetch('/api/manual/toc');
+    if (res.ok) _manualToc = await res.json();
+  } catch {}
+}
+
+function showManualViewer(page) {
+  _manualPrevState = { id: activeId, projectId: activeProjectId };
+  _manualCurrentPage = page || 1;
+
+  document.getElementById('input-area').style.display = 'none';
+  emptyState.style.display = 'none';
+  messagesEl.innerHTML = '';
+  headerTitleText.textContent = 'Service Manual';
+
+  loadManualInfo();
+  loadManualToc().then(() => renderManualViewer());
+}
+
+function renderManualViewer() {
+  const tocHtml = _manualToc.map(s => {
+    const code = s.code || s.section_code || '';
+    const name = s.name || s.title || '';
+    const startPage = s.start_page || s.page || 0;
+    return `<button class="manual-toc-item" data-page="${startPage}"><span class="toc-code">${escHtml(code)}</span>${escHtml(name)}</button>`;
+  }).join('');
+
+  const view = document.createElement('div');
+  view.className = 'manual-viewer';
+  view.innerHTML = `
+    <div class="manual-toolbar">
+      <button id="manual-back-btn">&larr; Back</button>
+      <div class="spacer"></div>
+      <button id="manual-prev-btn">&laquo; Prev</button>
+      <span class="manual-page-label">Page</span>
+      <input type="number" class="manual-page-input" id="manual-page-num" value="${_manualCurrentPage}" min="1" max="${_manualTotalPages}">
+      <span class="manual-page-label">of ${_manualTotalPages}</span>
+      <button id="manual-next-btn">Next &raquo;</button>
+      <div class="spacer"></div>
+      <button id="manual-toc-toggle">Contents</button>
+    </div>
+    <div class="manual-body">
+      <div class="manual-toc-panel" id="manual-toc-panel">${tocHtml || '<div style="padding:14px;color:var(--text-3);font-size:0.78rem;">Loading...</div>'}</div>
+      <div class="manual-page-container" id="manual-page-container">
+        <img id="manual-page-img" src="/api/manual/page/${_manualCurrentPage}" alt="Manual page ${_manualCurrentPage}">
+      </div>
+    </div>
+  `;
+
+  messagesEl.style.overflow = 'hidden';
+  messagesEl.appendChild(view);
+
+  function goToPage(p) {
+    p = Math.max(1, Math.min(_manualTotalPages, p));
+    _manualCurrentPage = p;
+    document.getElementById('manual-page-num').value = p;
+    const img = document.getElementById('manual-page-img');
+    img.src = `/api/manual/page/${p}`;
+    img.alt = `Manual page ${p}`;
+  }
+
+  view.querySelector('#manual-back-btn').onclick = () => {
+    messagesEl.innerHTML = '';
+    messagesEl.style.overflow = '';
+    document.getElementById('input-area').style.display = '';
+    if (_manualPrevState) {
+      activeId = _manualPrevState.id;
+      activeProjectId = _manualPrevState.projectId;
+      if (activeId) loadSession(activeId);
+      else if (activeProjectId) showProjectView(activeProjectId);
+      else { emptyState.style.display = ''; headerTitleText.textContent = 'Cheri Doctor'; }
+    }
+    _manualPrevState = null;
+  };
+
+  view.querySelector('#manual-prev-btn').onclick = () => goToPage(_manualCurrentPage - 1);
+  view.querySelector('#manual-next-btn').onclick = () => goToPage(_manualCurrentPage + 1);
+  view.querySelector('#manual-page-num').onchange = (e) => goToPage(parseInt(e.target.value) || 1);
+  view.querySelector('#manual-page-num').onkeydown = (e) => { if (e.key === 'Enter') goToPage(parseInt(e.target.value) || 1); };
+
+  // TOC items
+  view.querySelectorAll('.manual-toc-item').forEach(btn => {
+    btn.onclick = () => {
+      const page = parseInt(btn.dataset.page);
+      if (page > 0) goToPage(page);
+    };
+  });
+
+  // Toggle TOC panel
+  view.querySelector('#manual-toc-toggle').onclick = () => {
+    const panel = document.getElementById('manual-toc-panel');
+    panel.style.display = panel.style.display === 'none' ? '' : 'none';
+  };
+
+  // Keyboard navigation
+  const keyHandler = (e) => {
+    if (!document.querySelector('.manual-viewer')) { document.removeEventListener('keydown', keyHandler); return; }
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowLeft') goToPage(_manualCurrentPage - 1);
+    else if (e.key === 'ArrowRight') goToPage(_manualCurrentPage + 1);
+  };
+  document.addEventListener('keydown', keyHandler);
+}
+
+document.getElementById('manual-btn').onclick = () => showManualViewer(1);
+
 // ── Project Modal ──────────────────────────────────────────────────────────
 let editingProjectId = null;
 const projectModal = document.getElementById('project-modal');
@@ -3716,11 +5616,339 @@ document.getElementById('project-modal-cancel').onclick = closeProjectModal;
 projectModal.addEventListener('click', (e) => { if (e.target === projectModal) closeProjectModal(); });
 
 // ── UI Events ──────────────────────────────────────────────────────────────
-queryEl.addEventListener('input', () => {
+function syncQueryHeight() {
   queryEl.style.height = 'auto';
   queryEl.style.height = Math.min(queryEl.scrollHeight, 160) + "px";
+}
+
+function updateMicButtonState(message = '') {
+  if (!micBtn) return;
+  micBtn.classList.toggle('active', micListening);
+  micBtn.setAttribute('aria-pressed', micListening ? 'true' : 'false');
+  if (micBtn.disabled) return;
+  micBtn.title = message || (micListening ? 'Stop voice input' : 'Start voice input');
+}
+
+function initVoiceInput() {
+  const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognitionCtor) {
+    micBtn.disabled = true;
+    micBtn.title = 'Voice input not supported in this browser';
+    return;
+  }
+
+  speechRecognition = new SpeechRecognitionCtor();
+  speechRecognition.continuous = false;
+  speechRecognition.interimResults = true;
+  speechRecognition.lang = 'en-US';
+  speechRecognition.maxAlternatives = 1;
+
+  speechRecognition.onstart = () => {
+    micListening = true;
+    stopActiveAudio();
+    updateMicButtonState();
+  };
+
+  speechRecognition.onresult = (event) => {
+    let transcript = '';
+    for (let i = event.resultIndex; i < event.results.length; i += 1) {
+      transcript += event.results[i][0]?.transcript || '';
+    }
+    if (!transcript.trim()) return;
+    queryEl.value = transcript.trim();
+    syncQueryHeight();
+  };
+
+  speechRecognition.onerror = (event) => {
+    micListening = false;
+    updateMicButtonState(event.error === 'not-allowed' ? 'Microphone permission denied' : 'Voice input failed');
+  };
+
+  speechRecognition.onend = () => {
+    micListening = false;
+    updateMicButtonState();
+  };
+
+  // Mic button now enters real-time voice mode instead of basic STT
+  micBtn.onclick = () => {
+    if (voiceModeActive) return;
+    enterVoiceMode();
+  };
+
+  updateMicButtonState();
+}
+
+// ── Real-Time Voice Mode ──────────────────────────────────────────────
+const voiceOverlay = document.getElementById('voice-overlay');
+const voiceOrb = document.getElementById('voice-orb');
+const voiceStatus = document.getElementById('voice-status');
+const voiceTranscript = document.getElementById('voice-transcript');
+const voiceCloseBtn = document.getElementById('voice-close-btn');
+let voiceModeActive = false;
+let voiceRecognition = null;
+let voiceAudioQueue = [];
+let voicePlaying = false;
+let voiceSendLock = false;
+let voicePendingTranscript = '';
+
+// Common speech recognition misrecognitions for car/project terms
+const VOICE_REPLACEMENTS = [
+  [/\bsiri\b/gi, 'Cheri'],
+  [/\bsheree?\b/gi, 'Cheri'],
+  [/\bsherry\b/gi, 'Cheri'],
+  [/\bcherry\b/gi, 'Cheri'],
+  [/\bsiri doctor\b/gi, 'Cheri Doctor'],
+];
+
+function enterVoiceMode() {
+  const Ctor = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!Ctor) {
+    alert('Voice input is not supported in this browser. Try Chrome or Edge.');
+    return;
+  }
+  voiceModeActive = true;
+  voiceOverlay.classList.add('active');
+  voiceTranscript.textContent = '';
+  voiceStatus.textContent = 'Listening...';
+  voiceOrb.className = 'voice-orb listening';
+  stopActiveAudio();
+
+  voiceRecognition = new Ctor();
+  voiceRecognition.continuous = false;
+  voiceRecognition.interimResults = true;
+  voiceRecognition.lang = 'en-US';
+
+  voiceRecognition.onresult = (event) => {
+    let interim = '';
+    let final = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const t = event.results[i][0]?.transcript || '';
+      if (event.results[i].isFinal) final += t;
+      else interim += t;
+    }
+    // Apply word replacements for common misrecognitions
+    let display = final || interim;
+    for (const [pattern, replacement] of VOICE_REPLACEMENTS) {
+      display = display.replace(pattern, replacement);
+    }
+    voiceTranscript.textContent = display;
+    // Capture whatever we have — final or interim — so onend can send it
+    let corrected = (final || interim).trim();
+    for (const [pattern, replacement] of VOICE_REPLACEMENTS) {
+      corrected = corrected.replace(pattern, replacement);
+    }
+    if (corrected) voicePendingTranscript = corrected;
+  };
+
+  voiceRecognition.onend = () => {
+    // When recognition stops (continuous=false), send whatever we captured
+    if (voiceModeActive && !voiceSendLock && voicePendingTranscript) {
+      const text = voicePendingTranscript;
+      voicePendingTranscript = '';
+      voiceHandleFinalTranscript(text);
+    } else if (voiceModeActive && !voiceSendLock && !voicePlaying) {
+      // No transcript — restart listening
+      voiceStartListening();
+    }
+  };
+
+  voiceRecognition.onerror = (e) => {
+    if (e.error === 'no-speech' && voiceModeActive) {
+      voiceStartListening();
+    } else if (e.error === 'aborted' && voiceModeActive) {
+      // Silently restart after abort
+      if (!voiceSendLock && !voicePlaying) voiceStartListening();
+    } else if (e.error === 'not-allowed') {
+      voiceStatus.textContent = 'Microphone permission denied';
+      voiceOrb.className = 'voice-orb';
+    }
+  };
+
+  voiceStartListening();
+}
+
+function voiceStartListening() {
+  if (!voiceModeActive || !voiceRecognition) return;
+  voiceOrb.className = 'voice-orb listening';
+  voiceStatus.textContent = 'Listening...';
+  try { voiceRecognition.start(); } catch (e) { /* already started */ }
+}
+
+async function voiceHandleFinalTranscript(text) {
+  if (voiceSendLock) return;
+  voiceSendLock = true;
+  voiceOrb.className = 'voice-orb';
+  voiceStatus.textContent = 'Thinking...';
+  try { voiceRecognition.stop(); } catch (e) {}
+
+  // Lazy session creation — same as sendMessage()
+  if (!activeId) {
+    activeId = createSession(activeProjectId || undefined);
+    sessionStorage.setItem(TAB_KEY, activeId);
+    renderSidebar();
+  }
+  if (activeId && sessions[activeId]) {
+    sessions[activeId].deepResearchActive = deepResearchActive;
+  }
+  updateSessionTimestamp(activeId);
+
+  // Show the user message in chat
+  conversation.push({ role: 'user', text });
+  renderUserMessage(text);
+  if (activeId) {
+    sessions[activeId].messages.push({ role: 'user', text });
+    syncSession(activeId);
+  }
+
+  // Build request
+  let projectContext = '';
+  const sess = sessions[activeId];
+  if (sess?.projectId && projects[sess.projectId]) {
+    projectContext = `Project: ${projects[sess.projectId].name}\n${projects[sess.projectId].description}`;
+  }
+
+  const selectedModel = modelSelect?.value || 'claude-sonnet-4-6';
+
+  // Detect tech mode activation/deactivation from voice input
+  if (/\[tech_mode:\s*on\]|tech mode|let'?s (do this|get to work|start)|ready to (start|work)|heading to the garage/i.test(text)) {
+    techModeActive = true;
+    _syncModeUi();
+  } else if (/\[tech_mode:\s*off\]|i'?m done|that'?s enough|back inside|exit tech mode|stop tech mode/i.test(text)) {
+    techModeActive = false;
+    _syncModeUi();
+  }
+
+  try {
+    const data = await postChatStream({
+      query: text,
+      conversation,
+      model: selectedModel,
+      project_context: projectContext,
+      images: [],
+      tech_mode_hint: !!techModeActive,
+      deep_research: !!deepResearchActive,
+      session_id: activeId || null,
+      project_id: activeProjectId || null,
+    }, () => {});
+
+    const answer = data.answer || '';
+    renderAssistantMessage(
+      answer,
+      data.citations || [],
+      data.figures || [],
+      data.web_sources || [],
+      data.saved_notes || [],
+      data.mode || 'normal',
+      data.deep_research_summary || null,
+    );
+    conversation.push({ role: 'assistant', text: answer });
+    if (activeId) {
+      sessions[activeId].messages.push({
+        role: 'assistant', text: answer,
+        citations: data.citations || [], figures: data.figures || [],
+        web_sources: data.web_sources || [],
+        saved_notes: data.saved_notes || [],
+        mode: data.mode || 'normal',
+        deep_research_summary: data.deep_research_summary || null,
+      });
+      syncSession(activeId);
+    }
+    if ((data.saved_notes || []).length) refreshMemoryState();
+    scrollToBottom();
+
+    // Speak the response with sentence-level streaming
+    await voiceSpeakResponse(answer);
+  } catch (err) {
+    voiceOrb.className = 'voice-orb';
+    voiceStatus.textContent = 'Error: ' + err.message;
+    voiceTranscript.textContent = 'Tap the orb to try again, or end voice mode.';
+    console.error('Voice mode chat error', err);
+    voiceSendLock = false;
+    // Wait 3 seconds before auto-resuming so user can see the error
+    await new Promise(r => setTimeout(r, 3000));
+    if (voiceModeActive) voiceStartListening();
+    return;
+  }
+
+  voiceSendLock = false;
+  if (voiceModeActive) voiceStartListening();
+}
+
+async function voiceSpeakResponse(text) {
+  voiceOrb.className = 'voice-orb speaking';
+  voiceStatus.textContent = 'Speaking...';
+  voicePlaying = true;
+
+  // Strip markdown/HTML for speech
+  const speechText = extractSpeechText(text);
+  if (!speechText) { voicePlaying = false; return; }
+
+  // Split into sentences for chunked TTS
+  const sentences = speechText.match(/[^.!?]+[.!?]+\s*|[^.!?]+$/g) || [speechText];
+  // Group short sentences to reduce API calls (min ~40 chars per chunk)
+  const chunks = [];
+  let buf = '';
+  for (const s of sentences) {
+    buf += s;
+    if (buf.length >= 40) { chunks.push(buf.trim()); buf = ''; }
+  }
+  if (buf.trim()) chunks.push(buf.trim());
+
+  for (const chunk of chunks) {
+    if (!voiceModeActive) break;
+    try {
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: chunk }),
+      });
+      if (!res.ok) continue;
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      await new Promise((resolve, reject) => {
+        const audio = new Audio(url);
+        audio.onended = () => { URL.revokeObjectURL(url); resolve(); };
+        audio.onerror = () => { URL.revokeObjectURL(url); resolve(); };
+        audio.play().catch(() => resolve());
+      });
+    } catch (e) {
+      console.warn('Voice TTS chunk failed', e);
+    }
+  }
+
+  voicePlaying = false;
+}
+
+function exitVoiceMode() {
+  voiceModeActive = false;
+  voiceOverlay.classList.remove('active');
+  voiceOrb.className = 'voice-orb';
+  if (voiceRecognition) {
+    try { voiceRecognition.stop(); } catch (e) {}
+    voiceRecognition = null;
+  }
+  stopActiveAudio();
+  voiceAudioQueue = [];
+  voicePlaying = false;
+  voiceSendLock = false;
+}
+
+voiceCloseBtn.onclick = exitVoiceMode;
+voiceOverlay.addEventListener('keydown', (e) => { if (e.key === 'Escape') exitVoiceMode(); });
+
+queryEl.addEventListener('input', () => {
+  syncQueryHeight();
+  refreshDeepResearchSuggestion();
 });
-queryEl.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+queryEl.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter' || e.isComposing) return;
+  if (e.shiftKey) {
+    window.setTimeout(syncQueryHeight, 0);
+    return;
+  }
+  e.preventDefault();
+  sendMessage();
+});
 sendBtn.onclick = sendMessage;
 
 const sidebarBackdrop = document.getElementById('sidebar-backdrop');
@@ -3768,6 +5996,12 @@ window.addEventListener('popstate', (e) => {
   }
 });
 
+window.addEventListener('beforeunload', (e) => {
+  if (!isLoading) return;
+  e.preventDefault();
+  e.returnValue = '';
+});
+
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') lightbox.classList.remove('open'); });
 
 document.getElementById('chips').onclick = (e) => {
@@ -3812,6 +6046,7 @@ const plusDropdown = document.getElementById('plus-dropdown');
 const photoItem    = document.getElementById('photo-item');
 const cameraItem   = document.getElementById('camera-item');
 const techmodeItem = document.getElementById('techmode-item');
+const deepresearchItem = document.getElementById('deepresearch-item');
 const imageInput   = document.getElementById('image-input');
 const cameraInput  = document.getElementById('camera-input');
 const imagePreviews = document.getElementById('image-previews');
@@ -3840,6 +6075,24 @@ function handleImageFiles(input) {
 imageInput.onchange  = () => handleImageFiles(imageInput);
 cameraInput.onchange = () => handleImageFiles(cameraInput);
 
+// Ctrl+V paste images into chat
+document.addEventListener('paste', (e) => {
+  const items = Array.from(e.clipboardData?.items || []);
+  const imageItems = items.filter(item => item.type.startsWith('image/'));
+  if (!imageItems.length) return;
+  e.preventDefault();
+  imageItems.forEach(item => {
+    const blob = item.getAsFile();
+    if (!blob) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      pendingImages.push({ dataUrl: ev.target.result, name: `pasted-${Date.now()}.png` });
+      renderImagePreviews();
+    };
+    reader.readAsDataURL(blob);
+  });
+});
+
 function renderImagePreviews() {
   imagePreviews.innerHTML = '';
   if (!pendingImages.length) {
@@ -3859,10 +6112,7 @@ function renderImagePreviews() {
 // ── Tech Mode ────────────────────────────────────────────────────────────
 function toggleTechMode(on) {
   techModeActive = on;
-  document.body.classList.toggle('tech-mode-active', on);
-  plusBtn.classList.toggle('active', on);
-  techmodeItem.classList.toggle('active', on);
-  queryEl.placeholder = on ? 'Tech Mode — describe what you see or enter readings…' : 'Ask about your Geo Metro…';
+  _syncModeUi();
   if (on) {
     queryEl.value = '[TECH_MODE: ON] I\'m ready to start working on Cheri. Guide me through it step by step.';
   } else {
@@ -3873,11 +6123,20 @@ function toggleTechMode(on) {
 }
 
 techmodeItem.onclick = () => toggleTechMode(!techModeActive);
+deepresearchItem.onclick = () => {
+  plusDropdown.classList.remove('open');
+  setDeepResearchMode(!deepResearchActive);
+};
+deepResearchSuggestionBtn.onclick = () => {
+  setDeepResearchMode(true, { persist: !!activeId });
+  queryEl.focus();
+};
 
 modelSelect.onchange = (e) => localStorage.setItem(MODEL_KEY, e.target.value);
 
 // ── Init ───────────────────────────────────────────────────────────────────
 (async function init() {
+  initVoiceInput();
   const savedModel = localStorage.getItem(MODEL_KEY);
   if (savedModel && modelSelect) modelSelect.value = savedModel;
 

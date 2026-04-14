@@ -320,6 +320,41 @@ def run_pipeline(config_path: str = "configs/default.yaml",
                     "regions": regions,
                 }
 
+            # Enhance stored layout results with CV box detection.
+            # When Surya was unavailable, stored results only have a single
+            # full-page Text region. Run CV detection on the preprocessed
+            # image to find bordered figure/table regions.
+            from src.layout import _detect_boxes_cv, _remove_container_boxes, _merge_overlapping
+            from PIL import Image as PILImage_layout
+            enhanced_count = 0
+            for pn, lr in layout_results.items():
+                regions = lr["regions"]
+                # Only enhance pages that look like Surya fallback:
+                # single Text region covering most of the page
+                if (len(regions) == 1
+                        and regions[0].label == "Text"
+                        and pn in preprocess_results):
+                    pre = preprocess_results[pn]
+                    try:
+                        pre_img = PILImage_layout.open(pre.preprocessed_path).convert("RGB")
+                        cv_boxes = _detect_boxes_cv(pre_img, [], {})
+                        if cv_boxes:
+                            cv_boxes = _remove_container_boxes(cv_boxes, threshold=0.50)
+                            # Replace full-page Text region with CV boxes + Text.
+                            # Don't merge — the full-page Text would swallow CV boxes.
+                            lr["regions"] = cv_boxes + regions
+                            lr["regions"].sort(key=lambda r: r.y1)
+                            fig_count = sum(1 for r in lr["regions"] if r.is_figure)
+                            if fig_count:
+                                lr["page_type"] = "mixed" if any(
+                                    r.label == "Text" for r in lr["regions"]
+                                ) else "diagram"
+                                enhanced_count += 1
+                    except Exception as e:
+                        print(f"    [CV-enhance] p{pn} failed: {e}")
+            if enhanced_count:
+                print(f"    [CV-enhance] Added figure regions to {enhanced_count} pages.")
+
     # ── Stage D: Region-Specific Extraction ──────────────────────
     if "D" in stages:
         print("\n[Stage D] Extracting content from regions...")
@@ -526,7 +561,7 @@ def run_pipeline(config_path: str = "configs/default.yaml",
                                 pass
 
                             # Vision figure blocks: assign figure_id and export
-                            # a full-page WebP crop so the image can be served.
+                            # a cropped WebP of the individual figure.
                             if block_dict["type"] == "figure":
                                 fig_id = f"fig_p{pn:04d}_{v_fig_idx:03d}"
                                 asset_name = f"page_{pn:04d}_fig_{v_fig_idx:03d}.webp"
@@ -534,8 +569,20 @@ def run_pipeline(config_path: str = "configs/default.yaml",
                                 assets_dir.mkdir(parents=True, exist_ok=True)
                                 asset_path = assets_dir / asset_name
                                 if not asset_path.exists():
-                                    # Export the full page as the figure image
-                                    page_img.save(str(asset_path), "WEBP", quality=85)
+                                    # Try to crop individual figure using CV-detected regions
+                                    # (sorted by Y, container-split in Stage C)
+                                    fig_regions = [r for r in lr["regions"] if r.is_figure]
+                                    if v_fig_idx < len(fig_regions):
+                                        fr = fig_regions[v_fig_idx]
+                                        crop_box = (int(fr.x1), int(fr.y1), int(fr.x2), int(fr.y2))
+                                        fig_crop = pre_img.crop(crop_box)
+                                        fig_crop.save(str(asset_path), "WEBP", quality=85)
+                                        block_dict["bbox"] = list(crop_box)
+                                        print(f"      [fig] p{pn} fig_{v_fig_idx:03d} cropped ({int(fr.x1)},{int(fr.y1)})-({int(fr.x2)},{int(fr.y2)})")
+                                    else:
+                                        # Fallback: save full page if no matching CV region
+                                        page_img.save(str(asset_path), "WEBP", quality=85)
+                                        print(f"      [fig] p{pn} fig_{v_fig_idx:03d} full-page (no matching CV region)")
                                 block_dict["figure_id"] = fig_id
                                 block_dict["asset_path"] = str(asset_path.relative_to(PROJECT_ROOT)).replace("\\", "/")
                                 v_fig_idx += 1

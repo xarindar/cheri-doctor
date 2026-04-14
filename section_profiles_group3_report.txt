@@ -1,0 +1,913 @@
+================================================================================
+SECTION PROFILER — Group 3 (General, Maintenance, HVAC, Body, Wiring)
+================================================================================
+
+Loaded 1767 chunks across 18 target sections
+Total sections in corpus: 51
+  0A    :  270 chunks  — GENERAL INFORMATION > General Information
+  0B    :   57 chunks  — GENERAL INFORMATION > Maintenance and Lubrication
+  10    :  785 chunks  — 10
+  10-1  :    1 chunks  — BODY SERVICE > General Information
+  10-10 :    1 chunks  — BODY SERVICE > Safety Belts
+  10-11 :    1 chunks  — BODY SERVICE > Body Electrical Systems
+  10-2  :    1 chunks  — BODY SERVICE > Stationary Glass
+  10-3  :    1 chunks  — BODY SERVICE > Underbody
+  10-4  :    1 chunks  — BODY SERVICE > Front End
+  10-5  :    1 chunks  — BODY SERVICE > Doors
+  10-6  :    1 chunks  — BODY SERVICE > Body Rear Quarters
+  10-7  :    1 chunks  — BODY SERVICE > Body Rear End
+  10-8  :    1 chunks  — BODY SERVICE > Roof
+  10-9  :    1 chunks  — BODY SERVICE > Seats
+  1A    :   44 chunks  — HEATING AND AIR CONDITIONING > Heating and Ventilation
+  1B    :  164 chunks  — HEATING AND AIR CONDITIONING > Air Conditioning
+  1D    :   93 chunks  — HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+  9J    :  343 chunks  — 9J
+
+================================================================================
+SECTION 0A: GENERAL INFORMATION > General Information
+  Chunks: 270, Total term occurrences: 11772
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    identification                  freq= 255  sections=11  tfidf=0.031343
+    strength                        freq= 239  sections=14  tfidf=0.024846
+    polyurethane                    freq=  86  sections= 1  tfidf=0.023660
+    polyu                           freq=  84  sections= 1  tfidf=0.023110
+    fastener                        freq= 229  sections=15  tfidf=0.022551
+    metric                          freq= 103  sections= 6  tfidf=0.017376
+    pitch                           freq=  53  sections= 1  tfidf=0.014581
+    multiply                        freq=  45  sections= 1  tfidf=0.012380
+    designation                     freq=  49  sections= 3  tfidf=0.010596
+    got                             freq=  35  sections= 1  tfidf=0.009629
+    fractions                       freq=  32  sections= 1  tfidf=0.008804
+    decimal                         freq=  33  sections= 2  tfidf=0.007942
+    thread                          freq=  73  sections=17  tfidf=0.006458
+    nylon                           freq=  22  sections= 2  tfidf=0.005295
+    number                          freq=  78  sections=23  tfidf=0.004994
+    threads                         freq=  31  sections= 7  tfidf=0.004878
+    sizes                           freq=  29  sections= 9  tfidf=0.004014
+    coarse                          freq=  20  sections= 4  tfidf=0.003946
+    prevailing                      freq=  15  sections= 2  tfidf=0.003610
+    equivalent                      freq=  35  sections=15  tfidf=0.003447
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    strength identification                   freq= 218  sections= 3  tfidf=0.047139
+    fastener strength                         freq= 212  sections= 3  tfidf=0.045842
+    fastener strength identification          freq= 210  sections= 3  tfidf=0.045410
+    identification polyu                      freq=  84  sections= 1  tfidf=0.023110
+    strength identification polyu             freq=  84  sections= 1  tfidf=0.023110
+    screw thread                              freq=  51  sections= 1  tfidf=0.014031
+    strength identification a                 freq=  47  sections= 1  tfidf=0.012931
+    identification multiply                   freq=  45  sections= 1  tfidf=0.012380
+    strength identification multiply          freq=  45  sections= 1  tfidf=0.012380
+    pitch mm                                  freq=  43  sections= 1  tfidf=0.011830
+    designation of screw                      freq=  43  sections= 1  tfidf=0.011830
+    of screw thread                           freq=  43  sections= 1  tfidf=0.011830
+    mm designation                            freq=  40  sections= 1  tfidf=0.011005
+    pitch mm designation                      freq=  40  sections= 1  tfidf=0.011005
+    mm designation of                         freq=  40  sections= 1  tfidf=0.011005
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    system                               here=  10  also_in: 0B(16), 10(69), 1A(11), 1B(99), 1D(6), 9J(318)
+    air                                  here=   9  also_in: 0B(26), 10(58), 1A(27), 1B(80), 1D(6), 9J(20)
+    bolts                                here=  36  also_in: 0B(3), 10(169), 1A(5), 1B(14), 9J(15)
+    engine                               here=  23  also_in: 0B(23), 10(59), 1A(6), 1B(18), 9J(15)
+    parts                                here=  22  also_in: 0B(3), 10(61), 1B(3), 1D(17), 9J(53)
+    rear                                 here=  15  also_in: 0B(6), 10(263), 1A(5), 1B(5), 1D(33)
+    assembly                             here=   9  also_in: 10(182), 1A(32), 1B(23), 1D(12), 9J(16)
+    front                                here=  12  also_in: 10(238), 1B(4), 1D(31), 9J(12)
+    valve                                here=  12  also_in: 0B(4), 10(16), 1B(89), 1D(44)
+    body                                 here=  11  also_in: 0B(3), 10(145), 1A(8), 9J(10)
+    control                              here=  10  also_in: 0B(25), 10(92), 1A(67), 1B(18)
+    part                                 here=   9  also_in: 0B(13), 10(36), 1B(3), 9J(39)
+    top                                  here=   9  also_in: 10(133), 1B(3), 1D(4), 9J(5)
+    panel                                here=   8  also_in: 10(152), 1A(29), 1B(13), 9J(9)
+    replacement                          here=   8  also_in: 0B(13), 10(25), 1B(5), 9J(19)
+    n m                                  here=   8  also_in: 10(96), 1B(8), 1D(3), 9J(6)
+    position                             here=   7  also_in: 10(132), 1A(4), 1B(7), 9J(10)
+    plate                                here=   6  also_in: 10(24), 1A(5), 1B(3), 1D(57)
+    pressure                             here=   5  also_in: 0B(3), 10(32), 1B(69), 1D(26)
+    lock                                 here=   5  also_in: 0B(8), 10(94), 1B(5), 9J(5)
+    clean                                here=   5  also_in: 0B(3), 10(35), 1B(6), 1D(6)
+    screws                               here=   4  also_in: 10(140), 1A(13), 1B(4), 9J(4)
+    components                           here=   3  also_in: 10(38), 1B(7), 1D(4), 9J(24)
+    notice                               here=   3  also_in: 10(39), 1A(7), 1B(21), 1D(15)
+    possible                             here=   3  also_in: 10(45), 1A(10), 1B(38), 1D(9)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    10     (overlap= 1511)  10
+    9J     (overlap=  557)  9J
+    1B     (overlap=  537)  HEATING AND AIR CONDITIONING > Air Conditioning
+    0B     (overlap=  315)  GENERAL INFORMATION > Maintenance and Lubrication
+    1D     (overlap=  253)  HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+    1A     (overlap=  180)  HEATING AND AIR CONDITIONING > Heating and Ventilation
+    10-7   (overlap=    6)  BODY SERVICE > Body Rear End
+    10-1   (overlap=    5)  BODY SERVICE > General Information
+
+================================================================================
+SECTION 0B: GENERAL INFORMATION > Maintenance and Lubrication
+  Chunks: 57, Total term occurrences: 5355
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    schedule                        freq=  52  sections= 4  tfidf=0.022552
+    item                            freq=  68  sections= 8  tfidf=0.022027
+    whichever                       freq=  32  sections= 2  tfidf=0.016930
+    miles                           freq=  46  sections= 7  tfidf=0.015912
+    months                          freq=  29  sections= 3  tfidf=0.013785
+    occurs                          freq=  32  sections=12  tfidf=0.008168
+    emission                        freq=  25  sections= 9  tfidf=0.007606
+    cleaner                         freq=  25  sections=11  tfidf=0.006755
+    scheduled                       freq=  10  sections= 1  tfidf=0.006048
+    element                         freq=  23  sections=12  tfidf=0.005871
+    services                        freq=  11  sections= 2  tfidf=0.005820
+    first                           freq=  32  sections=22  tfidf=0.004759
+    transaxle                       freq=  23  sections=17  tfidf=0.004473
+    maintenance                     freq=  17  sections=13  tfidf=0.004104
+    oil                             freq=  33  sections=26  tfidf=0.003919
+    viscosity                       freq=   8  sections= 3  tfidf=0.003803
+    notes                           freq=   8  sections= 3  tfidf=0.003803
+    explanation                     freq=   8  sections= 3  tfidf=0.003803
+    inspection                      freq=  21  sections=21  tfidf=0.003297
+    spark                           freq=  12  sections=12  tfidf=0.003063
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    whichever occurs                          freq=  32  sections= 1  tfidf=0.019353
+    occurs first                              freq=  32  sections= 1  tfidf=0.019353
+    whichever occurs first                    freq=  32  sections= 1  tfidf=0.019353
+    miles months                              freq=  26  sections= 1  tfidf=0.015725
+    months whichever                          freq=  26  sections= 1  tfidf=0.015725
+    every miles months                        freq=  26  sections= 1  tfidf=0.015725
+    miles months whichever                    freq=  26  sections= 1  tfidf=0.015725
+    months whichever occurs                   freq=  26  sections= 1  tfidf=0.015725
+    schedule ii                               freq=  24  sections= 1  tfidf=0.014515
+    emission control service                  freq=  24  sections= 1  tfidf=0.014515
+    control service item                      freq=  24  sections= 1  tfidf=0.014515
+    ii item                                   freq=  22  sections= 1  tfidf=0.013305
+    schedule i item                           freq=  22  sections= 1  tfidf=0.013305
+    schedule ii item                          freq=  22  sections= 1  tfidf=0.013305
+    first emission                            freq=  20  sections= 1  tfidf=0.012096
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    air                                  here=  26  also_in: 0A(9), 10(58), 1A(27), 1B(80), 1D(6), 9J(20)
+    system                               here=  16  also_in: 0A(10), 10(69), 1A(11), 1B(99), 1D(6), 9J(318)
+    engine                               here=  23  also_in: 0A(23), 10(59), 1A(6), 1B(18), 9J(15)
+    rear                                 here=   6  also_in: 0A(15), 10(263), 1A(5), 1B(5), 1D(33)
+    necessary                            here=   4  also_in: 10(34), 1A(9), 1B(9), 1D(4), 9J(4)
+    bolts                                here=   3  also_in: 0A(36), 10(169), 1A(5), 1B(14), 9J(15)
+    parts                                here=   3  also_in: 0A(22), 10(61), 1B(3), 1D(17), 9J(53)
+    n m                                  here=   2  also_in: 0A(8), 10(96), 1B(8), 1D(3), 9J(6)
+    front                                here=   2  also_in: 0A(12), 10(238), 1B(4), 1D(31), 9J(12)
+    control                              here=  25  also_in: 0A(10), 10(92), 1A(67), 1B(18)
+    inspect                              here=  14  also_in: 10(9), 1B(12), 1D(3), 9J(17)
+    replacement                          here=  13  also_in: 0A(8), 10(25), 1B(5), 9J(19)
+    part                                 here=  13  also_in: 0A(9), 10(36), 1B(3), 9J(39)
+    cooling                              here=  10  also_in: 10(8), 1A(4), 1B(21), 1D(3)
+    lock                                 here=   8  also_in: 0A(5), 10(94), 1B(5), 9J(5)
+    valve                                here=   4  also_in: 0A(12), 10(16), 1B(89), 1D(44)
+    pressure                             here=   3  also_in: 0A(5), 10(32), 1B(69), 1D(26)
+    mounting                             here=   3  also_in: 10(49), 1A(12), 1B(12), 9J(30)
+    body                                 here=   3  also_in: 0A(11), 10(145), 1A(8), 9J(10)
+    while                                here=   3  also_in: 0A(3), 10(12), 1B(4), 9J(6)
+    mounting bolts                       here=   3  also_in: 10(25), 1A(5), 1B(4), 9J(11)
+    clean                                here=   3  also_in: 0A(5), 10(35), 1B(6), 1D(6)
+    safety                               here=   3  also_in: 0A(3), 10(144), 1B(3), 9J(8)
+    clutch                               here=   3  also_in: 0A(3), 10(19), 1B(23), 1D(37)
+    follow                               here=   2  also_in: 0A(3), 10(25), 1B(4), 9J(4)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    10     (overlap=  816)  10
+    1B     (overlap=  460)  HEATING AND AIR CONDITIONING > Air Conditioning
+    9J     (overlap=  335)  9J
+    0A     (overlap=  285)  GENERAL INFORMATION > General Information
+    1D     (overlap=  172)  HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+    1A     (overlap=  145)  HEATING AND AIR CONDITIONING > Heating and Ventilation
+    10-6   (overlap=    3)  BODY SERVICE > Body Rear Quarters
+    10-7   (overlap=    3)  BODY SERVICE > Body Rear End
+
+================================================================================
+SECTION 10: 10
+  Chunks: 785, Total term occurrences: 62117
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    door                            freq= 532  sections=10  tfidf=0.013137
+    molding                         freq= 130  sections= 1  tfidf=0.006778
+    glass                           freq= 207  sections= 7  tfidf=0.006173
+    latch                           freq= 154  sections= 5  tfidf=0.005306
+    bow                             freq= 106  sections= 2  tfidf=0.004835
+    trim                            freq= 232  sections=13  tfidf=0.004828
+    window                          freq= 120  sections= 5  tfidf=0.004134
+    adhesive                        freq= 119  sections= 5  tfidf=0.004100
+    securing                        freq= 140  sections= 9  tfidf=0.003672
+    belt                            freq= 172  sections=13  tfidf=0.003580
+    deck                            freq=  94  sections= 4  tfidf=0.003514
+    folding                         freq=  65  sections= 2  tfidf=0.002965
+    primer                          freq=  64  sections= 2  tfidf=0.002919
+    lid                             freq=  91  sections= 6  tfidf=0.002909
+    safety                          freq= 144  sections=15  tfidf=0.002687
+    weatherstrip                    freq=  51  sections= 1  tfidf=0.002659
+    quarter                         freq=  57  sections= 2  tfidf=0.002600
+    seat                            freq= 186  sections=21  tfidf=0.002518
+    retractor                       freq=  48  sections= 1  tfidf=0.002503
+    panel                           freq= 152  sections=19  tfidf=0.002291
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    safety belt                               freq= 123  sections= 2  tfidf=0.005610
+    measurement position                      freq=  99  sections= 1  tfidf=0.005162
+    door trim                                 freq=  89  sections= 1  tfidf=0.004640
+    deck lid                                  freq=  91  sections= 3  tfidf=0.003729
+    no measurement position                   freq=  71  sections= 1  tfidf=0.003702
+    mm in no                                  freq=  61  sections= 1  tfidf=0.003180
+    in no measurement                         freq=  60  sections= 1  tfidf=0.003128
+    folding top                               freq=  60  sections= 1  tfidf=0.003128
+    front door                                freq=  61  sections= 2  tfidf=0.002782
+    main bow                                  freq=  52  sections= 1  tfidf=0.002711
+    number main                               freq=  50  sections= 1  tfidf=0.002607
+    length mm                                 freq=  63  sections= 3  tfidf=0.002582
+    length mm in                              freq=  63  sections= 3  tfidf=0.002582
+    number main bow                           freq=  49  sections= 1  tfidf=0.002555
+    trim panel                                freq=  61  sections= 4  tfidf=0.002281
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    system                               here=  69  also_in: 0A(10), 0B(16), 1A(11), 1B(99), 1D(6), 9J(318)
+    air                                  here=  58  also_in: 0A(9), 0B(26), 1A(27), 1B(80), 1D(6), 9J(20)
+    rear                                 here= 263  also_in: 0A(15), 0B(6), 1A(5), 1B(5), 1D(33)
+    assembly                             here= 182  also_in: 0A(9), 1A(32), 1B(23), 1D(12), 9J(16)
+    bolts                                here= 169  also_in: 0A(36), 0B(3), 1A(5), 1B(14), 9J(15)
+    parts                                here=  61  also_in: 0A(22), 0B(3), 1B(3), 1D(17), 9J(53)
+    engine                               here=  59  also_in: 0A(23), 0B(23), 1A(6), 1B(18), 9J(15)
+    necessary                            here=  34  also_in: 0B(4), 1A(9), 1B(9), 1D(4), 9J(4)
+    front                                here= 238  also_in: 0A(12), 1B(4), 1D(31), 9J(12)
+    side                                 here= 184  also_in: 1A(17), 1B(12), 1D(10), 9J(45)
+    panel                                here= 152  also_in: 0A(8), 1A(29), 1B(13), 9J(9)
+    body                                 here= 145  also_in: 0A(11), 0B(3), 1A(8), 9J(10)
+    safety                               here= 144  also_in: 0A(3), 0B(3), 1B(3), 9J(8)
+    screws                               here= 140  also_in: 0A(4), 1A(13), 1B(4), 9J(4)
+    top                                  here= 133  also_in: 0A(9), 1B(3), 1D(4), 9J(5)
+    position                             here= 132  also_in: 0A(7), 1A(4), 1B(7), 9J(10)
+    n m                                  here=  96  also_in: 0A(8), 1B(8), 1D(3), 9J(6)
+    lock                                 here=  94  also_in: 0A(5), 0B(8), 1B(5), 9J(5)
+    control                              here=  92  also_in: 0A(10), 0B(25), 1A(67), 1B(18)
+    two                                  here=  81  also_in: 1A(14), 1B(12), 1D(5), 9J(16)
+    removal                              here=  57  also_in: 1A(5), 1B(5), 1D(3), 9J(5)
+    mounting                             here=  49  also_in: 0B(3), 1A(12), 1B(12), 9J(30)
+    possible                             here=  45  also_in: 0A(3), 1A(10), 1B(38), 1D(9)
+    notice                               here=  39  also_in: 0A(3), 1A(7), 1B(21), 1D(15)
+    components                           here=  38  also_in: 0A(3), 1B(7), 1D(4), 9J(24)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    9J     (overlap= 4003)  9J
+    1B     (overlap= 2909)  HEATING AND AIR CONDITIONING > Air Conditioning
+    0A     (overlap= 1542)  GENERAL INFORMATION > General Information
+    0B     (overlap=  958)  GENERAL INFORMATION > Maintenance and Lubrication
+    1A     (overlap=  952)  HEATING AND AIR CONDITIONING > Heating and Ventilation
+    1D     (overlap=  926)  HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+    10-11  (overlap=    7)  BODY SERVICE > Body Electrical Systems
+    10-6   (overlap=    7)  BODY SERVICE > Body Rear Quarters
+
+================================================================================
+SECTION 10-1: BODY SERVICE > General Information
+  Chunks: 1, Total term occurrences: 19
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    body                                 here=   1  also_in: 0A(11), 0B(3), 10(145), 1A(8), 9J(10)
+    information                          here=   1  also_in: 0A(7), 10(10), 9J(9)
+    general                              here=   1  also_in: 0A(8), 10(20)
+    entry                                here=   1  also_in: 10(8)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+
+================================================================================
+SECTION 10-10: BODY SERVICE > Safety Belts
+  Chunks: 1, Total term occurrences: 19
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    safety                               here=   1  also_in: 0A(3), 0B(3), 10(144), 1B(3), 9J(8)
+    body                                 here=   1  also_in: 0A(11), 0B(3), 10(145), 1A(8), 9J(10)
+    entry                                here=   1  also_in: 10(8)
+    belts                                here=   1  also_in: 10(17)
+    safety belts                         here=   1  also_in: 10(12)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+
+================================================================================
+SECTION 10-11: BODY SERVICE > Body Electrical Systems
+  Chunks: 1, Total term occurrences: 22
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    body                                 here=   2  also_in: 0A(11), 0B(3), 10(145), 1A(8), 9J(10)
+    electrical                           here=   1  also_in: 10(25), 1A(11), 1B(18), 9J(80)
+    systems                              here=   1  also_in: 10(5), 1B(4)
+    entry                                here=   1  also_in: 10(8)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    0B     (overlap=    2)  GENERAL INFORMATION > Maintenance and Lubrication
+    0A     (overlap=    2)  GENERAL INFORMATION > General Information
+    10-6   (overlap=    2)  BODY SERVICE > Body Rear Quarters
+    10-7   (overlap=    2)  BODY SERVICE > Body Rear End
+    10     (overlap=    2)  10
+    1A     (overlap=    2)  HEATING AND AIR CONDITIONING > Heating and Ventilation
+    9J     (overlap=    2)  9J
+    10-8   (overlap=    1)  BODY SERVICE > Roof
+
+================================================================================
+SECTION 10-2: BODY SERVICE > Stationary Glass
+  Chunks: 1, Total term occurrences: 19
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    body                                 here=   1  also_in: 0A(11), 0B(3), 10(145), 1A(8), 9J(10)
+    glass                                here=   1  also_in: 10(207), 1B(12)
+    entry                                here=   1  also_in: 10(8)
+    stationary                           here=   1  also_in: 10(5)
+    stationary glass                     here=   1  also_in: 10(5)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+
+================================================================================
+SECTION 10-3: BODY SERVICE > Underbody
+  Chunks: 1, Total term occurrences: 16
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    body                                 here=   1  also_in: 0A(11), 0B(3), 10(145), 1A(8), 9J(10)
+    underbody                            here=   1  also_in: 0B(3), 10(31)
+    entry                                here=   1  also_in: 10(8)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+
+================================================================================
+SECTION 10-4: BODY SERVICE > Front End
+  Chunks: 1, Total term occurrences: 19
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    front                                here=   1  also_in: 0A(12), 10(238), 1B(4), 1D(31), 9J(12)
+    body                                 here=   1  also_in: 0A(11), 0B(3), 10(145), 1A(8), 9J(10)
+    end                                  here=   1  also_in: 10(29), 9J(7)
+    entry                                here=   1  also_in: 10(8)
+    front end                            here=   1  also_in: 10(6)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+
+================================================================================
+SECTION 10-5: BODY SERVICE > Doors
+  Chunks: 1, Total term occurrences: 16
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    body                                 here=   1  also_in: 0A(11), 0B(3), 10(145), 1A(8), 9J(10)
+    entry                                here=   1  also_in: 10(8)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+
+================================================================================
+SECTION 10-6: BODY SERVICE > Body Rear Quarters
+  Chunks: 1, Total term occurrences: 22
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    rear                                 here=   1  also_in: 0A(15), 0B(6), 10(263), 1A(5), 1B(5), 1D(33)
+    body                                 here=   2  also_in: 0A(11), 0B(3), 10(145), 1A(8), 9J(10)
+    entry                                here=   1  also_in: 10(8)
+    quarters                             here=   1  also_in: 10(4)
+    body rear                            here=   1  also_in: 10(3)
+    rear quarters                        here=   1  also_in: 10(4)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    0B     (overlap=    2)  GENERAL INFORMATION > Maintenance and Lubrication
+    0A     (overlap=    2)  GENERAL INFORMATION > General Information
+    10-11  (overlap=    2)  BODY SERVICE > Body Electrical Systems
+    10-7   (overlap=    2)  BODY SERVICE > Body Rear End
+    10     (overlap=    2)  10
+    1A     (overlap=    2)  HEATING AND AIR CONDITIONING > Heating and Ventilation
+    9J     (overlap=    2)  9J
+    10-8   (overlap=    1)  BODY SERVICE > Roof
+
+================================================================================
+SECTION 10-7: BODY SERVICE > Body Rear End
+  Chunks: 1, Total term occurrences: 22
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    rear                                 here=   1  also_in: 0A(15), 0B(6), 10(263), 1A(5), 1B(5), 1D(33)
+    body                                 here=   2  also_in: 0A(11), 0B(3), 10(145), 1A(8), 9J(10)
+    end                                  here=   1  also_in: 10(29), 9J(7)
+    entry                                here=   1  also_in: 10(8)
+    body rear                            here=   1  also_in: 10(3)
+    rear end                             here=   1  also_in: 10(13)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    0B     (overlap=    2)  GENERAL INFORMATION > Maintenance and Lubrication
+    0A     (overlap=    2)  GENERAL INFORMATION > General Information
+    10-11  (overlap=    2)  BODY SERVICE > Body Electrical Systems
+    10-6   (overlap=    2)  BODY SERVICE > Body Rear Quarters
+    10     (overlap=    2)  10
+    1A     (overlap=    2)  HEATING AND AIR CONDITIONING > Heating and Ventilation
+    9J     (overlap=    2)  9J
+    10-8   (overlap=    1)  BODY SERVICE > Roof
+
+================================================================================
+SECTION 10-8: BODY SERVICE > Roof
+  Chunks: 1, Total term occurrences: 16
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    body                                 here=   1  also_in: 0A(11), 0B(3), 10(145), 1A(8), 9J(10)
+    entry                                here=   1  also_in: 10(8)
+    roof                                 here=   1  also_in: 10(15)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+
+================================================================================
+SECTION 10-9: BODY SERVICE > Seats
+  Chunks: 1, Total term occurrences: 16
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    body                                 here=   1  also_in: 0A(11), 0B(3), 10(145), 1A(8), 9J(10)
+    entry                                here=   1  also_in: 10(8)
+    seats                                here=   1  also_in: 10(15)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+
+================================================================================
+SECTION 1A: HEATING AND AIR CONDITIONING > Heating and Ventilation
+  Chunks: 44, Total term occurrences: 3862
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    blower                          freq=  66  sections= 5  tfidf=0.036573
+    heater                          freq=  82  sections=12  tfidf=0.029022
+    outlets                         freq=  16  sections= 1  tfidf=0.013418
+    control                         freq=  67  sections=27  tfidf=0.010403
+    case                            freq=  50  sections=22  tfidf=0.010310
+    fresh                           freq=  12  sections= 4  tfidf=0.007216
+    panel                           freq=  29  sections=19  tfidf=0.007029
+    cables                          freq=  19  sections=12  tfidf=0.006725
+    ventilation                     freq=  13  sections= 6  tfidf=0.006685
+    flows                           freq=  12  sections= 6  tfidf=0.006171
+    motor                           freq=  27  sections=21  tfidf=0.005878
+    defroster                       freq=   7  sections= 1  tfidf=0.005870
+    pnk                             freq=   8  sections= 2  tfidf=0.005869
+    terminal-to-terminal            freq=   8  sections= 2  tfidf=0.005869
+    recirculate                     freq=   6  sections= 1  tfidf=0.005032
+    instrument                      freq=  18  sections=17  tfidf=0.004854
+    resistor                        freq=  11  sections= 9  tfidf=0.004641
+    attaching                       freq=  15  sections=16  tfidf=0.004267
+    col2                            freq=   5  sections= 1  tfidf=0.004193
+    core                            freq=  12  sections=13  tfidf=0.004017
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    heater case                               freq=  29  sections= 2  tfidf=0.021275
+    heater control                            freq=  22  sections= 2  tfidf=0.016139
+    blower motor                              freq=  25  sections= 4  tfidf=0.015034
+    control cables                            freq=  17  sections= 2  tfidf=0.012471
+    blower case                               freq=  17  sections= 2  tfidf=0.012471
+    control assembly                          freq=  15  sections= 2  tfidf=0.011004
+    heater control assembly                   freq=  15  sections= 2  tfidf=0.011004
+    air flows                                 freq=  12  sections= 1  tfidf=0.010063
+    air flows from                            freq=  12  sections= 1  tfidf=0.010063
+    heater core                               freq=  12  sections= 3  tfidf=0.007909
+    flows from center                         freq=   9  sections= 1  tfidf=0.007547
+    side outlets                              freq=   8  sections= 1  tfidf=0.006709
+    from center and                           freq=   8  sections= 1  tfidf=0.006709
+    and side outlets                          freq=   8  sections= 1  tfidf=0.006709
+    blower switch                             freq=   9  sections= 3  tfidf=0.005932
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    air                                  here=  27  also_in: 0A(9), 0B(26), 10(58), 1B(80), 1D(6), 9J(20)
+    system                               here=  11  also_in: 0A(10), 0B(16), 10(69), 1B(99), 1D(6), 9J(318)
+    assembly                             here=  32  also_in: 0A(9), 10(182), 1B(23), 1D(12), 9J(16)
+    necessary                            here=   9  also_in: 0B(4), 10(34), 1B(9), 1D(4), 9J(4)
+    engine                               here=   6  also_in: 0A(23), 0B(23), 10(59), 1B(18), 9J(15)
+    rear                                 here=   5  also_in: 0A(15), 0B(6), 10(263), 1B(5), 1D(33)
+    bolts                                here=   5  also_in: 0A(36), 0B(3), 10(169), 1B(14), 9J(15)
+    front                                here=   2  also_in: 0A(12), 10(238), 1B(4), 1D(31), 9J(12)
+    control                              here=  67  also_in: 0A(10), 0B(25), 10(92), 1B(18)
+    panel                                here=  29  also_in: 0A(8), 10(152), 1B(13), 9J(9)
+    side                                 here=  17  also_in: 10(184), 1B(12), 1D(10), 9J(45)
+    two                                  here=  14  also_in: 10(81), 1B(12), 1D(5), 9J(16)
+    screws                               here=  13  also_in: 0A(4), 10(140), 1B(4), 9J(4)
+    mounting                             here=  12  also_in: 0B(3), 10(49), 1B(12), 9J(30)
+    possible                             here=  10  also_in: 0A(3), 10(45), 1B(38), 1D(9)
+    body                                 here=   8  also_in: 0A(11), 0B(3), 10(145), 9J(10)
+    resistance                           here=   8  also_in: 10(9), 1B(9), 1D(6), 9J(73)
+    notice                               here=   7  also_in: 0A(3), 10(39), 1B(21), 1D(15)
+    mounting bolts                       here=   5  also_in: 0B(3), 10(25), 1B(4), 9J(11)
+    removal                              here=   5  also_in: 10(57), 1B(5), 1D(3), 9J(5)
+    plate                                here=   5  also_in: 0A(6), 10(24), 1B(3), 1D(57)
+    installation                         here=   5  also_in: 10(36), 1B(3), 1D(6), 9J(3)
+    position                             here=   4  also_in: 0A(7), 10(132), 1B(7), 9J(10)
+    set                                  here=   4  also_in: 10(19), 1B(40), 1D(3), 9J(64)
+    cooling                              here=   4  also_in: 0B(10), 10(8), 1B(21), 1D(3)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    10     (overlap=  907)  10
+    1B     (overlap=  760)  HEATING AND AIR CONDITIONING > Air Conditioning
+    9J     (overlap=  396)  9J
+    0A     (overlap=  176)  GENERAL INFORMATION > General Information
+    0B     (overlap=  159)  GENERAL INFORMATION > Maintenance and Lubrication
+    1D     (overlap=  132)  HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+    10-11  (overlap=    3)  BODY SERVICE > Body Electrical Systems
+    10-6   (overlap=    3)  BODY SERVICE > Body Rear Quarters
+
+================================================================================
+SECTION 1B: HEATING AND AIR CONDITIONING > Air Conditioning
+  Chunks: 164, Total term occurrences: 16740
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    refrigerant                     freq= 161  sections= 3  tfidf=0.024482
+    evaporator                      freq=  71  sections= 3  tfidf=0.010796
+    compressor                      freq=  89  sections= 9  tfidf=0.008662
+    recovery                        freq=  47  sections= 2  tfidf=0.007955
+    station                         freq=  45  sections= 2  tfidf=0.007616
+    recycling                       freq=  32  sections= 1  tfidf=0.006191
+    dryer                           freq=  38  sections= 3  tfidf=0.005778
+    receiver                        freq=  40  sections= 4  tfidf=0.005549
+    condenser                       freq=  51  sections= 8  tfidf=0.005285
+    valve                           freq=  89  sections=18  tfidf=0.005250
+    drier                           freq=  22  sections= 1  tfidf=0.004256
+    liquid                          freq=  27  sections= 4  tfidf=0.003746
+    acr                             freq=  19  sections= 1  tfidf=0.003676
+    tank                            freq=  42  sections=11  tfidf=0.003630
+    core                            freq=  44  sections=13  tfidf=0.003398
+    charge                          freq=  38  sections=11  tfidf=0.003285
+    vacuum                          freq=  47  sections=15  tfidf=0.003255
+    moisture                        freq=  25  sections= 5  tfidf=0.003196
+    expansion                       freq=  23  sections= 4  tfidf=0.003191
+    conditioner                     freq=  24  sections= 5  tfidf=0.003068
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    receiver dryer                            freq=  37  sections= 3  tfidf=0.005626
+    refrigerant recovery                      freq=  23  sections= 1  tfidf=0.004450
+    gage set                                  freq=  28  sections= 3  tfidf=0.004258
+    filter drier                              freq=  22  sections= 1  tfidf=0.004256
+    charge of refrigerant                     freq=  21  sections= 1  tfidf=0.004063
+    evaporator core                           freq=  20  sections= 1  tfidf=0.003869
+    manifold gage                             freq=  24  sections= 3  tfidf=0.003650
+    manifold gage set                         freq=  24  sections= 3  tfidf=0.003650
+    drier core                                freq=  18  sections= 1  tfidf=0.003482
+    filter drier core                         freq=  18  sections= 1  tfidf=0.003482
+    expansion valve                           freq=  22  sections= 3  tfidf=0.003345
+    air conditioner                           freq=  24  sections= 5  tfidf=0.003068
+    recovery and recycling                    freq=  15  sections= 1  tfidf=0.002902
+    the filter drier                          freq=  15  sections= 1  tfidf=0.002902
+    c system                                  freq=  17  sections= 2  tfidf=0.002877
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    system                               here=  99  also_in: 0A(10), 0B(16), 10(69), 1A(11), 1D(6), 9J(318)
+    air                                  here=  80  also_in: 0A(9), 0B(26), 10(58), 1A(27), 1D(6), 9J(20)
+    assembly                             here=  23  also_in: 0A(9), 10(182), 1A(32), 1D(12), 9J(16)
+    engine                               here=  18  also_in: 0A(23), 0B(23), 10(59), 1A(6), 9J(15)
+    bolts                                here=  14  also_in: 0A(36), 0B(3), 10(169), 1A(5), 9J(15)
+    necessary                            here=   9  also_in: 0B(4), 10(34), 1A(9), 1D(4), 9J(4)
+    rear                                 here=   5  also_in: 0A(15), 0B(6), 10(263), 1A(5), 1D(33)
+    valve                                here=  89  also_in: 0A(12), 0B(4), 10(16), 1D(44)
+    pressure                             here=  69  also_in: 0A(5), 0B(3), 10(32), 1D(26)
+    set                                  here=  40  also_in: 10(19), 1A(4), 1D(3), 9J(64)
+    possible                             here=  38  also_in: 0A(3), 10(45), 1A(10), 1D(9)
+    clutch                               here=  23  also_in: 0A(3), 0B(3), 10(19), 1D(37)
+    cooling                              here=  21  also_in: 0B(10), 10(8), 1A(4), 1D(3)
+    notice                               here=  21  also_in: 0A(3), 10(39), 1A(7), 1D(15)
+    control                              here=  18  also_in: 0A(10), 0B(25), 10(92), 1A(67)
+    panel                                here=  13  also_in: 0A(8), 10(152), 1A(29), 9J(9)
+    two                                  here=  12  also_in: 10(81), 1A(14), 1D(5), 9J(16)
+    side                                 here=  12  also_in: 10(184), 1A(17), 1D(10), 9J(45)
+    mounting                             here=  12  also_in: 0B(3), 10(49), 1A(12), 9J(30)
+    inspect                              here=  12  also_in: 0B(14), 10(9), 1D(3), 9J(17)
+    resistance                           here=   9  also_in: 10(9), 1A(8), 1D(6), 9J(73)
+    n m                                  here=   8  also_in: 0A(8), 10(96), 1D(3), 9J(6)
+    components                           here=   7  also_in: 0A(3), 10(38), 1D(4), 9J(24)
+    position                             here=   7  also_in: 0A(7), 10(132), 1A(4), 9J(10)
+    clean                                here=   6  also_in: 0A(5), 0B(3), 10(35), 1D(6)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    10     (overlap= 2757)  10
+    9J     (overlap= 1510)  9J
+    1D     (overlap=  775)  HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+    1A     (overlap=  746)  HEATING AND AIR CONDITIONING > Heating and Ventilation
+    0A     (overlap=  525)  GENERAL INFORMATION > General Information
+    0B     (overlap=  506)  GENERAL INFORMATION > Maintenance and Lubrication
+    10-11  (overlap=    3)  BODY SERVICE > Body Electrical Systems
+    10-6   (overlap=    2)  BODY SERVICE > Body Rear Quarters
+
+================================================================================
+SECTION 1D: HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+  Chunks: 93, Total term occurrences: 4645
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    compressor                      freq=  64  sections= 9  tfidf=0.022448
+    plate                           freq=  57  sections=22  tfidf=0.009772
+    reed                            freq=  16  sections= 2  tfidf=0.009759
+    valve                           freq=  44  sections=18  tfidf=0.009353
+    clutch                          freq=  37  sections=17  tfidf=0.008296
+    seal                            freq=  49  sections=24  tfidf=0.007521
+    shaft                           freq=  38  sections=21  tfidf=0.006878
+    snap                            freq=  24  sections=13  tfidf=0.006680
+    magnetic                        freq=  19  sections=10  tfidf=0.006274
+    felt                            freq=  12  sections= 4  tfidf=0.006000
+    ring                            freq=  27  sections=18  tfidf=0.005739
+    oil                             freq=  41  sections=26  tfidf=0.005614
+    suction                         freq=  12  sections= 5  tfidf=0.005529
+    name                            freq=  11  sections= 5  tfidf=0.005068
+    protrusion                      freq=   9  sections= 3  tfidf=0.004932
+    cylinder                        freq=  21  sections=17  tfidf=0.004708
+    remover                         freq=  14  sections=10  tfidf=0.004623
+    pliers                          freq=  11  sections= 7  tfidf=0.004387
+    remedy                          freq=   7  sections= 2  tfidf=0.004270
+    valves                          freq=  10  sections= 7  tfidf=0.003988
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    valve plate                               freq=  23  sections= 1  tfidf=0.016037
+    shaft seal                                freq=  26  sections= 5  tfidf=0.011979
+    seal plate                                freq=  15  sections= 1  tfidf=0.010459
+    magnetic clutch                           freq=  19  sections= 3  tfidf=0.010412
+    compressor oil                            freq=  16  sections= 2  tfidf=0.009759
+    reed valve                                freq=  13  sections= 1  tfidf=0.009064
+    snap ring                                 freq=  24  sections= 9  tfidf=0.008418
+    oil felt                                  freq=  12  sections= 1  tfidf=0.008367
+    rear housing                              freq=  10  sections= 1  tfidf=0.006972
+    pressure plate                            freq=  15  sections= 6  tfidf=0.006413
+    drive clutch                              freq=   9  sections= 1  tfidf=0.006275
+    front housing                             freq=   9  sections= 1  tfidf=0.006275
+    figure compressor assembly                freq=   9  sections= 1  tfidf=0.006275
+    clutch coil                               freq=  10  sections= 2  tfidf=0.006099
+    ring pliers                               freq=  10  sections= 2  tfidf=0.006099
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    air                                  here=   6  also_in: 0A(9), 0B(26), 10(58), 1A(27), 1B(80), 9J(20)
+    system                               here=   6  also_in: 0A(10), 0B(16), 10(69), 1A(11), 1B(99), 9J(318)
+    engine                               here=   2  also_in: 0A(23), 0B(23), 10(59), 1A(6), 1B(18), 9J(15)
+    rear                                 here=  33  also_in: 0A(15), 0B(6), 10(263), 1A(5), 1B(5)
+    parts                                here=  17  also_in: 0A(22), 0B(3), 10(61), 1B(3), 9J(53)
+    assembly                             here=  12  also_in: 0A(9), 10(182), 1A(32), 1B(23), 9J(16)
+    necessary                            here=   4  also_in: 0B(4), 10(34), 1A(9), 1B(9), 9J(4)
+    plate                                here=  57  also_in: 0A(6), 10(24), 1A(5), 1B(3)
+    valve                                here=  44  also_in: 0A(12), 0B(4), 10(16), 1B(89)
+    clutch                               here=  37  also_in: 0A(3), 0B(3), 10(19), 1B(23)
+    front                                here=  31  also_in: 0A(12), 10(238), 1B(4), 9J(12)
+    pressure                             here=  26  also_in: 0A(5), 0B(3), 10(32), 1B(69)
+    notice                               here=  15  also_in: 0A(3), 10(39), 1A(7), 1B(21)
+    special                              here=  10  also_in: 0A(3), 10(13), 1B(4), 9J(8)
+    side                                 here=  10  also_in: 10(184), 1A(17), 1B(12), 9J(45)
+    possible                             here=   9  also_in: 0A(3), 10(45), 1A(10), 1B(38)
+    clean                                here=   6  also_in: 0A(5), 0B(3), 10(35), 1B(6)
+    resistance                           here=   6  also_in: 10(9), 1A(8), 1B(9), 9J(73)
+    installation                         here=   6  also_in: 10(36), 1A(5), 1B(3), 9J(3)
+    two                                  here=   5  also_in: 10(81), 1A(14), 1B(12), 9J(16)
+    components                           here=   4  also_in: 0A(3), 10(38), 1B(7), 9J(24)
+    top                                  here=   4  also_in: 0A(9), 10(133), 1B(3), 9J(5)
+    removal                              here=   3  also_in: 10(57), 1A(5), 1B(5), 9J(5)
+    amount                               here=   3  also_in: 10(3), 1A(3), 1B(3), 9J(6)
+    cooling                              here=   3  also_in: 0B(10), 10(8), 1A(4), 1B(21)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    10     (overlap=  832)  10
+    1B     (overlap=  682)  HEATING AND AIR CONDITIONING > Air Conditioning
+    9J     (overlap=  334)  9J
+    0A     (overlap=  222)  GENERAL INFORMATION > General Information
+    0B     (overlap=  174)  GENERAL INFORMATION > Maintenance and Lubrication
+    1A     (overlap=  129)  HEATING AND AIR CONDITIONING > Heating and Ventilation
+    10-6   (overlap=    1)  BODY SERVICE > Body Rear Quarters
+    10-7   (overlap=    1)  BODY SERVICE > Body Rear End
+
+================================================================================
+SECTION 9J: 9J
+  Chunks: 343, Total term occurrences: 41396
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    sir                             freq= 459  sections= 8  tfidf=0.019233
+    derm                            freq= 353  sections= 6  tfidf=0.016935
+    code                            freq= 213  sections= 7  tfidf=0.009531
+    arming                          freq= 162  sections= 4  tfidf=0.009088
+    ckt                             freq= 115  sections= 2  tfidf=0.007871
+    discriminating                  freq= 137  sections= 5  tfidf=0.007083
+    sensor                          freq= 281  sections=19  tfidf=0.006354
+    voltage                         freq= 239  sections=16  tfidf=0.006343
+    diagnostic                      freq= 192  sections=12  tfidf=0.006340
+    module                          freq= 206  sections=14  tfidf=0.006090
+    deployment                      freq= 126  sections= 6  tfidf=0.006045
+    restraint                       freq= 137  sections= 8  tfidf=0.005741
+    inflatable                      freq= 136  sections= 8  tfidf=0.005699
+    codes                           freq= 120  sections= 7  tfidf=0.005370
+    vlr                             freq=  66  sections= 1  tfidf=0.005164
+    j-a-2                           freq=  65  sections= 1  tfidf=0.005085
+    resistor                        freq= 117  sections= 9  tfidf=0.004605
+    inflator                        freq=  92  sections= 6  tfidf=0.004414
+    terminal                        freq= 165  sections=16  tfidf=0.004379
+    j-a-1                           freq=  61  sections= 2  tfidf=0.004175
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    sir diagnostic                            freq= 147  sections= 1  tfidf=0.011501
+    diagnostic system                         freq= 146  sections= 1  tfidf=0.011423
+    sir diagnostic system                     freq= 146  sections= 1  tfidf=0.011423
+    diagnostic system check                   freq= 143  sections= 1  tfidf=0.011188
+    arming sensor                             freq= 150  sections= 4  tfidf=0.008415
+    repeat sir                                freq= 101  sections= 1  tfidf=0.007902
+    repeat sir diagnostic                     freq= 100  sections= 1  tfidf=0.007824
+    sir codes                                 freq=  84  sections= 1  tfidf=0.006572
+    clear sir                                 freq=  81  sections= 1  tfidf=0.006337
+    clear sir codes                           freq=  81  sections= 1  tfidf=0.006337
+    resistor module                           freq= 100  sections= 3  tfidf=0.006149
+    restraint indicator                       freq= 107  sections= 4  tfidf=0.006003
+    inflatable restraint indicator            freq= 107  sections= 4  tfidf=0.006003
+    inflatable restraint                      freq= 135  sections= 8  tfidf=0.005657
+    discriminating sensor                     freq= 101  sections= 5  tfidf=0.005221
+
+  CONFUSION TERMS (shared with other Group 3 sections):
+    system                               here= 318  also_in: 0A(10), 0B(16), 10(69), 1A(11), 1B(99), 1D(6)
+    air                                  here=  20  also_in: 0A(9), 0B(26), 10(58), 1A(27), 1B(80), 1D(6)
+    parts                                here=  53  also_in: 0A(22), 0B(3), 10(61), 1B(3), 1D(17)
+    assembly                             here=  16  also_in: 0A(9), 10(182), 1A(32), 1B(23), 1D(12)
+    engine                               here=  15  also_in: 0A(23), 0B(23), 10(59), 1A(6), 1B(18)
+    bolts                                here=  15  also_in: 0A(36), 0B(3), 10(169), 1A(5), 1B(14)
+    resistance                           here=  73  also_in: 10(9), 1A(8), 1B(9), 1D(6)
+    set                                  here=  64  also_in: 10(19), 1A(4), 1B(40), 1D(3)
+    side                                 here=  45  also_in: 10(184), 1A(17), 1B(12), 1D(10)
+    part                                 here=  39  also_in: 0A(9), 0B(13), 10(36), 1B(3)
+    mounting                             here=  30  also_in: 0B(3), 10(49), 1A(12), 1B(12)
+    components                           here=  24  also_in: 0A(3), 10(38), 1B(7), 1D(4)
+    replacement                          here=  19  also_in: 0A(8), 0B(13), 10(25), 1B(5)
+    inspect                              here=  17  also_in: 0B(14), 10(9), 1B(12), 1D(3)
+    two                                  here=  16  also_in: 10(81), 1A(14), 1B(12), 1D(5)
+    sensor                               here= 281  also_in: 0A(6), 10(47), 1B(4)
+    terminal                             here= 165  also_in: 10(48), 1A(4), 1B(4)
+    repair                               here= 137  also_in: 10(94), 1B(6), 1D(4)
+    resistor                             here= 117  also_in: 10(7), 1A(11), 1B(3)
+    chart                                here=  93  also_in: 0A(6), 10(7), 1B(11)
+    switch                               here=  92  also_in: 10(166), 1A(17), 1B(66)
+    electrical                           here=  80  also_in: 10(25), 1A(11), 1B(18)
+    caution                              here=  66  also_in: 0B(4), 10(17), 1B(9)
+    fuse                                 here=  58  also_in: 10(27), 1A(4), 1B(3)
+    battery                              here=  48  also_in: 10(61), 1A(7), 1B(21)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    10     (overlap= 3997)  10
+    1B     (overlap= 1598)  HEATING AND AIR CONDITIONING > Air Conditioning
+    0A     (overlap=  562)  GENERAL INFORMATION > General Information
+    1A     (overlap=  421)  HEATING AND AIR CONDITIONING > Heating and Ventilation
+    0B     (overlap=  402)  GENERAL INFORMATION > Maintenance and Lubrication
+    1D     (overlap=  381)  HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+    10-11  (overlap=    4)  BODY SERVICE > Body Electrical Systems
+    10-4   (overlap=    4)  BODY SERVICE > Front End
+
+================================================================================
+GLOBAL CONFUSION MATRIX — Top shared terms between section pairs
+================================================================================
+
+  10 <-> 9J  (overlap=3389)
+    10: 10
+    9J: 9J
+    Top shared: sir(44/459), system(69/318), sensor(47/281), voltage(33/239), switch(166/92)
+
+  10 <-> 1B  (overlap=2289)
+    10: 10
+    1B: HEATING AND AIR CONDITIONING > Air Conditioning
+    Top shared: rear(263/5), front(238/4), switch(166/66), glass(207/12), assembly(182/23)
+
+  1B <-> 9J  (overlap=1278)
+    1B: HEATING AND AIR CONDITIONING > Air Conditioning
+    9J: 9J
+    Top shared: system(99/318), sensor(4/281), connector(16/194), module(3/206), terminal(4/165)
+
+  0A <-> 10  (overlap=1074)
+    0A: GENERAL INFORMATION > General Information
+    10: 10
+    Top shared: door(5/532), rear(15/263), identification(255/14), fastener(229/36), strength(239/15)
+
+  10 <-> 1A  (overlap=768)
+    10: 10
+    1A: HEATING AND AIR CONDITIONING > Heating and Ventilation
+    Top shared: door(532/3), rear(263/5), assembly(182/32), side(184/17), switch(166/17)
+
+  10 <-> 1D  (overlap=671)
+    10: 10
+    1D: HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+    Top shared: rear(263/33), front(238/31), side(184/10), assembly(182/12), top(133/4)
+
+  0B <-> 10  (overlap=606)
+    0B: GENERAL INFORMATION > Maintenance and Lubrication
+    10: 10
+    Top shared: door(7/532), rear(6/263), belt(6/172), bolts(3/169), latch(4/154)
+
+  1A <-> 1B  (overlap=574)
+    1A: HEATING AND AIR CONDITIONING > Heating and Ventilation
+    1B: HEATING AND AIR CONDITIONING > Air Conditioning
+    Top shared: system(11/99), air(27/80), blower(66/19), control(67/18), switch(17/66)
+
+  1B <-> 1D  (overlap=521)
+    1B: HEATING AND AIR CONDITIONING > Air Conditioning
+    1D: HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+    Top shared: compressor(89/64), valve(89/44), system(99/6), pressure(69/26), air(80/6)
+
+  0A <-> 9J  (overlap=370)
+    0A: GENERAL INFORMATION > General Information
+    9J: 9J
+    Top shared: system(10/318), sensor(6/281), code(9/213), restraint(4/137), codes(3/120)
+
+  0A <-> 1B  (overlap=329)
+    0A: GENERAL INFORMATION > General Information
+    1B: HEATING AND AIR CONDITIONING > Air Conditioning
+    Top shared: system(10/99), valve(12/89), air(9/80), screw(70/11), pressure(5/69)
+
+  0B <-> 1B  (overlap=326)
+    0B: GENERAL INFORMATION > Maintenance and Lubrication
+    1B: HEATING AND AIR CONDITIONING > Air Conditioning
+    Top shared: system(16/99), air(26/80), valve(4/89), pressure(3/69), oil(33/30)
+
+  1A <-> 9J  (overlap=326)
+    1A: HEATING AND AIR CONDITIONING > Heating and Ventilation
+    9J: 9J
+    Top shared: system(11/318), terminal(4/165), resistor(11/117), switch(17/92), electrical(11/80)
+
+  1D <-> 9J  (overlap=239)
+    1D: HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+    9J: 9J
+    Top shared: system(6/318), repair(4/137), low(7/111), tool(14/95), resistance(6/73)
+
+  0B <-> 9J  (overlap=236)
+    0B: GENERAL INFORMATION > Maintenance and Lubrication
+    9J: 9J
+    Top shared: system(16/318), caution(4/66), parts(3/53), part(13/39), first(32/15)
+
+  0A <-> 0B  (overlap=176)
+    0A: GENERAL INFORMATION > General Information
+    0B: GENERAL INFORMATION > Maintenance and Lubrication
+    Top shared: engine(23/23), equivalent(35/4), bolts(36/3), air(9/26), control(10/25)
+
+  0A <-> 1D  (overlap=153)
+    0A: GENERAL INFORMATION > General Information
+    1D: HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+    Top shared: plate(6/57), valve(12/44), rear(15/33), front(12/31), clutch(3/37)
+
+  0A <-> 1A  (overlap=121)
+    0A: GENERAL INFORMATION > General Information
+    1A: HEATING AND AIR CONDITIONING > Heating and Ventilation
+    Top shared: control(10/67), screw(70/4), assembly(9/32), bolts(36/5), panel(8/29)
+
+  0B <-> 1A  (overlap=118)
+    0B: GENERAL INFORMATION > Maintenance and Lubrication
+    1A: HEATING AND AIR CONDITIONING > Heating and Ventilation
+    Top shared: control(25/67), air(26/27), engine(23/6), system(16/11), cables(3/19)
+
+  0B <-> 1D  (overlap=108)
+    0B: GENERAL INFORMATION > Maintenance and Lubrication
+    1D: HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+    Top shared: item(68/6), oil(33/41), valve(4/44), clutch(3/37), rear(6/33)
+
+  1A <-> 1D  (overlap=101)
+    1A: HEATING AND AIR CONDITIONING > Heating and Ventilation
+    1D: HEATING AND AIR CONDITIONING > Air Conditioning Compressor Overhaul
+    Top shared: plate(5/57), assembly(32/12), shaft(3/38), rear(5/33), air(27/6)

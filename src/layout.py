@@ -40,13 +40,39 @@ def analyze_page_layout(pre: PreprocessResult, config: dict) -> dict:
         threshold=cfg_layout.get("overlap_iou_threshold", 0.50)
     )
 
+    # When Surya is unavailable, the fallback is a single full-page Text region.
+    # Don't let that suppress CV box detection — pass empty existing_regions so
+    # the full-page region doesn't filter out every CV box.
+    surya_fallback = (
+        not SURYA_AVAILABLE
+        and len(regions) == 1
+        and regions[0].label == "Text"
+    )
+
     # Surya often misses figures and tables in scanned technical documents.
     # Fall back to box detection: every table and diagram in this manual
     # is enclosed in a printed border. Detect those borders, then distinguish
     # tables (internal grid lines) from diagrams (no grid).
-    cv_boxes = _detect_boxes_cv(pre_img, regions, config)
+    cv_boxes = _detect_boxes_cv(pre_img, [] if surya_fallback else regions, config)
     if cv_boxes:
+        # Filter out CV boxes that contain other CV boxes. On multi-figure
+        # pages, CV detection often finds a large box spanning multiple
+        # figures PLUS individual boxes for each figure. We want the
+        # individual (smaller) crops, not the combined one.
+        cv_boxes = _remove_container_boxes(cv_boxes,
+                                           threshold=cfg_layout.get("overlap_iou_threshold", 0.50))
         regions = regions + cv_boxes
+        # Re-run overlap dedup on the combined list (CV boxes vs Surya regions).
+        regions = _merge_overlapping(
+            regions,
+            threshold=cfg_layout.get("overlap_iou_threshold", 0.50)
+        )
+
+    # Sort regions by vertical position (top-to-bottom) so that figure
+    # indices (fig_000, fig_001, ...) match visual reading order.
+    # Without this, detection order from Surya/CV causes mismatched
+    # figure-to-image assignments on multi-figure pages.
+    regions.sort(key=lambda r: r.y1)
 
     # Reclassify page type now that CV figures may have been added
     from layout_analysis import PageLayout
@@ -262,6 +288,123 @@ def detect_columns(img: Image.Image, config: dict) -> list[tuple[int, int, int, 
         return [(x_left, y_top, gc, y_bot), (gc, y_top, x_right, y_bot)]
 
     return [(x_left, y_top, x_right, y_bot)]
+
+
+def _remove_container_boxes(boxes: list, threshold: float = 0.50) -> list:
+    """Split large boxes that contain smaller boxes.
+
+    On multi-figure pages, CV detection finds both individual figure borders
+    AND a larger border encompassing multiple figures. We prefer the smaller
+    (more specific) crops. When a large box contains smaller ones, we replace
+    it with the "remainder" — the portion not covered by contained boxes.
+
+    Strategy: if a container is wider than its contained boxes (i.e., the
+    contained boxes sit on one side), split horizontally and keep the
+    uncovered portion. Similarly for vertical splits.
+    """
+    if len(boxes) <= 1:
+        return boxes
+
+    # Identify which boxes are containers
+    containers = set()
+    contained_by: dict[int, list[int]] = {}  # container_idx -> [child_idxs]
+
+    for i, big in enumerate(boxes):
+        children = []
+        for j, small in enumerate(boxes):
+            if i == j or small.area >= big.area:
+                continue
+            ix1 = max(big.x1, small.x1)
+            iy1 = max(big.y1, small.y1)
+            ix2 = min(big.x2, small.x2)
+            iy2 = min(big.y2, small.y2)
+            if ix1 < ix2 and iy1 < iy2:
+                intersection = (ix2 - ix1) * (iy2 - iy1)
+                if small.area > 0 and intersection / small.area > threshold:
+                    children.append(j)
+        if children:
+            containers.add(i)
+            contained_by[i] = children
+
+    kept = []
+    for i, box in enumerate(boxes):
+        if i not in containers:
+            kept.append(box)
+            continue
+
+        # This box contains smaller boxes. Find the uncovered remainder.
+        children = [boxes[j] for j in contained_by[i]]
+
+        # Compute the bounding box of all children
+        child_x1 = min(c.x1 for c in children)
+        child_y1 = min(c.y1 for c in children)
+        child_x2 = max(c.x2 for c in children)
+        child_y2 = max(c.y2 for c in children)
+
+        # Try horizontal split: if children are on the right, keep the left
+        margin = 50  # px tolerance
+        remainders = []
+
+        # Left remainder: container left edge to children left edge
+        if child_x1 - box.x1 > margin:
+            remainders.append(Region(
+                label=box.label,
+                bbox=[box.x1, box.y1, child_x1, box.y2],
+                confidence=box.confidence,
+            ))
+        # Right remainder: children right edge to container right edge
+        if box.x2 - child_x2 > margin:
+            remainders.append(Region(
+                label=box.label,
+                bbox=[child_x2, box.y1, box.x2, box.y2],
+                confidence=box.confidence,
+            ))
+        # Top remainder: above children
+        if child_y1 - box.y1 > margin:
+            remainders.append(Region(
+                label=box.label,
+                bbox=[box.x1, box.y1, box.x2, child_y1],
+                confidence=box.confidence,
+            ))
+        # Bottom remainder: below children
+        if box.y2 - child_y2 > margin:
+            remainders.append(Region(
+                label=box.label,
+                bbox=[box.x1, child_y2, box.x2, box.y2],
+                confidence=box.confidence,
+            ))
+
+        # Keep the largest valid remainder that doesn't overlap with children.
+        # On most pages this is the left or right portion with the "other" figure.
+        min_area = box.area * 0.15  # at least 15% of container
+        valid = [r for r in remainders if r.area >= min_area]
+
+        # Filter out remainders that heavily overlap with any child
+        non_overlapping = []
+        for r in valid:
+            overlaps_child = False
+            for c in children:
+                ix1 = max(r.x1, c.x1)
+                iy1 = max(r.y1, c.y1)
+                ix2 = min(r.x2, c.x2)
+                iy2 = min(r.y2, c.y2)
+                if ix1 < ix2 and iy1 < iy2:
+                    inter = (ix2 - ix1) * (iy2 - iy1)
+                    if r.area > 0 and inter / r.area > 0.3:
+                        overlaps_child = True
+                        break
+            if not overlaps_child:
+                non_overlapping.append(r)
+
+        if non_overlapping:
+            # Keep the largest non-overlapping remainder
+            best = max(non_overlapping, key=lambda r: r.area)
+            kept.append(best)
+            print(f"      [container-split] kept remainder ({int(best.x1)},{int(best.y1)})-({int(best.x2)},{int(best.y2)})")
+        else:
+            print(f"      [container-split] dropped container ({int(box.x1)},{int(box.y1)})-({int(box.x2)},{int(box.y2)}) — no valid remainder")
+
+    return kept
 
 
 def _merge_overlapping(regions: list, threshold: float = 0.50) -> list:

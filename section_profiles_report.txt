@@ -1,0 +1,1444 @@
+================================================================================
+SECTION PROFILER — Group 1 (Engine, Fuel, Electrical, Driveability)
+================================================================================
+
+Loaded 2197 chunks across 16 target sections
+Total sections in corpus: 51
+  6     :   38 chunks  — 6
+  6A1   :  338 chunks  — ENGINE — 6 > Engine Mechanical
+  6B    :   58 chunks  — ENGINE — 6 > Engine Cooling
+  6C    :   79 chunks  — ENGINE — 6 > Fuel System
+  6D    :    5 chunks  — ENGINE — 6 > Engine Electrical
+  6D1   :   39 chunks  — ENGINE — 6 > Battery
+  6D2   :   63 chunks  — ENGINE — 6 > Cranking System
+  6D3   :   53 chunks  — ENGINE — 6 > Charging System
+  6D4   :   73 chunks  — ENGINE — 6 > Ignition System
+  6D5   :    3 chunks  — ENGINE — 6 > Engine Wiring
+  6E    :   51 chunks  — ENGINE — 6 > Driveability and Emissions
+  6E2   :  545 chunks  — 6E2
+  6F    :   16 chunks  — ENGINE — 6 > Exhaust System
+  8     :  273 chunks  — 8
+  8A    :  515 chunks  — Electrical
+  8B    :   48 chunks  — Electrical Wiring
+
+================================================================================
+SECTION 6: 6
+  Chunks: 38, Total term occurrences: 6283
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    correction                      freq= 153  sections=15  tfidf=0.028229
+    possible                        freq= 153  sections=30  tfidf=0.012123
+    cause                           freq= 155  sections=34  tfidf=0.009288
+    malfunctioning                  freq=  20  sections= 4  tfidf=0.007393
+    engine                          freq=  66  sections=30  tfidf=0.005230
+    clogged                         freq=  13  sections= 5  tfidf=0.004428
+    spark                           freq=  19  sections=12  tfidf=0.004133
+    improper                        freq=  16  sections=10  tfidf=0.003906
+    fuel                            freq=  24  sections=18  tfidf=0.003772
+    throttle                        freq=  18  sections=13  tfidf=0.003704
+    worn                            freq=  20  sections=15  tfidf=0.003690
+    compression                     freq=  12  sections= 7  tfidf=0.003538
+    vacuum                          freq=  18  sections=15  tfidf=0.003321
+    plug                            freq=  19  sections=17  tfidf=0.003149
+    hose                            freq=  21  sections=20  tfidf=0.002966
+    valve                           freq=  18  sections=18  tfidf=0.002829
+    leaky                           freq=   7  sections= 4  tfidf=0.002587
+    e12                             freq=   5  sections= 1  tfidf=0.002577
+    oil                             freq=  25  sections=26  tfidf=0.002531
+    adjust                          freq=  25  sections=26  tfidf=0.002531
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    possible cause                            freq= 153  sections=16  tfidf=0.026753
+    replace possible cause                    freq=  59  sections=10  tfidf=0.014404
+    correction replace possible               freq=  39  sections=10  tfidf=0.009521
+    diagnosis condition                       freq=  18  sections= 1  tfidf=0.009278
+    engine diagnosis condition                freq=  18  sections= 1  tfidf=0.009278
+    engine diagnosis                          freq=  19  sections= 2  tfidf=0.008568
+    cause malfunctioning                      freq=  19  sections= 2  tfidf=0.008568
+    possible cause malfunctioning             freq=  19  sections= 2  tfidf=0.008568
+    correction check and                      freq=  21  sections= 4  tfidf=0.007762
+    check and replace                         freq=  14  sections= 2  tfidf=0.006313
+    or replace possible                       freq=  18  sections= 5  tfidf=0.006131
+    cause worn                                freq=  19  sections= 6  tfidf=0.006005
+    possible cause worn                       freq=  19  sections= 6  tfidf=0.006005
+    adjust possible                           freq=  14  sections= 3  tfidf=0.005672
+    adjust possible cause                     freq=  14  sections= 3  tfidf=0.005672
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=  66  also_in: 6A1(80), 6B(25), 6C(16), 6D(6), 6D1(11), 6D2(6)
+    switch                               here=  14  also_in: 6A1(13), 6B(27), 6D(17), 6D1(4), 6D2(11), 6D3(11)
+    system                               here=  13  also_in: 6A1(9), 6B(33), 6C(54), 6D(8), 6D1(7), 6D4(13)
+    battery                              here=   4  also_in: 6A1(22), 6B(8), 6C(14), 6D(21), 6D1(153), 6D2(19)
+    ignition                             here=  13  also_in: 6A1(5), 6D(16), 6D1(4), 6D2(8), 6D3(7), 6D4(65)
+    disconnect                           here=   4  also_in: 6A1(26), 6B(9), 6C(11), 6D1(4), 6D2(5), 6D3(5)
+    cause                                here= 155  also_in: 6A1(4), 6B(14), 6D1(4), 6D3(3), 6D4(5), 6E(6)
+    wire                                 here=   8  also_in: 6A1(7), 6C(4), 6D(3), 6D2(8), 6D3(17), 6D4(35)
+    connect                              here=   6  also_in: 6A1(20), 6B(5), 6C(8), 6D1(6), 6D2(3), 6D3(15)
+    repair                               here=  10  also_in: 6C(4), 6D(7), 6D2(7), 6D3(14), 6D4(5), 6E(6)
+    tighten                              here=  10  also_in: 6A1(23), 6B(4), 6D(4), 6D1(5), 6D2(6), 6D3(8)
+    electrical                           here=   8  also_in: 6C(8), 6D(7), 6D1(15), 6D4(6), 6E(6), 6E2(51)
+    position                             here=   8  also_in: 6A1(13), 6C(5), 6D2(9), 6D4(6), 6E(8), 6E2(56)
+    connector                            here=   7  also_in: 6C(5), 6D3(6), 6D4(14), 6D5(3), 6E(27), 6E2(103)
+    damage                               here=   4  also_in: 6A1(15), 6C(8), 6D1(10), 6D4(3), 6E(7), 6E2(25)
+    open                                 here=   3  also_in: 6A1(4), 6B(9), 6D3(3), 6D4(3), 6E(9), 6E2(76)
+    fuel                                 here=  24  also_in: 6A1(20), 6C(314), 6D4(12), 6E(24), 6E2(437), 6F(4)
+    diagnosis                            here=  19  also_in: 6D(9), 6D1(3), 6D4(5), 6E(6), 6E2(95), 8(17)
+    body                                 here=  10  also_in: 6A1(40), 6C(6), 6D1(5), 6D4(3), 6E(5), 6E2(92)
+    pump                                 here=   9  also_in: 6A1(70), 6B(36), 6C(58), 6D4(3), 6E(4), 6E2(83)
+    end                                  here=   5  also_in: 6A1(27), 6C(7), 6D1(6), 6D2(25), 6D3(33), 6E2(7)
+    fuse                                 here=   5  also_in: 6D1(6), 6D3(4), 6D4(5), 6E(10), 6E2(74), 8(75)
+    high                                 here=   4  also_in: 6A1(5), 6D1(4), 6D3(3), 6D4(16), 6E(5), 6E2(58)
+    specification                        here=   4  also_in: 6A1(13), 6B(3), 6C(3), 6D3(3), 6D4(6), 6E(9)
+    cap                                  here=   3  also_in: 6A1(50), 6B(40), 6C(30), 6D2(10), 6D4(31), 6E2(29)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    6E2    (overlap= 1297)  6E2
+    6A1    (overlap=  963)  ENGINE — 6 > Engine Mechanical
+    8      (overlap=  802)  8
+    8A     (overlap=  606)  Electrical
+    6D4    (overlap=  565)  ENGINE — 6 > Ignition System
+    6B     (overlap=  524)  ENGINE — 6 > Engine Cooling
+    6E     (overlap=  523)  ENGINE — 6 > Driveability and Emissions
+    6C     (overlap=  448)  ENGINE — 6 > Fuel System
+
+================================================================================
+SECTION 6A1: ENGINE — 6 > Engine Mechanical
+  Chunks: 338, Total term occurrences: 24334
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    valve                           freq= 227  sections=18  tfidf=0.009211
+    camshaft                        freq=  95  sections= 4  tfidf=0.009067
+    cylinder                        freq= 207  sections=17  tfidf=0.008859
+    piston                          freq= 123  sections= 9  tfidf=0.008235
+    crankshaft                      freq= 107  sections=11  tfidf=0.006362
+    journal                         freq=  54  sections= 2  tfidf=0.006287
+    head                            freq= 139  sections=17  tfidf=0.005949
+    timing                          freq=  82  sections= 8  tfidf=0.005845
+    oil                             freq= 211  sections=26  tfidf=0.005515
+    tensioner                       freq=  47  sections= 3  tfidf=0.004917
+    lash                            freq=  43  sections= 3  tfidf=0.004498
+    belt                            freq=  84  sections=13  tfidf=0.004463
+    diameter                        freq=  67  sections=11  tfidf=0.003984
+    adjuster                        freq=  51  sections= 7  tfidf=0.003882
+    guide                           freq=  73  sections=13  tfidf=0.003878
+    bearing                         freq= 123  sections=23  tfidf=0.003810
+    pulley                          freq=  47  sections= 7  tfidf=0.003578
+    pump                            freq=  70  sections=14  tfidf=0.003520
+    stamped                         freq=  39  sections= 5  tfidf=0.003430
+    stem                            freq=  29  sections= 2  tfidf=0.003376
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    cylinder head                             freq= 121  sections= 6  tfidf=0.009875
+    timing belt                               freq=  68  sections= 3  tfidf=0.007113
+    valve guide                               freq=  42  sections= 1  tfidf=0.005590
+    valve lash                                freq=  42  sections= 3  tfidf=0.004394
+    oil pump                                  freq=  48  sections= 5  tfidf=0.004221
+    lash adjuster                             freq=  36  sections= 3  tfidf=0.003766
+    valve lash adjuster                       freq=  35  sections= 3  tfidf=0.003661
+    connecting rod                            freq=  31  sections= 3  tfidf=0.003243
+    journal diameter                          freq=  22  sections= 1  tfidf=0.002928
+    head bolt                                 freq=  22  sections= 1  tfidf=0.002928
+    cylinder head bolt                        freq=  22  sections= 1  tfidf=0.002928
+    valve stem                                freq=  25  sections= 2  tfidf=0.002911
+    diameter mm in                            freq=  21  sections= 1  tfidf=0.002795
+    bearing cap                               freq=  26  sections= 3  tfidf=0.002720
+    ft cylinder                               freq=  20  sections= 1  tfidf=0.002662
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=  80  also_in: 6(66), 6B(25), 6C(16), 6D(6), 6D1(11), 6D2(6)
+    switch                               here=  13  also_in: 6(14), 6B(27), 6D(17), 6D1(4), 6D2(11), 6D3(11)
+    cable                                here=  36  also_in: 6B(8), 6C(21), 6D(9), 6D1(32), 6D2(4), 6D3(9)
+    battery                              here=  22  also_in: 6(4), 6B(8), 6C(14), 6D(21), 6D1(153), 6D2(19)
+    system                               here=   9  also_in: 6(13), 6B(33), 6C(54), 6D(8), 6D1(7), 6D4(13)
+    disconnect                           here=  26  also_in: 6(4), 6B(9), 6C(11), 6D1(4), 6D2(5), 6D3(5)
+    negative                             here=  22  also_in: 6B(8), 6C(14), 6D1(15), 6D2(4), 6D3(6), 6D4(6)
+    connect                              here=  20  also_in: 6(6), 6B(5), 6C(8), 6D1(6), 6D2(3), 6D3(15)
+    wire                                 here=   7  also_in: 6(8), 6C(4), 6D(3), 6D2(8), 6D3(17), 6D4(35)
+    two                                  here=  28  also_in: 6C(10), 6D1(3), 6D2(11), 6D3(5), 6D4(3), 6E2(11)
+    tighten                              here=  23  also_in: 6(10), 6B(4), 6D(4), 6D1(5), 6D2(6), 6D3(8)
+    damage                               here=  15  also_in: 6(4), 6C(8), 6D1(10), 6D4(3), 6E(7), 6E2(25)
+    position                             here=  13  also_in: 6(8), 6C(5), 6D2(9), 6D4(6), 6E(8), 6E2(56)
+    temperature                          here=  12  also_in: 6B(9), 6D1(10), 6D3(4), 6D4(5), 6D5(3), 6E(11)
+    pump                                 here=  70  also_in: 6(9), 6B(36), 6C(58), 6D4(3), 6E(4), 6E2(83)
+    cap                                  here=  50  also_in: 6(3), 6B(40), 6C(30), 6D2(10), 6D4(31), 6E2(29)
+    body                                 here=  40  also_in: 6(10), 6C(6), 6D1(5), 6D4(3), 6E(5), 6E2(92)
+    end                                  here=  27  also_in: 6(5), 6C(7), 6D1(6), 6D2(25), 6D3(33), 6E2(7)
+    assembly                             here=  22  also_in: 6C(23), 6D2(50), 6D3(4), 6D4(21), 6E2(51), 8(120)
+    nut                                  here=  21  also_in: 6B(4), 6C(5), 6D1(4), 6D2(6), 6D3(20), 6E2(3)
+    fuel                                 here=  20  also_in: 6(24), 6C(314), 6D4(12), 6E(24), 6E2(437), 6F(4)
+    one                                  here=  15  also_in: 6C(3), 6D(3), 6D1(4), 6E(10), 6E2(26), 8(29)
+    specification                        here=  13  also_in: 6(4), 6B(3), 6C(3), 6D3(3), 6D4(6), 6E(9)
+    turn                                 here=  10  also_in: 6D(3), 6D1(5), 6D3(9), 6D4(14), 6E2(21), 8(47)
+    high                                 here=   5  also_in: 6(4), 6D1(4), 6D3(3), 6D4(16), 6E(5), 6E2(58)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    6E2    (overlap= 3256)  6E2
+    8A     (overlap= 1618)  Electrical
+    8      (overlap= 1447)  8
+    6      (overlap= 1062)  6
+    6C     (overlap= 1018)  ENGINE — 6 > Fuel System
+    6B     (overlap= 1011)  ENGINE — 6 > Engine Cooling
+    6D4    (overlap=  955)  ENGINE — 6 > Ignition System
+    6E     (overlap=  816)  ENGINE — 6 > Driveability and Emissions
+
+================================================================================
+SECTION 6B: ENGINE — 6 > Engine Cooling
+  Chunks: 58, Total term occurrences: 5169
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    radiator                        freq=  65  sections=12  tfidf=0.017188
+    thermostat                      freq=  43  sections= 7  tfidf=0.015410
+    water                           freq=  62  sections=21  tfidf=0.010085
+    pump                            freq=  36  sections=14  tfidf=0.008523
+    tank                            freq=  30  sections=11  tfidf=0.008398
+    coolant                         freq=  43  sections=19  tfidf=0.007787
+    cooling                         freq=  37  sections=17  tfidf=0.007455
+    cap                             freq=  40  sections=19  tfidf=0.007244
+    reservoir                       freq=  22  sections=10  tfidf=0.006529
+    thermo                          freq=  15  sections= 5  tfidf=0.006210
+    hose                            freq=  31  sections=20  tfidf=0.005321
+    valve                           freq=  26  sections=18  tfidf=0.004967
+    belt                            freq=  17  sections=13  tfidf=0.004252
+    temp                            freq=   7  sections= 2  tfidf=0.003837
+    pellet                          freq=   6  sections= 1  tfidf=0.003759
+    fan                             freq=  14  sections=12  tfidf=0.003702
+    generator                       freq=  12  sections=12  tfidf=0.003173
+    pulley                          freq=   8  sections= 7  tfidf=0.002867
+    inlet                           freq=   9  sections= 9  tfidf=0.002837
+    expands                         freq=   5  sections= 2  tfidf=0.002741
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    water pump                                freq=  32  sections= 6  tfidf=0.012294
+    reservoir tank                            freq=  22  sections= 2  tfidf=0.012059
+    cooling system                            freq=  25  sections= 7  tfidf=0.008959
+    radiator cap                              freq=  16  sections= 2  tfidf=0.008770
+    thermo switch                             freq=  15  sections= 3  tfidf=0.007387
+    the cooling system                        freq=  12  sections= 2  tfidf=0.006577
+    the reservoir tank                        freq=  10  sections= 1  tfidf=0.006266
+    c f                                       freq=  16  sections=11  tfidf=0.004479
+    than c f                                  freq=   9  sections= 3  tfidf=0.004432
+    water reservoir                           freq=   7  sections= 1  tfidf=0.004386
+    water reservoir tank                      freq=   7  sections= 1  tfidf=0.004386
+    the water pump                            freq=   8  sections= 3  tfidf=0.003940
+    the radiator cap                          freq=   6  sections= 1  tfidf=0.003759
+    thermostat temp                           freq=   6  sections= 1  tfidf=0.003759
+    f b                                       freq=   6  sections= 1  tfidf=0.003759
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=  25  also_in: 6(66), 6A1(80), 6C(16), 6D(6), 6D1(11), 6D2(6)
+    switch                               here=  27  also_in: 6(14), 6A1(13), 6D(17), 6D1(4), 6D2(11), 6D3(11)
+    system                               here=  33  also_in: 6(13), 6A1(9), 6C(54), 6D(8), 6D1(7), 6D4(13)
+    battery                              here=   8  also_in: 6(4), 6A1(22), 6C(14), 6D(21), 6D1(153), 6D2(19)
+    cable                                here=   8  also_in: 6A1(36), 6C(21), 6D(9), 6D1(32), 6D2(4), 6D3(9)
+    ignition                             here=   2  also_in: 6(13), 6A1(5), 6D(16), 6D1(4), 6D2(8), 6D3(7)
+    disconnect                           here=   9  also_in: 6(4), 6A1(26), 6C(11), 6D1(4), 6D2(5), 6D3(5)
+    cause                                here=  14  also_in: 6(155), 6A1(4), 6D1(4), 6D3(3), 6D4(5), 6E(6)
+    negative                             here=   8  also_in: 6A1(22), 6C(14), 6D1(15), 6D2(4), 6D3(6), 6D4(6)
+    connect                              here=   5  also_in: 6(6), 6A1(20), 6C(8), 6D1(6), 6D2(3), 6D3(15)
+    damage                               here=   2  also_in: 6(4), 6A1(15), 6C(8), 6D1(10), 6D4(3), 6E(7)
+    open                                 here=   9  also_in: 6(3), 6A1(4), 6D3(3), 6D4(3), 6E(9), 6E2(76)
+    temperature                          here=   9  also_in: 6A1(12), 6D1(10), 6D3(4), 6D4(5), 6D5(3), 6E(11)
+    tighten                              here=   4  also_in: 6(10), 6A1(23), 6D(4), 6D1(5), 6D2(6), 6D3(8)
+    unit                                 here=   3  also_in: 6A1(4), 6C(23), 6D2(7), 6D3(11), 6E(6), 6E2(11)
+    one                                  here=   2  also_in: 6A1(15), 6C(3), 6D(3), 6D1(4), 6E(10), 6E2(26)
+    turn                                 here=   2  also_in: 6A1(10), 6D(3), 6D1(5), 6D3(9), 6D4(14), 6E2(21)
+    cap                                  here=  40  also_in: 6(3), 6A1(50), 6C(30), 6D2(10), 6D4(31), 6E2(29)
+    pump                                 here=  36  also_in: 6(9), 6A1(70), 6C(58), 6D4(3), 6E(4), 6E2(83)
+    nut                                  here=   4  also_in: 6A1(21), 6C(5), 6D1(4), 6D2(6), 6D3(20), 6E2(3)
+    specification                        here=   3  also_in: 6(4), 6A1(13), 6C(3), 6D3(3), 6D4(6), 6E(9)
+    pressure                             here=  15  also_in: 6(10), 6A1(36), 6C(44), 6E(9), 6E2(179), 8(13)
+    possible                             here=  12  also_in: 6(153), 6C(3), 6E(6), 6E2(3), 6F(15), 8(74)
+    generator                            here=  12  also_in: 6A1(5), 6D(3), 6D1(6), 6D3(97), 6D4(15), 8(3)
+    air                                  here=  10  also_in: 6(17), 6A1(41), 6D4(13), 6E(18), 6E2(213), 8(4)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    6A1    (overlap=  972)  ENGINE — 6 > Engine Mechanical
+    6E2    (overlap=  902)  6E2
+    8A     (overlap=  587)  Electrical
+    8      (overlap=  557)  8
+    6C     (overlap=  485)  ENGINE — 6 > Fuel System
+    6      (overlap=  461)  6
+    6D4    (overlap=  369)  ENGINE — 6 > Ignition System
+    6E     (overlap=  342)  ENGINE — 6 > Driveability and Emissions
+
+================================================================================
+SECTION 6C: ENGINE — 6 > Fuel System
+  Chunks: 79, Total term occurrences: 7098
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    fuel                            freq= 314  sections=18  tfidf=0.043680
+    tank                            freq=  74  sections=11  tfidf=0.015085
+    filler                          freq=  41  sections= 8  tfidf=0.010020
+    pump                            freq=  58  sections=14  tfidf=0.010000
+    hose                            freq=  73  sections=20  tfidf=0.009126
+    vapor                           freq=  22  sections= 3  tfidf=0.007890
+    filter                          freq=  40  sections=14  tfidf=0.006896
+    neck                            freq=  19  sections= 4  tfidf=0.006217
+    sending                         freq=  19  sections= 6  tfidf=0.005316
+    clamp                           freq=  32  sections=16  tfidf=0.004953
+    lines                           freq=  24  sections=12  tfidf=0.004622
+    cap                             freq=  30  sections=19  tfidf=0.003956
+    fusebox                         freq=  11  sections= 3  tfidf=0.003945
+    line                            freq=  35  sections=22  tfidf=0.003927
+    relief                          freq=  14  sections= 7  tfidf=0.003654
+    feed                            freq=  16  sections=10  tfidf=0.003458
+    pressure                        freq=  44  sections=29  tfidf=0.003289
+    outlet                          freq=  13  sections= 8  tfidf=0.003177
+    system                          freq=  54  sections=33  tfidf=0.003085
+    relay                           freq=  16  sections=13  tfidf=0.002914
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    fuel tank                                 freq=  58  sections= 6  tfidf=0.016228
+    fuel pump                                 freq=  50  sections= 6  tfidf=0.013989
+    the fuel tank                             freq=  29  sections= 2  tfidf=0.011576
+    fuel system                               freq=  37  sections= 5  tfidf=0.011156
+    fuel filler                               freq=  30  sections= 3  tfidf=0.010759
+    fuel filter                               freq=  30  sections= 4  tfidf=0.009816
+    hose clamp                                freq=  18  sections= 2  tfidf=0.007185
+    fuel filler cap                           freq=  19  sections= 3  tfidf=0.006814
+    fuel vapor                                freq=  17  sections= 2  tfidf=0.006786
+    refer to fuel                             freq=  14  sections= 1  tfidf=0.006388
+    filler neck                               freq=  19  sections= 4  tfidf=0.006217
+    filler cap                                freq=  19  sections= 4  tfidf=0.006217
+    the fuel pump                             freq=  17  sections= 3  tfidf=0.006097
+    hose clamp and                            freq=  12  sections= 1  tfidf=0.005475
+    fuel feed                                 freq=  15  sections= 3  tfidf=0.005379
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=  16  also_in: 6(66), 6A1(80), 6B(25), 6D(6), 6D1(11), 6D2(6)
+    system                               here=  54  also_in: 6(13), 6A1(9), 6B(33), 6D(8), 6D1(7), 6D4(13)
+    cable                                here=  21  also_in: 6A1(36), 6B(8), 6D(9), 6D1(32), 6D2(4), 6D3(9)
+    battery                              here=  14  also_in: 6(4), 6A1(22), 6B(8), 6D(21), 6D1(153), 6D2(19)
+    disconnect                           here=  11  also_in: 6(4), 6A1(26), 6B(9), 6D1(4), 6D2(5), 6D3(5)
+    negative                             here=  14  also_in: 6A1(22), 6B(8), 6D1(15), 6D2(4), 6D3(6), 6D4(6)
+    connect                              here=   8  also_in: 6(6), 6A1(20), 6B(5), 6D1(6), 6D2(3), 6D3(15)
+    wire                                 here=   4  also_in: 6(8), 6A1(7), 6D(3), 6D2(8), 6D3(17), 6D4(35)
+    unit                                 here=  23  also_in: 6A1(4), 6B(3), 6D2(7), 6D3(11), 6E(6), 6E2(11)
+    two                                  here=  10  also_in: 6A1(28), 6D1(3), 6D2(11), 6D3(5), 6D4(3), 6E2(11)
+    damage                               here=   8  also_in: 6(4), 6A1(15), 6D1(10), 6D4(3), 6E(7), 6E2(25)
+    electrical                           here=   8  also_in: 6(8), 6D(7), 6D1(15), 6D4(6), 6E(6), 6E2(51)
+    position                             here=   5  also_in: 6(8), 6A1(13), 6D2(9), 6D4(6), 6E(8), 6E2(56)
+    connector                            here=   5  also_in: 6(7), 6D3(6), 6D4(14), 6D5(3), 6E(27), 6E2(103)
+    repair                               here=   4  also_in: 6(10), 6D(7), 6D2(7), 6D3(14), 6D4(5), 6E(6)
+    fuel                                 here= 314  also_in: 6(24), 6A1(20), 6D4(12), 6E(24), 6E2(437), 6F(4)
+    pump                                 here=  58  also_in: 6(9), 6A1(70), 6B(36), 6D4(3), 6E(4), 6E2(83)
+    cap                                  here=  30  also_in: 6(3), 6A1(50), 6B(40), 6D2(10), 6D4(31), 6E2(29)
+    assembly                             here=  23  also_in: 6A1(22), 6D2(50), 6D3(4), 6D4(21), 6E2(51), 8(120)
+    end                                  here=   7  also_in: 6(5), 6A1(27), 6D1(6), 6D2(25), 6D3(33), 6E2(7)
+    body                                 here=   6  also_in: 6(10), 6A1(40), 6D1(5), 6D4(3), 6E(5), 6E2(92)
+    nut                                  here=   5  also_in: 6A1(21), 6B(4), 6D1(4), 6D2(6), 6D3(20), 6E2(3)
+    one                                  here=   3  also_in: 6A1(15), 6D(3), 6D1(4), 6E(10), 6E2(26), 8(29)
+    specification                        here=   3  also_in: 6(4), 6A1(13), 6B(3), 6D3(3), 6D4(6), 6E(9)
+    pressure                             here=  44  also_in: 6(10), 6A1(36), 6B(15), 6E(9), 6E2(179), 8(13)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    6E2    (overlap= 2160)  6E2
+    6A1    (overlap=  973)  ENGINE — 6 > Engine Mechanical
+    8A     (overlap=  799)  Electrical
+    8      (overlap=  785)  8
+    6B     (overlap=  502)  ENGINE — 6 > Engine Cooling
+    6      (overlap=  490)  6
+    6E     (overlap=  473)  ENGINE — 6 > Driveability and Emissions
+    6D4    (overlap=  437)  ENGINE — 6 > Ignition System
+
+================================================================================
+SECTION 6D: ENGINE — 6 > Engine Electrical
+  Chunks: 5, Total term occurrences: 1636
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    volts                           freq=  24  sections=10  tfidf=0.022503
+    voltage                         freq=  23  sections=16  tfidf=0.015445
+    action                          freq=  14  sections=10  tfidf=0.013127
+    trans                           freq=   8  sections= 4  tfidf=0.011356
+    solenoid                        freq=  11  sections=11  tfidf=0.009729
+    cranking                        freq=  10  sections=10  tfidf=0.009376
+    terminal                        freq=  12  sections=16  tfidf=0.008058
+    less                            freq=  15  sections=21  tfidf=0.007709
+    battery                         freq=  21  sections=27  tfidf=0.007697
+    ignition                        freq=  16  sections=24  tfidf=0.006973
+    starter                         freq=  11  sections=18  tfidf=0.006639
+    branch                          freq=   5  sections= 5  tfidf=0.006541
+    volt                            freq=   6  sections=10  tfidf=0.005626
+    eye                             freq=   4  sections= 5  tfidf=0.005232
+    switch                          freq=  17  sections=30  tfidf=0.005173
+    adequate                        freq=   4  sections= 6  tfidf=0.004856
+    term                            freq=   3  sections= 4  tfidf=0.004259
+    charging                        freq=   5  sections=12  tfidf=0.004177
+    clutch                          freq=   6  sections=17  tfidf=0.003820
+    auto                            freq=   3  sections= 6  tfidf=0.003642
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    volts or more                             freq=  10  sections= 3  tfidf=0.015559
+    less than volts                           freq=  12  sections= 6  tfidf=0.014567
+    voltage result                            freq=   6  sections= 2  tfidf=0.010391
+    action if less                            freq=   5  sections= 1  tfidf=0.009898
+    than volts on                             freq=   5  sections= 1  tfidf=0.009898
+    voltage at solenoid                       freq=   5  sections= 1  tfidf=0.009898
+    at ignition switch                        freq=   5  sections= 1  tfidf=0.009898
+    cranking voltage                          freq=   5  sections= 2  tfidf=0.008659
+    key in start                              freq=   4  sections= 1  tfidf=0.007919
+    action if volts                           freq=   4  sections= 1  tfidf=0.007919
+    clean and tighten                         freq=   4  sections= 1  tfidf=0.007919
+    solenoid battery terminal                 freq=   4  sections= 1  tfidf=0.007919
+    clutch switch                             freq=   5  sections= 3  tfidf=0.007780
+    if less than                              freq=   5  sections= 3  tfidf=0.007780
+    this section contains                     freq=   5  sections= 4  tfidf=0.007098
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=   6  also_in: 6(66), 6A1(80), 6B(25), 6C(16), 6D1(11), 6D2(6)
+    switch                               here=  17  also_in: 6(14), 6A1(13), 6B(27), 6D1(4), 6D2(11), 6D3(11)
+    battery                              here=  21  also_in: 6(4), 6A1(22), 6B(8), 6C(14), 6D1(153), 6D2(19)
+    cable                                here=   9  also_in: 6A1(36), 6B(8), 6C(21), 6D1(32), 6D2(4), 6D3(9)
+    system                               here=   8  also_in: 6(13), 6A1(9), 6B(33), 6C(54), 6D1(7), 6D4(13)
+    ignition                             here=  16  also_in: 6(13), 6A1(5), 6D1(4), 6D2(8), 6D3(7), 6D4(65)
+    wire                                 here=   3  also_in: 6(8), 6A1(7), 6C(4), 6D2(8), 6D3(17), 6D4(35)
+    connector                            here=   2  also_in: 6(7), 6C(5), 6D3(6), 6D4(14), 6D5(3), 6E(27)
+    position                             here=   2  also_in: 6(8), 6A1(13), 6C(5), 6D2(9), 6D4(6), 6E(8)
+    two                                  here=   1  also_in: 6A1(28), 6C(10), 6D1(3), 6D2(11), 6D3(5), 6D4(3)
+    electrical                           here=   7  also_in: 6(8), 6C(8), 6D1(15), 6D4(6), 6E(6), 6E2(51)
+    repair                               here=   7  also_in: 6(10), 6C(4), 6D2(7), 6D3(14), 6D4(5), 6E(6)
+    tighten                              here=   4  also_in: 6(10), 6A1(23), 6B(4), 6D1(5), 6D2(6), 6D3(8)
+    high                                 here=   1  also_in: 6(4), 6A1(5), 6D1(4), 6D3(3), 6D4(16), 6E(5)
+    terminal                             here=  12  also_in: 6D1(7), 6D2(3), 6D3(33), 6D4(8), 6E(43), 6E2(171)
+    diagnosis                            here=   9  also_in: 6(19), 6D1(3), 6D4(5), 6E(6), 6E2(95), 8(17)
+    turn                                 here=   3  also_in: 6A1(10), 6D1(5), 6D3(9), 6D4(14), 6E2(21), 8(47)
+    one                                  here=   3  also_in: 6A1(15), 6C(3), 6D1(4), 6E(10), 6E2(26), 8(29)
+    components                           here=   2  also_in: 6C(8), 6D1(4), 6D2(4), 6D4(4), 6E(8), 6E2(23)
+    circuit                              here=   1  also_in: 6D2(8), 6D3(3), 6D4(4), 6E(29), 6E2(216), 8(65)
+    voltage                              here=  23  also_in: 6D1(18), 6D3(46), 6D4(25), 6E(15), 6E2(230), 8(11)
+    ignition switch                      here=  10  also_in: 6D2(8), 6D3(6), 6D4(6), 6E2(31), 8(38), 8A(65)
+    connections                          here=   6  also_in: 6C(4), 6D3(8), 6D4(4), 6E(5), 6E2(17), 6F(4)
+    ground                               here=   4  also_in: 6D1(15), 6D3(11), 6D4(9), 6E(8), 6E2(103), 8(25)
+    wiring                               here=   3  also_in: 6D2(4), 6D4(8), 6D5(5), 6E(12), 6E2(38), 8(46)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    8A     (overlap=  413)  Electrical
+    6E2    (overlap=  400)  6E2
+    8      (overlap=  253)  8
+    6D1    (overlap=  224)  ENGINE — 6 > Battery
+    6E     (overlap=  206)  ENGINE — 6 > Driveability and Emissions
+    6D4    (overlap=  204)  ENGINE — 6 > Ignition System
+    6D3    (overlap=  201)  ENGINE — 6 > Charging System
+    6D2    (overlap=  192)  ENGINE — 6 > Cranking System
+
+================================================================================
+SECTION 6D1: ENGINE — 6 > Battery
+  Chunks: 39, Total term occurrences: 5594
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    battery                         freq= 153  sections=27  tfidf=0.016400
+    charging                        freq=  27  sections=12  tfidf=0.006597
+    charge                          freq=  22  sections=11  tfidf=0.005690
+    discharged                      freq=  18  sections= 8  tfidf=0.005581
+    batteries                       freq=  11  sections= 2  tfidf=0.005571
+    hydrometer                      freq=  13  sections= 4  tfidf=0.005397
+    ampere                          freq=  10  sections= 2  tfidf=0.005065
+    charger                         freq=  10  sections= 2  tfidf=0.005065
+    load                            freq=  19  sections=15  tfidf=0.003937
+    jump                            freq=  10  sections= 5  tfidf=0.003826
+    hours                           freq=  11  sections= 7  tfidf=0.003643
+    dot                             freq=   8  sections= 3  tfidf=0.003640
+    retainer                        freq=  14  sections=11  tfidf=0.003621
+    voltage                         freq=  18  sections=16  tfidf=0.003535
+    estimated                       freq=   6  sections= 1  tfidf=0.003474
+    amps                            freq=   9  sections= 5  tfidf=0.003443
+    current                         freq=  17  sections=16  tfidf=0.003339
+    cable                           freq=  32  sections=29  tfidf=0.003035
+    minimum                         freq=  10  sections= 9  tfidf=0.002912
+    electrolyte                     freq=   7  sections= 4  tfidf=0.002906
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    discharged battery                        freq=  11  sections= 1  tfidf=0.006369
+    ground bolt                               freq=  11  sections= 1  tfidf=0.006369
+    completely discharged                     freq=   8  sections= 1  tfidf=0.004632
+    a completely discharged                   freq=   8  sections= 1  tfidf=0.004632
+    replacement number                        freq=   8  sections= 1  tfidf=0.004632
+    test load                                 freq=   8  sections= 1  tfidf=0.004632
+    load amps                                 freq=   8  sections= 1  tfidf=0.004632
+    test load amps                            freq=   8  sections= 1  tfidf=0.004632
+    positive battery cable                    freq=   7  sections= 1  tfidf=0.004053
+    minimum voltage                           freq=   7  sections= 1  tfidf=0.004053
+    battery retainer                          freq=   8  sections= 2  tfidf=0.004052
+    battery cable                             freq=  17  sections=13  tfidf=0.003929
+    the battery should                        freq=   7  sections= 2  tfidf=0.003545
+    completely discharged battery             freq=   6  sections= 1  tfidf=0.003474
+    charge the battery                        freq=   6  sections= 1  tfidf=0.003474
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=  11  also_in: 6(66), 6A1(80), 6B(25), 6C(16), 6D(6), 6D2(6)
+    switch                               here=   4  also_in: 6(14), 6A1(13), 6B(27), 6D(17), 6D2(11), 6D3(11)
+    battery                              here= 153  also_in: 6(4), 6A1(22), 6B(8), 6C(14), 6D(21), 6D2(19)
+    cable                                here=  32  also_in: 6A1(36), 6B(8), 6C(21), 6D(9), 6D2(4), 6D3(9)
+    system                               here=   7  also_in: 6(13), 6A1(9), 6B(33), 6C(54), 6D(8), 6D4(13)
+    ignition                             here=   4  also_in: 6(13), 6A1(5), 6D(16), 6D2(8), 6D3(7), 6D4(65)
+    disconnect                           here=   4  also_in: 6(4), 6A1(26), 6B(9), 6C(11), 6D2(5), 6D3(5)
+    negative                             here=  15  also_in: 6A1(22), 6B(8), 6C(14), 6D2(4), 6D3(6), 6D4(6)
+    connect                              here=   6  also_in: 6(6), 6A1(20), 6B(5), 6C(8), 6D2(3), 6D3(15)
+    cause                                here=   4  also_in: 6(155), 6A1(4), 6B(14), 6D3(3), 6D4(5), 6E(6)
+    open                                 here=   2  also_in: 6(3), 6A1(4), 6B(9), 6D3(3), 6D4(3), 6E(9)
+    electrical                           here=  15  also_in: 6(8), 6C(8), 6D(7), 6D4(6), 6E(6), 6E2(51)
+    temperature                          here=  10  also_in: 6A1(12), 6B(9), 6D3(4), 6D4(5), 6D5(3), 6E(11)
+    damage                               here=  10  also_in: 6(4), 6A1(15), 6C(8), 6D4(3), 6E(7), 6E2(25)
+    tighten                              here=   5  also_in: 6(10), 6A1(23), 6B(4), 6D(4), 6D2(6), 6D3(8)
+    two                                  here=   3  also_in: 6A1(28), 6C(10), 6D2(11), 6D3(5), 6D4(3), 6E2(11)
+    terminal                             here=   7  also_in: 6D(12), 6D2(3), 6D3(33), 6D4(8), 6E(43), 6E2(171)
+    end                                  here=   6  also_in: 6(5), 6A1(27), 6C(7), 6D2(25), 6D3(33), 6E2(7)
+    fuse                                 here=   6  also_in: 6(5), 6D3(4), 6D4(5), 6E(10), 6E2(74), 8(75)
+    turn                                 here=   5  also_in: 6A1(10), 6D(3), 6D3(9), 6D4(14), 6E2(21), 8(47)
+    body                                 here=   5  also_in: 6(10), 6A1(40), 6C(6), 6D4(3), 6E(5), 6E2(92)
+    high                                 here=   4  also_in: 6(4), 6A1(5), 6D3(3), 6D4(16), 6E(5), 6E2(58)
+    one                                  here=   4  also_in: 6A1(15), 6C(3), 6D(3), 6E(10), 6E2(26), 8(29)
+    nut                                  here=   4  also_in: 6A1(21), 6B(4), 6C(5), 6D2(6), 6D3(20), 6E2(3)
+    diagnosis                            here=   3  also_in: 6(19), 6D(9), 6D4(5), 6E(6), 6E2(95), 8(17)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    6E2    (overlap=  891)  6E2
+    8A     (overlap=  775)  Electrical
+    8      (overlap=  670)  8
+    6A1    (overlap=  547)  ENGINE — 6 > Engine Mechanical
+    6D3    (overlap=  519)  ENGINE — 6 > Charging System
+    6D4    (overlap=  420)  ENGINE — 6 > Ignition System
+    6E     (overlap=  401)  ENGINE — 6 > Driveability and Emissions
+    6D2    (overlap=  371)  ENGINE — 6 > Cranking System
+
+================================================================================
+SECTION 6D2: ENGINE — 6 > Cranking System
+  Chunks: 63, Total term occurrences: 4897
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    commutator                      freq=  33  sections= 2  tfidf=0.019093
+    starter                         freq=  73  sections=18  tfidf=0.014719
+    armature                        freq=  29  sections= 5  tfidf=0.012673
+    solenoid                        freq=  39  sections=11  tfidf=0.011523
+    pinion                          freq=  32  sections= 9  tfidf=0.010646
+    overrunning                     freq=  14  sections= 1  tfidf=0.009259
+    planetary                       freq=  16  sections= 3  tfidf=0.008317
+    test                            freq=  38  sections=19  tfidf=0.007264
+    brush                           freq=  23  sections=11  tfidf=0.006796
+    volts                           freq=  19  sections=10  tfidf=0.005952
+    housing                         freq=  34  sections=22  tfidf=0.005529
+    ring                            freq=  27  sections=18  tfidf=0.005444
+    absorber                        freq=  11  sections= 5  tfidf=0.004807
+    starter-to-solenoid             freq=   7  sections= 1  tfidf=0.004630
+    load                            freq=  19  sections=15  tfidf=0.004498
+    snap                            freq=  17  sections=13  tfidf=0.004488
+    shock                           freq=  11  sections= 6  tfidf=0.004461
+    transmission                    freq=  19  sections=17  tfidf=0.004041
+    field                           freq=  12  sections= 9  tfidf=0.003992
+    carrier                         freq=  12  sections= 9  tfidf=0.003992
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    starter solenoid                          freq=  33  sections= 5  tfidf=0.014422
+    commutator end                            freq=  21  sections= 1  tfidf=0.013889
+    test volts                                freq=  19  sections= 1  tfidf=0.012566
+    no load test                              freq=  19  sections= 1  tfidf=0.012566
+    load test volts                           freq=  19  sections= 1  tfidf=0.012566
+    starter assembly                          freq=  19  sections= 3  tfidf=0.009876
+    overrunning clutch                        freq=  14  sections= 1  tfidf=0.009259
+    commutator end housing                    freq=  14  sections= 1  tfidf=0.009259
+    end housing                               freq=  16  sections= 2  tfidf=0.009257
+    load test                                 freq=  19  sections= 4  tfidf=0.009011
+    carrier shaft                             freq=  11  sections= 1  tfidf=0.007275
+    planetary carrier shaft                   freq=  11  sections= 1  tfidf=0.007275
+    transmission equipped                     freq=  13  sections= 3  tfidf=0.006758
+    transmission equipped vehicles            freq=  13  sections= 3  tfidf=0.006758
+    field assembly                            freq=  10  sections= 1  tfidf=0.006614
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=   6  also_in: 6(66), 6A1(80), 6B(25), 6C(16), 6D(6), 6D1(11)
+    switch                               here=  11  also_in: 6(14), 6A1(13), 6B(27), 6D(17), 6D1(4), 6D3(11)
+    battery                              here=  19  also_in: 6(4), 6A1(22), 6B(8), 6C(14), 6D(21), 6D1(153)
+    cable                                here=   4  also_in: 6A1(36), 6B(8), 6C(21), 6D(9), 6D1(32), 6D3(9)
+    ignition                             here=   8  also_in: 6(13), 6A1(5), 6D(16), 6D1(4), 6D3(7), 6D4(65)
+    disconnect                           here=   5  also_in: 6(4), 6A1(26), 6B(9), 6C(11), 6D1(4), 6D3(5)
+    wire                                 here=   8  also_in: 6(8), 6A1(7), 6C(4), 6D(3), 6D3(17), 6D4(35)
+    negative                             here=   4  also_in: 6A1(22), 6B(8), 6C(14), 6D1(15), 6D3(6), 6D4(6)
+    connect                              here=   3  also_in: 6(6), 6A1(20), 6B(5), 6C(8), 6D1(6), 6D3(15)
+    damage                               here=   2  also_in: 6(4), 6A1(15), 6C(8), 6D1(10), 6D4(3), 6E(7)
+    two                                  here=  11  also_in: 6A1(28), 6C(10), 6D1(3), 6D3(5), 6D4(3), 6E2(11)
+    position                             here=   9  also_in: 6(8), 6A1(13), 6C(5), 6D4(6), 6E(8), 6E2(56)
+    unit                                 here=   7  also_in: 6A1(4), 6B(3), 6C(23), 6D3(11), 6E(6), 6E2(11)
+    repair                               here=   7  also_in: 6(10), 6C(4), 6D(7), 6D3(14), 6D4(5), 6E(6)
+    tighten                              here=   6  also_in: 6(10), 6A1(23), 6B(4), 6D(4), 6D1(5), 6D3(8)
+    diagnosis                            here=   2  also_in: 6(19), 6D(9), 6D1(3), 6D4(5), 6E(6), 6E2(95)
+    assembly                             here=  50  also_in: 6A1(22), 6C(23), 6D3(4), 6D4(21), 6E2(51), 8(120)
+    end                                  here=  25  also_in: 6(5), 6A1(27), 6C(7), 6D1(6), 6D3(33), 6E2(7)
+    cap                                  here=  10  also_in: 6(3), 6A1(50), 6B(40), 6C(30), 6D4(31), 6E2(29)
+    nut                                  here=   6  also_in: 6A1(21), 6B(4), 6C(5), 6D1(4), 6D3(20), 6E2(3)
+    terminal                             here=   3  also_in: 6D(12), 6D1(7), 6D3(33), 6D4(8), 6E(43), 6E2(171)
+    in this section                      here=   9  also_in: 6C(17), 6D1(7), 6D3(16), 6D4(10), 6E(4), 6E2(13)
+    circuit                              here=   8  also_in: 6D3(3), 6D4(4), 6E(29), 6E2(216), 8(65), 8A(150)
+    ignition switch                      here=   8  also_in: 6D(10), 6D3(6), 6D4(6), 6E2(31), 8(38), 8A(65)
+    bolt                                 here=   7  also_in: 6A1(76), 6B(7), 6D1(11), 6D3(10), 6E2(4), 8(10)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    6E2    (overlap=  781)  6E2
+    8A     (overlap=  703)  Electrical
+    6A1    (overlap=  603)  ENGINE — 6 > Engine Mechanical
+    8      (overlap=  578)  8
+    6D3    (overlap=  558)  ENGINE — 6 > Charging System
+    6D4    (overlap=  427)  ENGINE — 6 > Ignition System
+    6D1    (overlap=  357)  ENGINE — 6 > Battery
+    8B     (overlap=  275)  Electrical Wiring
+
+================================================================================
+SECTION 6D3: ENGINE — 6 > Charging System
+  Chunks: 53, Total term occurrences: 5510
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    generator                       freq=  97  sections=12  tfidf=0.024063
+    regulator                       freq=  38  sections= 7  tfidf=0.012775
+    voltage                         freq=  46  sections=16  tfidf=0.009172
+    stator                          freq=  22  sections= 6  tfidf=0.007929
+    output                          freq=  28  sections=11  tfidf=0.007353
+    frame                           freq=  25  sections=10  tfidf=0.006960
+    terminal                        freq=  33  sections=16  tfidf=0.006580
+    lamp                            freq=  29  sections=15  tfidf=0.006101
+    rotor                           freq=  20  sections=11  tfidf=0.005252
+    test                            freq=  30  sections=19  tfidf=0.005097
+    ammeter                         freq=  12  sections= 4  tfidf=0.005058
+    battery                         freq=  43  sections=27  tfidf=0.004679
+    rectifier                       freq=   9  sections= 2  tfidf=0.004628
+    pulley                          freq=  13  sections= 7  tfidf=0.004370
+    amps                            freq=  11  sections= 5  tfidf=0.004272
+    rated                           freq=  10  sections= 4  tfidf=0.004215
+    voltmeter                       freq=  13  sections=11  tfidf=0.003414
+    rating                          freq=   8  sections= 4  tfidf=0.003372
+    drive                           freq=  22  sections=21  tfidf=0.003357
+    volts                           freq=  12  sections=10  tfidf=0.003341
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    end frame                                 freq=  20  sections= 1  tfidf=0.011756
+    voltage regulator                         freq=  19  sections= 3  tfidf=0.008778
+    rear end frame                            freq=  13  sections= 1  tfidf=0.007641
+    generator b                               freq=  13  sections= 1  tfidf=0.007641
+    generator b terminal                      freq=  13  sections= 1  tfidf=0.007641
+    the voltage regulator                     freq=  13  sections= 1  tfidf=0.007641
+    b terminal                                freq=  14  sections= 2  tfidf=0.007199
+    generator procedure in                    freq=  12  sections= 1  tfidf=0.007053
+    rear end                                  freq=  20  sections= 7  tfidf=0.006724
+    drive end                                 freq=  12  sections= 2  tfidf=0.006170
+    end bearing                               freq=   9  sections= 1  tfidf=0.005290
+    rated output                              freq=   9  sections= 1  tfidf=0.005290
+    the rear end                              freq=  10  sections= 2  tfidf=0.005142
+    unit repair generator                     freq=   8  sections= 1  tfidf=0.004702
+    repair generator procedure                freq=   8  sections= 1  tfidf=0.004702
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=  11  also_in: 6(66), 6A1(80), 6B(25), 6C(16), 6D(6), 6D1(11)
+    switch                               here=  11  also_in: 6(14), 6A1(13), 6B(27), 6D(17), 6D1(4), 6D2(11)
+    system                               here=   2  also_in: 6(13), 6A1(9), 6B(33), 6C(54), 6D(8), 6D1(7)
+    battery                              here=  43  also_in: 6(4), 6A1(22), 6B(8), 6C(14), 6D(21), 6D1(153)
+    cable                                here=   9  also_in: 6A1(36), 6B(8), 6C(21), 6D(9), 6D1(32), 6D2(4)
+    ignition                             here=   7  also_in: 6(13), 6A1(5), 6D(16), 6D1(4), 6D2(8), 6D4(65)
+    disconnect                           here=   5  also_in: 6(4), 6A1(26), 6B(9), 6C(11), 6D1(4), 6D2(5)
+    wire                                 here=  17  also_in: 6(8), 6A1(7), 6C(4), 6D(3), 6D2(8), 6D4(35)
+    connect                              here=  15  also_in: 6(6), 6A1(20), 6B(5), 6C(8), 6D1(6), 6D2(3)
+    negative                             here=   6  also_in: 6A1(22), 6B(8), 6C(14), 6D1(15), 6D2(4), 6D4(6)
+    cause                                here=   3  also_in: 6(155), 6A1(4), 6B(14), 6D1(4), 6D4(5), 6E(6)
+    repair                               here=  14  also_in: 6(10), 6C(4), 6D(7), 6D2(7), 6D4(5), 6E(6)
+    unit                                 here=  11  also_in: 6A1(4), 6B(3), 6C(23), 6D2(7), 6E(6), 6E2(11)
+    tighten                              here=   8  also_in: 6(10), 6A1(23), 6B(4), 6D(4), 6D1(5), 6D2(6)
+    connector                            here=   6  also_in: 6(7), 6C(5), 6D4(14), 6D5(3), 6E(27), 6E2(103)
+    two                                  here=   5  also_in: 6A1(28), 6C(10), 6D1(3), 6D2(11), 6D4(3), 6E2(11)
+    temperature                          here=   4  also_in: 6A1(12), 6B(9), 6D1(10), 6D4(5), 6D5(3), 6E(11)
+    open                                 here=   3  also_in: 6(3), 6A1(4), 6B(9), 6D4(3), 6E(9), 6E2(76)
+    diagnosis                            here=   2  also_in: 6(19), 6D(9), 6D1(3), 6D4(5), 6E(6), 6E2(95)
+    terminal                             here=  33  also_in: 6D(12), 6D1(7), 6D2(3), 6D4(8), 6E(43), 6E2(171)
+    end                                  here=  33  also_in: 6(5), 6A1(27), 6C(7), 6D1(6), 6D2(25), 6E2(7)
+    nut                                  here=  20  also_in: 6A1(21), 6B(4), 6C(5), 6D1(4), 6D2(6), 6E2(3)
+    turn                                 here=   9  also_in: 6A1(10), 6D(3), 6D1(5), 6D4(14), 6E2(21), 8(47)
+    assembly                             here=   4  also_in: 6A1(22), 6C(23), 6D2(50), 6D4(21), 6E2(51), 8(120)
+    fuse                                 here=   4  also_in: 6(5), 6D1(6), 6D4(5), 6E(10), 6E2(74), 8(75)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    6E2    (overlap= 1015)  6E2
+    8A     (overlap=  908)  Electrical
+    8      (overlap=  721)  8
+    6A1    (overlap=  657)  ENGINE — 6 > Engine Mechanical
+    6D4    (overlap=  591)  ENGINE — 6 > Ignition System
+    6D2    (overlap=  576)  ENGINE — 6 > Cranking System
+    6D1    (overlap=  508)  ENGINE — 6 > Battery
+    6E     (overlap=  354)  ENGINE — 6 > Driveability and Emissions
+
+================================================================================
+SECTION 6D4: ENGINE — 6 > Ignition System
+  Chunks: 73, Total term occurrences: 8422
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    spark                           freq= 134  sections=12  tfidf=0.021748
+    distributor                     freq= 106  sections=11  tfidf=0.018211
+    plug                            freq=  90  sections=17  tfidf=0.011129
+    timing                          freq=  50  sections= 8  tfidf=0.010298
+    pickup                          freq=  29  sections= 4  tfidf=0.007997
+    coil                            freq=  69  sections=19  tfidf=0.007669
+    ignition                        freq=  65  sections=24  tfidf=0.005502
+    centrifugal                     freq=  18  sections= 3  tfidf=0.005440
+    vacuum                          freq=  39  sections=15  tfidf=0.005368
+    rotor                           freq=  30  sections=11  tfidf=0.005154
+    suffix                          freq=  11  sections= 1  tfidf=0.004230
+    insulator                       freq=  18  sections= 7  tfidf=0.003959
+    gap                             freq=  16  sections= 6  tfidf=0.003773
+    plugs                           freq=  22  sections=12  tfidf=0.003571
+    ignitor                         freq=   9  sections= 1  tfidf=0.003461
+    cap                             freq=  31  sections=19  tfidf=0.003446
+    shell                           freq=  11  sections= 3  tfidf=0.003325
+    voltage                         freq=  25  sections=16  tfidf=0.003261
+    boot                            freq=  18  sections=11  tfidf=0.003092
+    condenser                       freq=  15  sections= 8  tfidf=0.003089
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    spark plug                                freq=  85  sections= 9  tfidf=0.016443
+    the spark plug                            freq=  37  sections= 2  tfidf=0.012447
+    distributor housing                       freq=  29  sections= 1  tfidf=0.011152
+    pickup coil                               freq=  25  sections= 2  tfidf=0.008410
+    distributor cap                           freq=  23  sections= 4  tfidf=0.006342
+    spark control                             freq=  18  sections= 2  tfidf=0.006055
+    ignition coil                             freq=  26  sections= 7  tfidf=0.005719
+    generator assembly                        freq=  14  sections= 1  tfidf=0.005384
+    the distributor housing                   freq=  13  sections= 1  tfidf=0.004999
+    spark plugs                               freq=  22  sections= 7  tfidf=0.004839
+    base plate                                freq=  14  sections= 2  tfidf=0.004710
+    signal rotor                              freq=  15  sections= 3  tfidf=0.004534
+    vacuum centrifugal                        freq=  11  sections= 1  tfidf=0.004230
+    the high voltage                          freq=  11  sections= 1  tfidf=0.004230
+    plug wire                                 freq=  16  sections= 5  tfidf=0.004066
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=  30  also_in: 6(66), 6A1(80), 6B(25), 6C(16), 6D(6), 6D1(11)
+    switch                               here=   9  also_in: 6(14), 6A1(13), 6B(27), 6D(17), 6D1(4), 6D2(11)
+    battery                              here=  14  also_in: 6(4), 6A1(22), 6B(8), 6C(14), 6D(21), 6D1(153)
+    system                               here=  13  also_in: 6(13), 6A1(9), 6B(33), 6C(54), 6D(8), 6D1(7)
+    cable                                here=   6  also_in: 6A1(36), 6B(8), 6C(21), 6D(9), 6D1(32), 6D2(4)
+    ignition                             here=  65  also_in: 6(13), 6A1(5), 6D(16), 6D1(4), 6D2(8), 6D3(7)
+    disconnect                           here=   8  also_in: 6(4), 6A1(26), 6B(9), 6C(11), 6D1(4), 6D2(5)
+    wire                                 here=  35  also_in: 6(8), 6A1(7), 6C(4), 6D(3), 6D2(8), 6D3(17)
+    connect                              here=   8  also_in: 6(6), 6A1(20), 6B(5), 6C(8), 6D1(6), 6D2(3)
+    negative                             here=   6  also_in: 6A1(22), 6B(8), 6C(14), 6D1(15), 6D2(4), 6D3(6)
+    cause                                here=   5  also_in: 6(155), 6A1(4), 6B(14), 6D1(4), 6D3(3), 6E(6)
+    connector                            here=  14  also_in: 6(7), 6C(5), 6D3(6), 6D5(3), 6E(27), 6E2(103)
+    position                             here=   6  also_in: 6(8), 6A1(13), 6C(5), 6D2(9), 6E(8), 6E2(56)
+    electrical                           here=   6  also_in: 6(8), 6C(8), 6D(7), 6D1(15), 6E(6), 6E2(51)
+    repair                               here=   5  also_in: 6(10), 6C(4), 6D(7), 6D2(7), 6D3(14), 6E(6)
+    temperature                          here=   5  also_in: 6A1(12), 6B(9), 6D1(10), 6D3(4), 6D5(3), 6E(11)
+    tighten                              here=   5  also_in: 6(10), 6A1(23), 6B(4), 6D(4), 6D1(5), 6D2(6)
+    two                                  here=   3  also_in: 6A1(28), 6C(10), 6D1(3), 6D2(11), 6D3(5), 6E2(11)
+    open                                 here=   3  also_in: 6(3), 6A1(4), 6B(9), 6D3(3), 6E(9), 6E2(76)
+    damage                               here=   3  also_in: 6(4), 6A1(15), 6C(8), 6D1(10), 6E(7), 6E2(25)
+    cap                                  here=  31  also_in: 6(3), 6A1(50), 6B(40), 6C(30), 6D2(10), 6E2(29)
+    assembly                             here=  21  also_in: 6A1(22), 6C(23), 6D2(50), 6D3(4), 6E2(51), 8(120)
+    high                                 here=  16  also_in: 6(4), 6A1(5), 6D1(4), 6D3(3), 6E(5), 6E2(58)
+    turn                                 here=  14  also_in: 6A1(10), 6D(3), 6D1(5), 6D3(9), 6E2(21), 8(47)
+    fuel                                 here=  12  also_in: 6(24), 6A1(20), 6C(314), 6E(24), 6E2(437), 6F(4)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    6E2    (overlap= 2210)  6E2
+    8A     (overlap= 1114)  Electrical
+    6A1    (overlap=  934)  ENGINE — 6 > Engine Mechanical
+    8      (overlap=  825)  8
+    6E     (overlap=  759)  ENGINE — 6 > Driveability and Emissions
+    6D3    (overlap=  606)  ENGINE — 6 > Charging System
+    6      (overlap=  579)  6
+    6C     (overlap=  465)  ENGINE — 6 > Fuel System
+
+================================================================================
+SECTION 6D5: ENGINE — 6 > Engine Wiring
+  Chunks: 3, Total term occurrences: 235
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    sensor                          freq=   5  sections=19  tfidf=0.019917
+    wiring                          freq=   5  sections=21  tfidf=0.017889
+    temperature                     freq=   3  sections=19  tfidf=0.011950
+    engine                          freq=   5  sections=30  tfidf=0.010592
+    connector                       freq=   3  sections=25  tfidf=0.008601
+    switch                          freq=   3  sections=30  tfidf=0.006355
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    engine wiring                             freq=   4  sections= 5  tfidf=0.036427
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=   5  also_in: 6(66), 6A1(80), 6B(25), 6C(16), 6D(6), 6D1(11)
+    switch                               here=   3  also_in: 6(14), 6A1(13), 6B(27), 6D(17), 6D1(4), 6D2(11)
+    battery                              here=   1  also_in: 6(4), 6A1(22), 6B(8), 6C(14), 6D(21), 6D1(153)
+    position                             here=   2  also_in: 6(8), 6A1(13), 6C(5), 6D2(9), 6D4(6), 6E(8)
+    unit                                 here=   1  also_in: 6A1(4), 6B(3), 6C(23), 6D2(7), 6D3(11), 6E(6)
+    temperature                          here=   3  also_in: 6A1(12), 6B(9), 6D1(10), 6D3(4), 6D4(5), 6E(11)
+    connector                            here=   3  also_in: 6(7), 6C(5), 6D3(6), 6D4(14), 6E(27), 6E2(103)
+    fuel                                 here=   1  also_in: 6(24), 6A1(20), 6C(314), 6D4(12), 6E(24), 6E2(437)
+    terminal                             here=   1  also_in: 6D(12), 6D1(7), 6D2(3), 6D3(33), 6D4(8), 6E(43)
+    pressure                             here=   2  also_in: 6(10), 6A1(36), 6B(15), 6C(44), 6E(9), 6E2(179)
+    connections                          here=   2  also_in: 6C(4), 6D(6), 6D3(8), 6D4(4), 6E(5), 6E2(17)
+    air                                  here=   1  also_in: 6(17), 6A1(41), 6B(10), 6D4(13), 6E(18), 6E2(213)
+    manifold                             here=   1  also_in: 6(12), 6A1(44), 6B(5), 6D4(4), 6E(12), 6E2(105)
+    generator                            here=   1  also_in: 6A1(5), 6B(12), 6D(3), 6D1(6), 6D3(97), 6D4(15)
+    ground                               here=   1  also_in: 6D(4), 6D1(15), 6D3(11), 6D4(9), 6E(8), 6E2(103)
+    wiring                               here=   5  also_in: 6D(3), 6D2(4), 6D4(8), 6E(12), 6E2(38), 8(46)
+    gage                                 here=   1  also_in: 6(12), 6A1(29), 6B(4), 6E(3), 6E2(14), 8(57)
+    vacuum                               here=   1  also_in: 6(18), 6A1(12), 6B(6), 6C(5), 6D4(39), 6E(19)
+    speed                                here=   1  also_in: 6A1(7), 6D3(6), 6D4(5), 6E(10), 6E2(90), 8(7)
+    control                              here=   1  also_in: 6A1(8), 6C(6), 6D4(25), 6E(30), 6E2(111), 8(21)
+    solenoid                             here=   1  also_in: 6A1(6), 6D(11), 6D1(3), 6D2(39), 6E(4), 6E2(55)
+    harness                              here=   1  also_in: 6(3), 6C(3), 6D4(5), 6E(8), 6E2(31), 8(12)
+    motor                                here=   2  also_in: 6B(5), 6C(10), 6D2(15), 6E2(3), 8(71), 8A(31)
+    valve                                here=   2  also_in: 6(18), 6A1(227), 6B(26), 6C(16), 6E(3), 6E2(229)
+    throttle                             here=   2  also_in: 6(18), 6A1(33), 6C(7), 6D4(3), 6E(10), 6E2(242)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    8A     (overlap=   49)  Electrical
+    6E     (overlap=   48)  ENGINE — 6 > Driveability and Emissions
+    6E2    (overlap=   48)  6E2
+    6A1    (overlap=   37)  ENGINE — 6 > Engine Mechanical
+    6D4    (overlap=   37)  ENGINE — 6 > Ignition System
+    8      (overlap=   35)  8
+    6      (overlap=   32)  6
+    6D     (overlap=   26)  ENGINE — 6 > Engine Electrical
+
+================================================================================
+SECTION 6E: ENGINE — 6 > Driveability and Emissions
+  Chunks: 51, Total term occurrences: 8938
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    ecm                             freq=  42  sections=11  tfidf=0.006799
+    code                            freq=  29  sections= 7  tfidf=0.006010
+    diagnostic                      freq=  35  sections=12  tfidf=0.005353
+    terminal                        freq=  43  sections=16  tfidf=0.005285
+    oxygen                          freq=  22  sections= 8  tfidf=0.004270
+    codes                           freq=  19  sections= 7  tfidf=0.003938
+    emission                        freq=  18  sections= 9  tfidf=0.003281
+    weather-pack                    freq=   9  sections= 1  tfidf=0.003261
+    trouble                         freq=  16  sections= 8  tfidf=0.003105
+    exhaust                         freq=  19  sections=11  tfidf=0.003076
+    metri-pack                      freq=   8  sections= 1  tfidf=0.002899
+    j29533a                         freq=   8  sections= 1  tfidf=0.002899
+    bt8127                          freq=   8  sections= 1  tfidf=0.002899
+    stored                          freq=  11  sections= 4  tfidf=0.002858
+    sensor                          freq=  27  sections=19  tfidf=0.002828
+    circuit                         freq=  29  sections=21  tfidf=0.002728
+    fuel                            freq=  24  sections=18  tfidf=0.002651
+    light                           freq=  26  sections=20  tfidf=0.002581
+    label                           freq=  14  sections= 9  tfidf=0.002552
+    engine                          freq=  45  sections=30  tfidf=0.002506
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    engine light                              freq=  14  sections= 2  tfidf=0.004438
+    check engine light                        freq=  14  sections= 2  tfidf=0.004438
+    used for removing                         freq=  11  sections= 1  tfidf=0.003986
+    oxygen sensor                             freq=  19  sections= 8  tfidf=0.003687
+    location of information                   freq=   9  sections= 1  tfidf=0.003261
+    the check engine                          freq=  10  sections= 2  tfidf=0.003170
+    j29533a bt8127                            freq=   8  sections= 1  tfidf=0.002899
+    sensor wrench                             freq=   8  sections= 1  tfidf=0.002899
+    oxygen sensor wrench                      freq=   8  sections= 1  tfidf=0.002899
+    for removing or                           freq=   8  sections= 1  tfidf=0.002899
+    removing or installing                    freq=   8  sections= 1  tfidf=0.002899
+    or installing the                         freq=   8  sections= 1  tfidf=0.002899
+    installing the oxygen                     freq=   8  sections= 1  tfidf=0.002899
+    trouble code                              freq=   9  sections= 2  tfidf=0.002853
+    control information                       freq=   9  sections= 3  tfidf=0.002563
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=  45  also_in: 6(66), 6A1(80), 6B(25), 6C(16), 6D(6), 6D1(11)
+    switch                               here=   9  also_in: 6(14), 6A1(13), 6B(27), 6D(17), 6D1(4), 6D2(11)
+    system                               here=  32  also_in: 6(13), 6A1(9), 6B(33), 6C(54), 6D(8), 6D1(7)
+    cable                                here=   5  also_in: 6A1(36), 6B(8), 6C(21), 6D(9), 6D1(32), 6D2(4)
+    ignition                             here=  10  also_in: 6(13), 6A1(5), 6D(16), 6D1(4), 6D2(8), 6D3(7)
+    wire                                 here=  17  also_in: 6(8), 6A1(7), 6C(4), 6D(3), 6D2(8), 6D3(17)
+    cause                                here=   6  also_in: 6(155), 6A1(4), 6B(14), 6D1(4), 6D3(3), 6D4(5)
+    connector                            here=  27  also_in: 6(7), 6C(5), 6D3(6), 6D4(14), 6D5(3), 6E2(103)
+    temperature                          here=  11  also_in: 6A1(12), 6B(9), 6D1(10), 6D3(4), 6D4(5), 6D5(3)
+    open                                 here=   9  also_in: 6(3), 6A1(4), 6B(9), 6D3(3), 6D4(3), 6E2(76)
+    position                             here=   8  also_in: 6(8), 6A1(13), 6C(5), 6D2(9), 6D4(6), 6E2(56)
+    damage                               here=   7  also_in: 6(4), 6A1(15), 6C(8), 6D1(10), 6D4(3), 6E2(25)
+    repair                               here=   6  also_in: 6(10), 6C(4), 6D(7), 6D2(7), 6D3(14), 6D4(5)
+    electrical                           here=   6  also_in: 6(8), 6C(8), 6D(7), 6D1(15), 6D4(6), 6E2(51)
+    unit                                 here=   6  also_in: 6A1(4), 6B(3), 6C(23), 6D2(7), 6D3(11), 6E2(11)
+    terminal                             here=  43  also_in: 6D(12), 6D1(7), 6D2(3), 6D3(33), 6D4(8), 6E2(171)
+    fuel                                 here=  24  also_in: 6(24), 6A1(20), 6C(314), 6D4(12), 6E2(437), 6F(4)
+    one                                  here=  10  also_in: 6A1(15), 6C(3), 6D(3), 6D1(4), 6E2(26), 8(29)
+    fuse                                 here=  10  also_in: 6(5), 6D1(6), 6D3(4), 6D4(5), 6E2(74), 8(75)
+    specification                        here=   9  also_in: 6(4), 6A1(13), 6B(3), 6C(3), 6D3(3), 6D4(6)
+    diagnosis                            here=   6  also_in: 6(19), 6D(9), 6D1(3), 6D4(5), 6E2(95), 8(17)
+    body                                 here=   5  also_in: 6(10), 6A1(40), 6C(6), 6D1(5), 6D4(3), 6E2(92)
+    high                                 here=   5  also_in: 6(4), 6A1(5), 6D1(4), 6D3(3), 6D4(16), 6E2(58)
+    pump                                 here=   4  also_in: 6(9), 6A1(70), 6B(36), 6C(58), 6D4(3), 6E2(83)
+    circuit                              here=  29  also_in: 6D2(8), 6D3(3), 6D4(4), 6E2(216), 8(65), 8A(150)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    6E2    (overlap= 2164)  6E2
+    8A     (overlap= 1258)  Electrical
+    8      (overlap=  804)  8
+    6A1    (overlap=  762)  ENGINE — 6 > Engine Mechanical
+    6D4    (overlap=  759)  ENGINE — 6 > Ignition System
+    6      (overlap=  547)  6
+    6C     (overlap=  484)  ENGINE — 6 > Fuel System
+    6D1    (overlap=  419)  ENGINE — 6 > Battery
+
+================================================================================
+SECTION 6E2: 6E2
+  Chunks: 545, Total term occurrences: 59368
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    ecm                             freq= 378  sections=11  tfidf=0.009213
+    fuel                            freq= 437  sections=18  tfidf=0.007268
+    code                            freq= 212  sections= 7  tfidf=0.006615
+    throttle                        freq= 242  sections=13  tfidf=0.005270
+    carline                         freq=  92  sections= 1  tfidf=0.005019
+    sensor                          freq= 301  sections=19  tfidf=0.004746
+    vin                             freq= 117  sections= 4  tfidf=0.004577
+    signal                          freq= 225  sections=15  tfidf=0.004393
+    voltage                         freq= 230  sections=16  tfidf=0.004256
+    injector                        freq= 126  sections= 6  tfidf=0.004215
+    eng                             freq=  77  sections= 1  tfidf=0.004201
+    valve                           freq= 229  sections=18  tfidf=0.003809
+    diagnostic                      freq= 139  sections=12  tfidf=0.003200
+    terminal                        freq= 171  sections=16  tfidf=0.003164
+    ignition                        freq= 258  sections=24  tfidf=0.003098
+    vacuum                          freq= 158  sections=15  tfidf=0.003085
+    circuit                         freq= 216  sections=21  tfidf=0.003059
+    light                           freq= 200  sections=20  tfidf=0.002989
+    tbi                             freq=  86  sections= 6  tfidf=0.002877
+    egr                             freq=  85  sections= 6  tfidf=0.002843
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    l vin                                     freq= 117  sections= 2  tfidf=0.005584
+    vin m                                     freq=  92  sections= 1  tfidf=0.005019
+    m carline                                 freq=  92  sections= 1  tfidf=0.005019
+    l vin m                                   freq=  92  sections= 1  tfidf=0.005019
+    vin m carline                             freq=  92  sections= 1  tfidf=0.005019
+    carline tbi                               freq=  79  sections= 1  tfidf=0.004310
+    m carline tbi                             freq=  79  sections= 1  tfidf=0.004310
+    eng run                                   freq=  77  sections= 1  tfidf=0.004201
+    wire color                                freq=  98  sections= 4  tfidf=0.003834
+    engine light                              freq=  78  sections= 2  tfidf=0.003722
+    check engine light                        freq=  78  sections= 2  tfidf=0.003722
+    voltage key                               freq=  55  sections= 1  tfidf=0.003000
+    voltage key on                            freq=  55  sections= 1  tfidf=0.003000
+    voltage eng                               freq=  52  sections= 1  tfidf=0.002837
+    voltage eng run                           freq=  52  sections= 1  tfidf=0.002837
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here= 325  also_in: 6(66), 6A1(80), 6B(25), 6C(16), 6D(6), 6D1(11)
+    switch                               here= 193  also_in: 6(14), 6A1(13), 6B(27), 6D(17), 6D1(4), 6D2(11)
+    system                               here= 185  also_in: 6(13), 6A1(9), 6B(33), 6C(54), 6D(8), 6D1(7)
+    battery                              here=  40  also_in: 6(4), 6A1(22), 6B(8), 6C(14), 6D(21), 6D1(153)
+    cable                                here=  24  also_in: 6A1(36), 6B(8), 6C(21), 6D(9), 6D1(32), 6D2(4)
+    ignition                             here= 258  also_in: 6(13), 6A1(5), 6D(16), 6D1(4), 6D2(8), 6D3(7)
+    disconnect                           here=  52  also_in: 6(4), 6A1(26), 6B(9), 6C(11), 6D1(4), 6D2(5)
+    wire                                 here= 284  also_in: 6(8), 6A1(7), 6C(4), 6D(3), 6D2(8), 6D3(17)
+    connect                              here=  49  also_in: 6(6), 6A1(20), 6B(5), 6C(8), 6D1(6), 6D2(3)
+    cause                                here=  34  also_in: 6(155), 6A1(4), 6B(14), 6D1(4), 6D3(3), 6D4(5)
+    negative                             here=  22  also_in: 6A1(22), 6B(8), 6C(14), 6D1(15), 6D2(4), 6D3(6)
+    temperature                          here= 131  also_in: 6A1(12), 6B(9), 6D1(10), 6D3(4), 6D4(5), 6D5(3)
+    connector                            here= 103  also_in: 6(7), 6C(5), 6D3(6), 6D4(14), 6D5(3), 6E(27)
+    open                                 here=  76  also_in: 6(3), 6A1(4), 6B(9), 6D3(3), 6D4(3), 6E(9)
+    position                             here=  56  also_in: 6(8), 6A1(13), 6C(5), 6D2(9), 6D4(6), 6E(8)
+    electrical                           here=  51  also_in: 6(8), 6C(8), 6D(7), 6D1(15), 6D4(6), 6E(6)
+    damage                               here=  25  also_in: 6(4), 6A1(15), 6C(8), 6D1(10), 6D4(3), 6E(7)
+    fuel                                 here= 437  also_in: 6(24), 6A1(20), 6C(314), 6D4(12), 6E(24), 6F(4)
+    terminal                             here= 171  also_in: 6D(12), 6D1(7), 6D2(3), 6D3(33), 6D4(8), 6E(43)
+    diagnosis                            here=  95  also_in: 6(19), 6D(9), 6D1(3), 6D4(5), 6E(6), 8(17)
+    body                                 here=  92  also_in: 6(10), 6A1(40), 6C(6), 6D1(5), 6D4(3), 6E(5)
+    pump                                 here=  83  also_in: 6(9), 6A1(70), 6B(36), 6C(58), 6D4(3), 6E(4)
+    fuse                                 here=  74  also_in: 6(5), 6D1(6), 6D3(4), 6D4(5), 6E(10), 8(75)
+    high                                 here=  58  also_in: 6(4), 6A1(5), 6D1(4), 6D3(3), 6D4(16), 6E(5)
+    assembly                             here=  51  also_in: 6A1(22), 6C(23), 6D2(50), 6D3(4), 6D4(21), 8(120)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    8A     (overlap= 5996)  Electrical
+    8      (overlap= 3489)  8
+    6A1    (overlap= 3373)  ENGINE — 6 > Engine Mechanical
+    6E     (overlap= 2475)  ENGINE — 6 > Driveability and Emissions
+    6D4    (overlap= 2350)  ENGINE — 6 > Ignition System
+    6C     (overlap= 2313)  ENGINE — 6 > Fuel System
+    6      (overlap= 1395)  6
+    6D3    (overlap= 1123)  ENGINE — 6 > Charging System
+
+================================================================================
+SECTION 6F: ENGINE — 6 > Exhaust System
+  Chunks: 16, Total term occurrences: 1314
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    exhaust                         freq=  24  sections=11  tfidf=0.026428
+    muffler                         freq=  14  sections= 4  tfidf=0.024744
+    catalytic                       freq=   8  sections= 4  tfidf=0.014139
+    converter                       freq=   9  sections= 7  tfidf=0.012688
+    correction                      freq=  13  sections=15  tfidf=0.011469
+    misfire                         freq=   3  sections= 2  tfidf=0.006469
+    rich                            freq=   3  sections= 2  tfidf=0.006469
+    manifold                        freq=   7  sections=15  tfidf=0.006176
+    possible                        freq=  15  sections=30  tfidf=0.005683
+    pipe                            freq=   6  sections=14  tfidf=0.005588
+    loose                           freq=   7  sections=20  tfidf=0.004727
+    cause                           freq=  16  sections=34  tfidf=0.004584
+    gaskets                         freq=   3  sections= 6  tfidf=0.004534
+    restricted                      freq=   3  sections= 6  tfidf=0.004534
+    etc                             freq=   5  sections=17  tfidf=0.003963
+    mixture                         freq=   3  sections= 8  tfidf=0.003960
+    pipes                           freq=   3  sections= 8  tfidf=0.003960
+    leaking                         freq=   3  sections= 9  tfidf=0.003720
+    system                          freq=  12  sections=33  tfidf=0.003703
+    malfunction                     freq=   3  sections=10  tfidf=0.003502
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    exhaust system                            freq=  10  sections= 5  tfidf=0.016287
+    center pipe                               freq=   6  sections= 1  tfidf=0.014788
+    catalytic converter                       freq=   8  sections= 4  tfidf=0.014139
+    the exhaust system                        freq=   7  sections= 3  tfidf=0.013561
+    possible cause                            freq=  13  sections=16  tfidf=0.010869
+    exhaust manifold                          freq=   6  sections= 6  tfidf=0.009068
+    the catalytic converter                   freq=   4  sections= 2  tfidf=0.008625
+    loose or broken                           freq=   4  sections= 2  tfidf=0.008625
+    cause loose                               freq=   5  sections= 6  tfidf=0.007557
+    possible cause loose                      freq=   5  sections= 6  tfidf=0.007557
+    converter correction                      freq=   3  sections= 1  tfidf=0.007394
+    engine misfire                            freq=   3  sections= 1  tfidf=0.007394
+    rich fuel                                 freq=   3  sections= 1  tfidf=0.007394
+    mixture etc                               freq=   3  sections= 1  tfidf=0.007394
+    etc possible                              freq=   3  sections= 1  tfidf=0.007394
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=   5  also_in: 6(66), 6A1(80), 6B(25), 6C(16), 6D(6), 6D1(11)
+    system                               here=  12  also_in: 6(13), 6A1(9), 6B(33), 6C(54), 6D(8), 6D1(7)
+    cause                                here=  16  also_in: 6(155), 6A1(4), 6B(14), 6D1(4), 6D3(3), 6D4(5)
+    damage                               here=   4  also_in: 6(4), 6A1(15), 6C(8), 6D1(10), 6D4(3), 6E(7)
+    tighten                              here=   3  also_in: 6(10), 6A1(23), 6B(4), 6D(4), 6D1(5), 6D2(6)
+    body                                 here=   2  also_in: 6(10), 6A1(40), 6C(6), 6D1(5), 6D4(3), 6E(5)
+    assembly                             here=   2  also_in: 6A1(22), 6C(23), 6D2(50), 6D3(4), 6D4(21), 6E2(51)
+    diagnosis                            here=   1  also_in: 6(19), 6D(9), 6D1(3), 6D4(5), 6E(6), 6E2(95)
+    fuel                                 here=   4  also_in: 6(24), 6A1(20), 6C(314), 6D4(12), 6E(24), 6E2(437)
+    air                                  here=   1  also_in: 6(17), 6A1(41), 6B(10), 6D4(13), 6E(18), 6E2(213)
+    possible                             here=  15  also_in: 6(153), 6B(12), 6C(3), 6E(6), 6E2(3), 8(74)
+    manifold                             here=   7  also_in: 6(12), 6A1(44), 6B(5), 6D4(4), 6E(12), 6E2(105)
+    components                           here=   6  also_in: 6C(8), 6D1(4), 6D2(4), 6D4(4), 6E(8), 6E2(23)
+    necessary                            here=   5  also_in: 6(15), 6A1(16), 6B(5), 6C(6), 6E2(8), 8(9)
+    connections                          here=   4  also_in: 6C(4), 6D(6), 6D3(8), 6D4(4), 6E(5), 6E2(17)
+    specifications                       here=   2  also_in: 6A1(3), 6B(3), 6D2(3), 6D3(3), 6D4(7), 6E(8)
+    control                              here=   2  also_in: 6A1(8), 6C(6), 6D4(25), 6E(30), 6E2(111), 8(21)
+    inspect                              here=   2  also_in: 6A1(9), 6B(4), 6C(7), 6D2(5), 6E(3), 6E2(17)
+    bolts                                here=   2  also_in: 6(7), 6A1(41), 6B(4), 6D2(12), 6D3(10), 6D4(9)
+    condition                            here=   2  also_in: 6(18), 6D1(7), 6D3(7), 6D4(5), 6E2(29), 8(23)
+    type                                 here=   1  also_in: 6A1(5), 6B(4), 6D4(3), 6E(7), 6E2(7), 8(3)
+    center                               here=   6  also_in: 6A1(9), 6D2(9), 6E2(5), 8(6), 8A(27), 8B(9)
+    damaged                              here=   3  also_in: 6A1(8), 6D4(4), 6E(3), 6E2(34), 8A(20), 8B(3)
+    gasket                               here=   3  also_in: 6(10), 6A1(32), 6B(3), 6C(7), 6D2(3), 6E2(19)
+    specified                            here=   2  also_in: 6(6), 6A1(5), 6D3(4), 6D4(6), 6E2(10), 8(4)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    6E2    (overlap=  215)  6E2
+    6      (overlap=  197)  6
+    8      (overlap=  146)  8
+    6B     (overlap=  142)  ENGINE — 6 > Engine Cooling
+    6A1    (overlap=  140)  ENGINE — 6 > Engine Mechanical
+    6E     (overlap=  134)  ENGINE — 6 > Driveability and Emissions
+    8A     (overlap=  116)  Electrical
+    6D4    (overlap=   94)  ENGINE — 6 > Ignition System
+
+================================================================================
+SECTION 8: 8
+  Chunks: 273, Total term occurrences: 23120
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    wiper                           freq= 191  sections= 4  tfidf=0.019186
+    buzzer                          freq=  55  sections= 2  tfidf=0.006740
+    cluster                         freq=  78  sections= 7  tfidf=0.006249
+    switch                          freq= 285  sections=30  tfidf=0.006137
+    panel                           freq= 136  sections=19  tfidf=0.005506
+    black                           freq=  72  sections=12  tfidf=0.004257
+    warning                         freq=  53  sections= 8  tfidf=0.003976
+    green                           freq=  58  sections=10  tfidf=0.003848
+    yellow                          freq=  63  sections=12  tfidf=0.003725
+    white                           freq=  56  sections=10  tfidf=0.003715
+    correction                      freq=  74  sections=15  tfidf=0.003710
+    blue                            freq=  60  sections=12  tfidf=0.003547
+    lamp                            freq=  68  sections=15  tfidf=0.003410
+    red                             freq=  57  sections=12  tfidf=0.003370
+    washer                          freq=  89  sections=21  tfidf=0.003237
+    instrument                      freq=  70  sections=17  tfidf=0.003153
+    light                           freq=  81  sections=20  tfidf=0.003109
+    attaching                       freq=  64  sections=16  tfidf=0.003041
+    fuse                            freq=  75  sections=19  tfidf=0.003037
+    battery                         freq= 117  sections=27  tfidf=0.003034
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    wiper motor                               freq=  47  sections= 3  tfidf=0.005175
+    rear wiper                                freq=  38  sections= 2  tfidf=0.004657
+    negative battery cable                    freq=  65  sections=10  tfidf=0.004313
+    faulty correction                         freq=  35  sections= 2  tfidf=0.004289
+    warning buzzer                            freq=  27  sections= 1  tfidf=0.003782
+    negative battery                          freq=  65  sections=13  tfidf=0.003635
+    battery cable                             freq=  65  sections=13  tfidf=0.003635
+    possible cause                            freq=  74  sections=16  tfidf=0.003516
+    cluster housing                           freq=  24  sections= 1  tfidf=0.003362
+    wiper arm                                 freq=  26  sections= 2  tfidf=0.003186
+    turn signal                               freq=  37  sections= 7  tfidf=0.002964
+    or disconnect figure                      freq=  24  sections= 2  tfidf=0.002941
+    wiper washer                              freq=  29  sections= 4  tfidf=0.002913
+    b bl                                      freq=  19  sections= 1  tfidf=0.002662
+    the cluster housing                       freq=  19  sections= 1  tfidf=0.002662
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=   8  also_in: 6(66), 6A1(80), 6B(25), 6C(16), 6D(6), 6D1(11)
+    switch                               here= 285  also_in: 6(14), 6A1(13), 6B(27), 6D(17), 6D1(4), 6D2(11)
+    battery                              here= 117  also_in: 6(4), 6A1(22), 6B(8), 6C(14), 6D(21), 6D1(153)
+    cable                                here=  72  also_in: 6A1(36), 6B(8), 6C(21), 6D(9), 6D1(32), 6D2(4)
+    system                               here=  16  also_in: 6(13), 6A1(9), 6B(33), 6C(54), 6D(8), 6D1(7)
+    disconnect                           here=  49  also_in: 6(4), 6A1(26), 6B(9), 6C(11), 6D1(4), 6D2(5)
+    ignition                             here=  46  also_in: 6(13), 6A1(5), 6D(16), 6D1(4), 6D2(8), 6D3(7)
+    negative                             here=  81  also_in: 6A1(22), 6B(8), 6C(14), 6D1(15), 6D2(4), 6D3(6)
+    cause                                here=  74  also_in: 6(155), 6A1(4), 6B(14), 6D1(4), 6D3(3), 6D4(5)
+    connect                              here=  58  also_in: 6(6), 6A1(20), 6B(5), 6C(8), 6D1(6), 6D2(3)
+    wire                                 here=  49  also_in: 6(8), 6A1(7), 6C(4), 6D(3), 6D2(8), 6D3(17)
+    position                             here=  66  also_in: 6(8), 6A1(13), 6C(5), 6D2(9), 6D4(6), 6E(8)
+    two                                  here=  54  also_in: 6A1(28), 6C(10), 6D1(3), 6D2(11), 6D3(5), 6D4(3)
+    electrical                           here=  47  also_in: 6(8), 6C(8), 6D(7), 6D1(15), 6D4(6), 6E(6)
+    connector                            here=  39  also_in: 6(7), 6C(5), 6D3(6), 6D4(14), 6D5(3), 6E(27)
+    temperature                          here=  33  also_in: 6A1(12), 6B(9), 6D1(10), 6D3(4), 6D4(5), 6D5(3)
+    repair                               here=  31  also_in: 6(10), 6C(4), 6D(7), 6D2(7), 6D3(14), 6D4(5)
+    unit                                 here=  21  also_in: 6A1(4), 6B(3), 6C(23), 6D2(7), 6D3(11), 6E(6)
+    assembly                             here= 120  also_in: 6A1(22), 6C(23), 6D2(50), 6D3(4), 6D4(21), 6E2(51)
+    fuse                                 here=  75  also_in: 6(5), 6D1(6), 6D3(4), 6D4(5), 6E(10), 6E2(74)
+    turn                                 here=  47  also_in: 6A1(10), 6D(3), 6D1(5), 6D3(9), 6D4(14), 6E2(21)
+    terminal                             here=  37  also_in: 6D(12), 6D1(7), 6D2(3), 6D3(33), 6D4(8), 6E(43)
+    one                                  here=  29  also_in: 6A1(15), 6C(3), 6D(3), 6D1(4), 6E(10), 6E2(26)
+    pump                                 here=  28  also_in: 6(9), 6A1(70), 6B(36), 6C(58), 6D4(3), 6E(4)
+    fuel                                 here=  20  also_in: 6(24), 6A1(20), 6C(314), 6D4(12), 6E(24), 6E2(437)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    8A     (overlap= 4327)  Electrical
+    6E2    (overlap= 3404)  6E2
+    8B     (overlap= 1500)  Electrical Wiring
+    6A1    (overlap= 1461)  ENGINE — 6 > Engine Mechanical
+    6D4    (overlap=  848)  ENGINE — 6 > Ignition System
+    6E     (overlap=  837)  ENGINE — 6 > Driveability and Emissions
+    6      (overlap=  836)  6
+    6C     (overlap=  835)  ENGINE — 6 > Fuel System
+
+================================================================================
+SECTION 8A: Electrical
+  Chunks: 515, Total term occurrences: 50811
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    component                       freq= 418  sections=15  tfidf=0.009537
+    junction                        freq= 196  sections= 7  tfidf=0.007145
+    test                            freq= 350  sections=19  tfidf=0.006448
+    action                          freq= 212  sections=10  tfidf=0.006400
+    behind                          freq= 171  sections= 7  tfidf=0.006234
+    location                        freq= 413  sections=23  tfidf=0.006127
+    harness                         freq= 309  sections=18  tfidf=0.006005
+    fuse                            freq= 313  sections=19  tfidf=0.005766
+    details                         freq= 167  sections= 8  tfidf=0.005701
+    lamp                            freq= 235  sections=15  tfidf=0.005361
+    cluster                         freq= 147  sections= 7  tfidf=0.005359
+    cavities                        freq=  94  sections= 2  tfidf=0.005241
+    block                           freq= 372  sections=24  tfidf=0.005220
+    controller                      freq= 142  sections= 7  tfidf=0.005177
+    daytime                         freq= 115  sections= 5  tfidf=0.004844
+    cavity                          freq= 129  sections= 7  tfidf=0.004703
+    connector                       freq= 321  sections=25  tfidf=0.004256
+    warning                         freq= 124  sections= 8  tfidf=0.004233
+    alarm                           freq=  82  sections= 3  tfidf=0.004108
+    switch                          freq= 336  sections=30  tfidf=0.003292
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    details component                         freq= 157  sections= 1  tfidf=0.010007
+    block details component                   freq= 157  sections= 1  tfidf=0.010007
+    block details                             freq= 163  sections= 2  tfidf=0.009089
+    fuse block details                        freq= 163  sections= 2  tfidf=0.009089
+    junction block                            freq= 195  sections= 4  tfidf=0.008913
+    lh i p                                    freq= 115  sections= 1  tfidf=0.007330
+    behind lh                                 freq=  96  sections= 1  tfidf=0.006119
+    i p figure                                freq=  90  sections= 1  tfidf=0.005737
+    p harness                                 freq= 102  sections= 2  tfidf=0.005688
+    i p harness                               freq= 102  sections= 2  tfidf=0.005688
+    instrument panel cluster                  freq= 102  sections= 2  tfidf=0.005688
+    behind lh i                               freq=  88  sections= 1  tfidf=0.005609
+    to chassis ground                         freq= 100  sections= 2  tfidf=0.005576
+    location i p                              freq=  85  sections= 1  tfidf=0.005418
+    cavities location                         freq=  84  sections= 1  tfidf=0.005354
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here= 131  also_in: 6(66), 6A1(80), 6B(25), 6C(16), 6D(6), 6D1(11)
+    switch                               here= 336  also_in: 6(14), 6A1(13), 6B(27), 6D(17), 6D1(4), 6D2(11)
+    battery                              here=  70  also_in: 6(4), 6A1(22), 6B(8), 6C(14), 6D(21), 6D1(153)
+    system                               here=  68  also_in: 6(13), 6A1(9), 6B(33), 6C(54), 6D(8), 6D1(7)
+    cable                                here=  22  also_in: 6A1(36), 6B(8), 6C(21), 6D(9), 6D1(32), 6D2(4)
+    ignition                             here= 117  also_in: 6(13), 6A1(5), 6D(16), 6D1(4), 6D2(8), 6D3(7)
+    disconnect                           here=  64  also_in: 6(4), 6A1(26), 6B(9), 6C(11), 6D1(4), 6D2(5)
+    wire                                 here= 215  also_in: 6(8), 6A1(7), 6C(4), 6D(3), 6D2(8), 6D3(17)
+    connect                              here=  91  also_in: 6(6), 6A1(20), 6B(5), 6C(8), 6D1(6), 6D2(3)
+    connector                            here= 321  also_in: 6(7), 6C(5), 6D3(6), 6D4(14), 6D5(3), 6E(27)
+    repair                               here=  93  also_in: 6(10), 6C(4), 6D(7), 6D2(7), 6D3(14), 6D4(5)
+    open                                 here=  73  also_in: 6(3), 6A1(4), 6B(9), 6D3(3), 6D4(3), 6E(9)
+    temperature                          here=  41  also_in: 6A1(12), 6B(9), 6D1(10), 6D3(4), 6D4(5), 6D5(3)
+    unit                                 here=  27  also_in: 6A1(4), 6B(3), 6C(23), 6D2(7), 6D3(11), 6E(6)
+    position                             here=  25  also_in: 6(8), 6A1(13), 6C(5), 6D2(9), 6D4(6), 6E(8)
+    electrical                           here=  21  also_in: 6(8), 6C(8), 6D(7), 6D1(15), 6D4(6), 6E(6)
+    two                                  here=  20  also_in: 6A1(28), 6C(10), 6D1(3), 6D2(11), 6D3(5), 6D4(3)
+    fuse                                 here= 313  also_in: 6(5), 6D1(6), 6D3(4), 6D4(5), 6E(10), 6E2(74)
+    fuel                                 here=  71  also_in: 6(24), 6A1(20), 6C(314), 6D4(12), 6E(24), 6E2(437)
+    terminal                             here=  63  also_in: 6D(12), 6D1(7), 6D2(3), 6D3(33), 6D4(8), 6E(43)
+    turn                                 here=  60  also_in: 6A1(10), 6D(3), 6D1(5), 6D3(9), 6D4(14), 6E2(21)
+    diagnosis                            here=  44  also_in: 6(19), 6D(9), 6D1(3), 6D4(5), 6E(6), 6E2(95)
+    assembly                             here=  32  also_in: 6A1(22), 6C(23), 6D2(50), 6D3(4), 6D4(21), 6E2(51)
+    one                                  here=  23  also_in: 6A1(15), 6C(3), 6D(3), 6D1(4), 6E(10), 6E2(26)
+    pump                                 here=  18  also_in: 6(9), 6A1(70), 6B(36), 6C(58), 6D4(3), 6E(4)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    6E2    (overlap= 5886)  6E2
+    8      (overlap= 4388)  8
+    6A1    (overlap= 1629)  ENGINE — 6 > Engine Mechanical
+    8B     (overlap= 1469)  Electrical Wiring
+    6E     (overlap= 1359)  ENGINE — 6 > Driveability and Emissions
+    6D4    (overlap= 1188)  ENGINE — 6 > Ignition System
+    6D3    (overlap=  994)  ENGINE — 6 > Charging System
+    6C     (overlap=  868)  ENGINE — 6 > Fuel System
+
+================================================================================
+SECTION 8B: Electrical Wiring
+  Chunks: 48, Total term occurrences: 5088
+================================================================================
+
+  DISTINCTIVE TERMS (top unigrams by TF-IDF):
+    lamps                           freq=  56  sections= 7  tfidf=0.020388
+    lamp                            freq=  72  sections=15  tfidf=0.016404
+    headlamp                        freq=  38  sections= 7  tfidf=0.013835
+    daytime                         freq=  24  sections= 5  tfidf=0.010095
+    composite                       freq=  19  sections= 3  tfidf=0.009506
+    bulb                            freq=  25  sections=10  tfidf=0.007537
+    flasher                         freq=  14  sections= 3  tfidf=0.007004
+    combination                     freq=  19  sections= 8  tfidf=0.006477
+    lens                            freq=  11  sections= 3  tfidf=0.005503
+    headlamps                       freq=  13  sections= 5  tfidf=0.005468
+    dome                            freq=  13  sections= 5  tfidf=0.005468
+    horn                            freq=  14  sections= 6  tfidf=0.005464
+    running                         freq=  25  sections=17  tfidf=0.005117
+    hazard                          freq=  12  sections= 5  tfidf=0.005047
+    socket                          freq=  13  sections= 7  tfidf=0.004733
+    signal                          freq=  20  sections=15  tfidf=0.004557
+    securing                        freq=  14  sections= 9  tfidf=0.004483
+    aiming                          freq=   8  sections= 2  tfidf=0.004455
+    resistor                        freq=  13  sections= 9  tfidf=0.004163
+    parking                         freq=  18  sections=15  tfidf=0.004101
+
+  DISTINCTIVE PHRASES (top multi-word by TF-IDF):
+    lamp assembly                             freq=  36  sections= 5  tfidf=0.015142
+    running lamps                             freq=  23  sections= 3  tfidf=0.011507
+    daytime running lamps                     freq=  23  sections= 3  tfidf=0.011507
+    daytime running                           freq=  24  sections= 5  tfidf=0.010095
+    rear combination                          freq=  19  sections= 4  tfidf=0.008672
+    turn signal                               freq=  20  sections= 7  tfidf=0.007281
+    combination lamp                          freq=  15  sections= 4  tfidf=0.006847
+    rear combination lamp                     freq=  15  sections= 4  tfidf=0.006847
+    lamps resistor                            freq=  12  sections= 3  tfidf=0.006004
+    running lamps resistor                    freq=  12  sections= 3  tfidf=0.006004
+    dome lamp                                 freq=  13  sections= 4  tfidf=0.005934
+    signal lamp assembly                      freq=   8  sections= 1  tfidf=0.005092
+    front turn                                freq=  11  sections= 4  tfidf=0.005021
+    front turn signal                         freq=  11  sections= 4  tfidf=0.005021
+    combination lamp assembly                 freq=  11  sections= 4  tfidf=0.005021
+
+  CONFUSION TERMS (shared with other Group 1 sections):
+    engine                               here=   3  also_in: 6(66), 6A1(80), 6B(25), 6C(16), 6D(6), 6D1(11)
+    switch                               here=  19  also_in: 6(14), 6A1(13), 6B(27), 6D(17), 6D1(4), 6D2(11)
+    battery                              here=  19  also_in: 6(4), 6A1(22), 6B(8), 6C(14), 6D(21), 6D1(153)
+    cable                                here=  18  also_in: 6A1(36), 6B(8), 6C(21), 6D(9), 6D1(32), 6D2(4)
+    system                               here=  13  also_in: 6(13), 6A1(9), 6B(33), 6C(54), 6D(8), 6D1(7)
+    ignition                             here=   5  also_in: 6(13), 6A1(5), 6D(16), 6D1(4), 6D2(8), 6D3(7)
+    disconnect                           here=   4  also_in: 6(4), 6A1(26), 6B(9), 6C(11), 6D1(4), 6D2(5)
+    connect                              here=   2  also_in: 6(6), 6A1(20), 6B(5), 6C(8), 6D1(6), 6D2(3)
+    negative                             here=  18  also_in: 6A1(22), 6B(8), 6C(14), 6D1(15), 6D2(4), 6D3(6)
+    two                                  here=  19  also_in: 6A1(28), 6C(10), 6D1(3), 6D2(11), 6D3(5), 6D4(3)
+    position                             here=  11  also_in: 6(8), 6A1(13), 6C(5), 6D2(9), 6D4(6), 6E(8)
+    electrical                           here=  11  also_in: 6(8), 6C(8), 6D(7), 6D1(15), 6D4(6), 6E(6)
+    unit                                 here=   7  also_in: 6A1(4), 6B(3), 6C(23), 6D2(7), 6D3(11), 6E(6)
+    connector                            here=   7  also_in: 6(7), 6C(5), 6D3(6), 6D4(14), 6D5(3), 6E(27)
+    open                                 here=   3  also_in: 6(3), 6A1(4), 6B(9), 6D3(3), 6D4(3), 6E(9)
+    assembly                             here=  57  also_in: 6A1(22), 6C(23), 6D2(50), 6D3(4), 6D4(21), 6E2(51)
+    turn                                 here=  26  also_in: 6A1(10), 6D(3), 6D1(5), 6D3(9), 6D4(14), 6E2(21)
+    diagnosis                            here=  10  also_in: 6(19), 6D(9), 6D1(3), 6D4(5), 6E(6), 6E2(95)
+    fuse                                 here=   5  also_in: 6(5), 6D1(6), 6D3(4), 6D4(5), 6E(10), 6E2(74)
+    nut                                  here=   4  also_in: 6A1(21), 6B(4), 6C(5), 6D1(4), 6D2(6), 6D3(20)
+    one                                  here=   3  also_in: 6A1(15), 6C(3), 6D(3), 6D1(4), 6E(10), 6E2(26)
+    cap                                  here=   3  also_in: 6(3), 6A1(50), 6B(40), 6C(30), 6D2(10), 6D4(31)
+    in this section                      here=   2  also_in: 6C(17), 6D1(7), 6D2(9), 6D3(16), 6D4(10), 6E(4)
+    possible                             here=   2  also_in: 6(153), 6B(12), 6C(3), 6E(6), 6E2(3), 6F(15)
+    three                                here=   2  also_in: 6(4), 6A1(9), 6C(4), 6D1(4), 6D3(4), 6E(8)
+
+  SECTION NEIGHBORHOOD (most term overlap):
+    8      (overlap= 1417)  8
+    8A     (overlap= 1337)  Electrical
+    6E2    (overlap=  690)  6E2
+    6A1    (overlap=  429)  ENGINE — 6 > Engine Mechanical
+    6D4    (overlap=  336)  ENGINE — 6 > Ignition System
+    6C     (overlap=  326)  ENGINE — 6 > Fuel System
+    6D3    (overlap=  308)  ENGINE — 6 > Charging System
+    6E     (overlap=  284)  ENGINE — 6 > Driveability and Emissions
+
+================================================================================
+GLOBAL CONFUSION MATRIX — Top shared terms between section pairs
+================================================================================
+
+  6E2 <-> 8A  (overlap=5173)
+    6E2: 6E2
+    8A: Electrical
+    Top shared: switch(193/336), fuel(437/71), wire(284/215), component(40/418), engine(325/131)
+
+  8 <-> 8A  (overlap=3965)
+    8: 8
+    8A: Electrical
+    Top shared: switch(285/336), location(4/413), block(24/372), fuse(75/313), test(11/350)
+
+  6E2 <-> 8  (overlap=3060)
+    6E2: 6E2
+    8: 8
+    Top shared: switch(193/285), fuel(437/20), ecm(378/3), engine(325/8), wire(284/49)
+
+  6A1 <-> 6E2  (overlap=2814)
+    6A1: ENGINE — 6 > Engine Mechanical
+    6E2: 6E2
+    Top shared: fuel(20/437), valve(227/229), engine(80/325), sensor(17/301), wire(7/284)
+
+  6C <-> 6E2  (overlap=1812)
+    6C: ENGINE — 6 > Fuel System
+    6E2: 6E2
+    Top shared: fuel(314/437), engine(16/325), wire(4/284), throttle(7/242), valve(16/229)
+
+  6D4 <-> 6E2  (overlap=1798)
+    6D4: ENGINE — 6 > Ignition System
+    6E2: 6E2
+    Top shared: fuel(12/437), ecm(7/378), engine(30/325), ignition(65/258), wire(35/284)
+
+  6E <-> 6E2  (overlap=1683)
+    6E: ENGINE — 6 > Driveability and Emissions
+    6E2: 6E2
+    Top shared: fuel(24/437), ecm(42/378), engine(45/325), sensor(27/301), wire(17/284)
+
+  6A1 <-> 8A  (overlap=1304)
+    6A1: ENGINE — 6 > Engine Mechanical
+    8A: Electrical
+    Top shared: block(36/372), switch(13/336), oil(211/30), wire(7/215), engine(80/131)
+
+  6A1 <-> 8  (overlap=1218)
+    6A1: ENGINE — 6 > Engine Mechanical
+    8: 8
+    Top shared: switch(13/285), oil(211/12), cylinder(207/3), head(139/11), assembly(22/120)
+
+  8A <-> 8B  (overlap=1141)
+    8A: Electrical
+    8B: Electrical Wiring
+    Top shared: block(372/4), switch(336/19), connector(321/7), fuse(313/5), lamp(235/72)
+
+  8 <-> 8B  (overlap=1117)
+    8: 8
+    8B: Electrical Wiring
+    Top shared: switch(285/19), assembly(120/57), panel(136/10), rear(112/29), lamp(68/72)
+
+  6 <-> 6E2  (overlap=995)
+    6: 6
+    6E2: 6E2
+    Top shared: fuel(24/437), engine(66/325), wire(8/284), ignition(13/258), throttle(18/242)
+
+  6E <-> 8A  (overlap=953)
+    6E: ENGINE — 6 > Driveability and Emissions
+    8A: Electrical
+    Top shared: component(7/418), location(9/413), test(8/350), connector(27/321), switch(9/336)
+
+  6D4 <-> 8A  (overlap=924)
+    6D4: ENGINE — 6 > Ignition System
+    8A: Electrical
+    Top shared: switch(9/336), connector(14/321), fuse(5/313), harness(5/309), result(8/257)
+
+  6D3 <-> 6E2  (overlap=797)
+    6D3: ENGINE — 6 > Charging System
+    6E2: 6E2
+    Top shared: engine(11/325), wire(17/284), voltage(46/230), ignition(7/258), circuit(3/216)
+
+  6 <-> 6A1  (overlap=771)
+    6: 6
+    6A1: ENGINE — 6 > Engine Mechanical
+    Top shared: valve(18/227), oil(25/211), cylinder(13/207), cause(155/4), engine(66/80)
+
+  6A1 <-> 6C  (overlap=770)
+    6A1: ENGINE — 6 > Engine Mechanical
+    6C: ENGINE — 6 > Fuel System
+    Top shared: fuel(20/314), valve(227/16), pump(70/58), hose(38/73), engine(80/16)
+
+  6D3 <-> 8A  (overlap=724)
+    6D3: ENGINE — 6 > Charging System
+    8A: Electrical
+    Top shared: test(30/350), switch(11/336), connector(6/321), fuse(4/313), lamp(29/235)
+
+  6A1 <-> 6D4  (overlap=719)
+    6A1: ENGINE — 6 > Engine Mechanical
+    6D4: ENGINE — 6 > Ignition System
+    Top shared: spark(4/134), timing(82/50), distributor(10/106), engine(80/30), plug(14/90)
+
+  6A1 <-> 6B  (overlap=698)
+    6A1: ENGINE — 6 > Engine Mechanical
+    6B: ENGINE — 6 > Engine Cooling
+    Top shared: valve(227/26), cylinder(207/7), head(139/3), cylinder head(121/3), pump(70/36)
+
+  6 <-> 8  (overlap=693)
+    6: 6
+    8: 8
+    Top shared: switch(14/285), cause(155/74), correction(153/74), possible(153/74), possible cause(153/74)
+
+  6B <-> 6E2  (overlap=673)
+    6B: ENGINE — 6 > Engine Cooling
+    6E2: 6E2
+    Top shared: engine(25/325), valve(26/229), air(10/213), switch(27/193), system(33/185)
+
+  6D4 <-> 8  (overlap=662)
+    6D4: ENGINE — 6 > Ignition System
+    8: 8
+    Top shared: switch(9/285), assembly(21/120), battery(14/117), ignition(65/46), housing(32/68)
+
+  6C <-> 8A  (overlap=647)
+    6C: ENGINE — 6 > Fuel System
+    8A: Electrical
+    Top shared: component(3/418), fuel(314/71), connector(5/321), harness(3/309), result(4/257)
+
+  6D2 <-> 6E2  (overlap=646)
+    6D2: ENGINE — 6 > Cranking System
+    6E2: 6E2
+    Top shared: engine(6/325), wire(8/284), ignition(8/258), circuit(8/216), switch(11/193)
+
+  6C <-> 8  (overlap=639)
+    6C: ENGINE — 6 > Fuel System
+    8: 8
+    Top shared: fuel(314/20), assembly(23/120), battery(14/117), rear(4/112), negative(14/81)
+
+  6D1 <-> 6E2  (overlap=619)
+    6D1: ENGINE — 6 > Battery
+    6E2: 6E2
+    Top shared: engine(11/325), ignition(4/258), voltage(18/230), light(5/200), switch(4/193)
+
+  6E <-> 8  (overlap=588)
+    6E: ENGINE — 6 > Driveability and Emissions
+    8: 8
+    Top shared: switch(9/285), light(26/81), circuit(29/65), fuse(10/75), terminal(43/37)
+
+  6D2 <-> 8A  (overlap=566)
+    6D2: ENGINE — 6 > Cranking System
+    8A: Electrical
+    Top shared: test(38/350), switch(11/336), wire(8/215), circuit(8/150), engine(6/131)
+
+  6D4 <-> 6E  (overlap=558)
+    6D4: ENGINE — 6 > Ignition System
+    6E: ENGINE — 6 > Driveability and Emissions
+    Top shared: spark(134/6), engine(30/45), ignition(65/10), vacuum(39/19), control(25/30)

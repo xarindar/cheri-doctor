@@ -33,6 +33,66 @@ PAGE_HEADER_RE2 = re.compile(r"^[A-Z][A-Z &/]{5,}\s+\d+[A-Z]*\d*-\d+\s*$")
 SECTION_HEADER_RE = re.compile(r"^SECTION\s+\d+[A-Z]*\d*\b", re.IGNORECASE)
 # Standalone page labels: "9A-4", "6B-12", "10-7-2"
 PAGE_LABEL_RE   = re.compile(r"^\d+[A-Z]*\d*-\d+(?:-\d+)?$")
+PIN_LABEL_RE    = re.compile(r"\b[ABC]\d{1,2}\b")
+
+INFO_TYPE_PATTERNS = (
+    ("connector_face", re.compile(r"\b(?:connector faces?|terminal end view|end view|face layout)\b", re.IGNORECASE)),
+    ("pinout", re.compile(r"\b(?:pinout|connector identification|pin:|cavity|terminal)\b", re.IGNORECASE)),
+    ("diagram", re.compile(r"\b(?:figure|diagram|schematic|illustration|view)\b", re.IGNORECASE)),
+    ("spec", re.compile(r"\b(?:spec(?:ification)?s?|voltage|resistance|torque|pressure|clearance|capacity|dimension)\b", re.IGNORECASE)),
+    ("location", re.compile(r"\b(?:location|located|mounting location|component location|placement)\b", re.IGNORECASE)),
+    ("diagnostic", re.compile(r"\b(?:diagnos(?:is|tic)|symptom|condition|cause|correction|trouble code|code\b)\b", re.IGNORECASE)),
+    ("wiring", re.compile(r"\b(?:wire|wiring|circuit|harness|ground|relay|switch terminal)\b", re.IGNORECASE)),
+    ("cross_reference", re.compile(r"\b(?:table of contents|refer to|see section|section \d|cross[ -]?reference|index)\b", re.IGNORECASE)),
+)
+
+INFO_TYPE_SYNONYMS = {
+    "connector_face": "connector face terminal end view layout",
+    "pinout": "pinout pin terminal cavity connector identification",
+    "diagram": "figure diagram schematic illustration",
+    "spec": "spec specification voltage resistance torque pressure capacity",
+    "location": "location located component position mounting",
+    "diagnostic": "diagnostic diagnosis symptom condition cause correction",
+    "procedure": "procedure steps removal installation inspection adjustment",
+    "wiring": "wiring wire circuit harness terminal ground power",
+    "cross_reference": "cross reference mapping refer index table of contents",
+}
+
+ENTITY_PATTERNS = (
+    ("ecm", re.compile(r"\b(?:ecm|engine control module)\b", re.IGNORECASE)),
+    ("ecu", re.compile(r"\b(?:ecu|electronic control unit)\b", re.IGNORECASE)),
+    ("aldl", re.compile(r"\b(?:aldl|assembly line diagnostic link|diagnosis switch terminal)\b", re.IGNORECASE)),
+    ("cts", re.compile(r"\b(?:cts|coolant temperature sensor)\b", re.IGNORECASE)),
+    ("tps", re.compile(r"\b(?:tps|throttle position sensor)\b", re.IGNORECASE)),
+    ("map", re.compile(r"\b(?:map|manifold absolute pressure)\b", re.IGNORECASE)),
+    ("o2", re.compile(r"\b(?:o2|oxygen sensor)\b", re.IGNORECASE)),
+    ("mat", re.compile(r"\b(?:mat|manifold air temperature)\b", re.IGNORECASE)),
+    ("isc", re.compile(r"\b(?:isc|idle speed control|isc solenoid)\b", re.IGNORECASE)),
+    ("egr", re.compile(r"\b(?:egr|exhaust gas recirculation)\b", re.IGNORECASE)),
+    ("vss", re.compile(r"\b(?:vss|vehicle speed sensor)\b", re.IGNORECASE)),
+    ("sir", re.compile(r"\b(?:sir|airbag|inflatable restraint|supplemental restraint)\b", re.IGNORECASE)),
+    ("fuel pump", re.compile(r"\bfuel pump\b", re.IGNORECASE)),
+    ("connector a", re.compile(r"\b(?:ecm\s+)?connector\s+a\b", re.IGNORECASE)),
+    ("connector b", re.compile(r"\b(?:ecm\s+)?connector\s+b\b", re.IGNORECASE)),
+    ("connector c1", re.compile(r"\bconnector\s+c1\b", re.IGNORECASE)),
+    ("connector c2", re.compile(r"\bconnector\s+c2\b", re.IGNORECASE)),
+)
+
+BODY_STYLE_PATTERNS = (
+    ("convertible", re.compile(r"\bconvertible\b", re.IGNORECASE)),
+    ("hatchback", re.compile(r"\bhatchback\b", re.IGNORECASE)),
+    ("sedan", re.compile(r"\bsedan\b", re.IGNORECASE)),
+    ("wagon", re.compile(r"\bwagon\b", re.IGNORECASE)),
+    ("3-door", re.compile(r"\b3-door\b", re.IGNORECASE)),
+    ("5-door", re.compile(r"\b5-door\b", re.IGNORECASE)),
+)
+
+TRIM_VARIANT_PATTERNS = (
+    ("lsi", re.compile(r"\blsi\b", re.IGNORECASE)),
+    ("xfi", re.compile(r"\bxfi\b", re.IGNORECASE)),
+)
+
+SIR_FALSE_RE = re.compile(r"\b(?:without|less)\s+(?:sir|airbag)|\bnon[- ]airbag\b", re.IGNORECASE)
 
 SECTION_SYSTEM_MAP = {
     "0A": "general_info",
@@ -474,6 +534,7 @@ def build_chunks(document: dict, config: dict, source_doc: str = "main") -> tupl
         if source_doc == "supplement" and not c["chunk_id"].startswith("sup_"):
             c["chunk_id"] = "sup_" + c["chunk_id"]
 
+    _attach_page_artifact_links(chunks, figures)
     return chunks, figures
 
 
@@ -610,6 +671,14 @@ def _stitch_procedures(chunks: list[dict]) -> list[dict]:
         for fref in chunk.get("figure_refs", []):
             if fref not in (prev.get("figure_refs") or []):
                 prev.setdefault("figure_refs", []).append(fref)
+
+        for field in ("info_types", "entities", "body_styles", "trim_variants", "asset_refs"):
+            existing = prev.setdefault(field, [])
+            for value in chunk.get(field, []) or []:
+                if value not in existing:
+                    existing.append(value)
+        if prev.get("sir_equipped") is None and chunk.get("sir_equipped") is not None:
+            prev["sir_equipped"] = chunk["sir_equipped"]
 
         # Update token count
         prev["token_count"] = len(prev["text"]) // CHARS_PER_TOKEN
@@ -1208,7 +1277,8 @@ def _make_chunk(*, chunk_id, doc_id, page, block_ids, bbox, ctype,
                 section_code, source_label, section_path, text,
                 procedure_type=None, system=None, engine_variant=None,
                 steps=None, kv=None, figure_refs=None, asset_refs=None,
-                starting_step=1) -> dict:
+                starting_step=1, info_types=None, entities=None,
+                body_styles=None, trim_variants=None, sir_equipped=None) -> dict:
     if not system:
         system = _get_system(section_code, section_path)
     if not engine_variant:
@@ -1217,7 +1287,7 @@ def _make_chunk(*, chunk_id, doc_id, page, block_ids, bbox, ctype,
     # Strip running page headers (e.g. "8-30 BODY AND CHASSIS ELECTRICAL")
     text = _strip_page_headers(text)
 
-    return {
+    return _enrich_chunk_metadata({
         "chunk_id":       chunk_id,
         "doc_id":         doc_id,
         "page":           page,
@@ -1236,8 +1306,148 @@ def _make_chunk(*, chunk_id, doc_id, page, block_ids, bbox, ctype,
         "kv":             kv,
         "figure_refs":    figure_refs or [],
         "asset_refs":     asset_refs or [],
+        "info_types":     info_types,
+        "entities":       entities,
+        "body_styles":    body_styles,
+        "trim_variants":  trim_variants,
+        "sir_equipped":   sir_equipped,
         "token_count":    len(text) // CHARS_PER_TOKEN,
-    }
+    })
+
+
+def _enrich_chunk_metadata(chunk: dict) -> dict:
+    text = chunk.get("text") or ""
+    context = " ".join(
+        part for part in (
+            chunk.get("section_path", ""),
+            chunk.get("source_label") or "",
+            text,
+        )
+        if part
+    )
+    info_types = chunk.get("info_types")
+    if info_types is None:
+        info_types = _infer_info_types(chunk.get("type", ""), context)
+    entities = chunk.get("entities")
+    if entities is None:
+        entities = _extract_entities(context, info_types)
+    body_styles = chunk.get("body_styles")
+    if body_styles is None:
+        body_styles = _infer_matches(context, BODY_STYLE_PATTERNS)
+    trim_variants = chunk.get("trim_variants")
+    if trim_variants is None:
+        trim_variants = _infer_matches(context, TRIM_VARIANT_PATTERNS)
+    if chunk.get("sir_equipped") is None:
+        chunk["sir_equipped"] = _infer_sir_equipped(context)
+
+    chunk["info_types"] = info_types
+    chunk["entities"] = entities
+    chunk["body_styles"] = body_styles
+    chunk["trim_variants"] = trim_variants
+    chunk.setdefault("steps", None)
+    chunk.setdefault("kv", None)
+    chunk.setdefault("figure_refs", [])
+    chunk.setdefault("asset_refs", [])
+    chunk.setdefault("same_page_chunk_ids", [])
+    chunk.setdefault("same_page_figure_ids", [])
+    chunk.setdefault("related_figure_ids", [])
+    chunk.setdefault("related_table_ids", [])
+    chunk.setdefault("source_doc", "main")
+    if "token_count" not in chunk:
+        chunk["token_count"] = len(text) // CHARS_PER_TOKEN
+    return chunk
+
+
+def _infer_matches(text: str, patterns: tuple[tuple[str, re.Pattern], ...]) -> list[str]:
+    return [value for value, pattern in patterns if pattern.search(text)]
+
+
+def _infer_info_types(ctype: str, text: str) -> list[str]:
+    info_types: list[str] = []
+    if ctype == "procedure":
+        info_types.append("procedure")
+    elif ctype == "figure":
+        info_types.append("diagram")
+    elif ctype in ("toc_entry", "toc_category"):
+        info_types.append("cross_reference")
+
+    for info_type, pattern in INFO_TYPE_PATTERNS:
+        if pattern.search(text) and info_type not in info_types:
+            info_types.append(info_type)
+    if ctype == "table" and "spec" not in info_types and re.search(r"\b(?:key|eng\.?\s+run|voltage|resistance|torque)\b", text, re.IGNORECASE):
+        info_types.append("spec")
+    return info_types
+
+
+def _extract_entities(text: str, info_types: list[str]) -> list[str]:
+    entities: list[str] = []
+    for entity, pattern in ENTITY_PATTERNS:
+        if pattern.search(text):
+            entities.append(entity)
+
+    if any(info in info_types for info in ("pinout", "connector_face", "wiring")):
+        for pin in PIN_LABEL_RE.findall(text):
+            normalized = pin.lower()
+            if normalized not in entities:
+                entities.append(normalized)
+            if len(entities) >= 20:
+                break
+    return entities
+
+
+def _infer_sir_equipped(text: str) -> bool | None:
+    if SIR_FALSE_RE.search(text):
+        return False
+    if re.search(r"\b(?:sir|airbag|inflatable restraint|supplemental restraint)\b", text, re.IGNORECASE):
+        return True
+    return None
+
+
+def _attach_page_artifact_links(chunks: list[dict], figures: list[dict]) -> None:
+    figures_by_page: dict[int, list[str]] = {}
+    for fig in figures:
+        page = fig.get("page")
+        figure_id = fig.get("figure_id")
+        if page is None or not figure_id:
+            continue
+        figures_by_page.setdefault(page, [])
+        if figure_id not in figures_by_page[page]:
+            figures_by_page[page].append(figure_id)
+
+    chunks_by_page: dict[int, list[dict]] = {}
+    for chunk in chunks:
+        page = chunk.get("page")
+        if page is None:
+            chunk.setdefault("same_page_chunk_ids", [])
+            chunk.setdefault("same_page_figure_ids", [])
+            chunk.setdefault("related_figure_ids", [])
+            chunk.setdefault("related_table_ids", [])
+            continue
+        chunks_by_page.setdefault(page, []).append(chunk)
+
+    for page, page_chunks in chunks_by_page.items():
+        page_chunk_ids = [chunk["chunk_id"] for chunk in page_chunks]
+        table_ids = [chunk["chunk_id"] for chunk in page_chunks if chunk.get("type") == "table"]
+        page_figure_ids = figures_by_page.get(page, [])
+        for chunk in page_chunks:
+            chunk["same_page_chunk_ids"] = [cid for cid in page_chunk_ids if cid != chunk["chunk_id"]]
+            own_fig_refs = list(chunk.get("figure_refs") or [])
+            chunk["same_page_figure_ids"] = [fid for fid in page_figure_ids if fid not in own_fig_refs]
+
+            related_figures = list(own_fig_refs)
+            if chunk.get("type") == "table" or any(
+                info in (chunk.get("info_types") or [])
+                for info in ("pinout", "connector_face", "wiring", "spec")
+            ):
+                for figure_id in page_figure_ids:
+                    if figure_id not in related_figures:
+                        related_figures.append(figure_id)
+            chunk["related_figure_ids"] = related_figures
+
+            related_tables: list[str] = []
+            if chunk.get("type") == "figure" or "diagram" in (chunk.get("info_types") or []):
+                related_tables = [table_id for table_id in table_ids if table_id != chunk["chunk_id"]]
+            chunk["related_table_ids"] = related_tables
 
 
 def _gen_id(prefix: str, section_code: str | None, page: int,
@@ -1327,7 +1537,7 @@ def build_toc_chunks(toc_md_path, doc_id: str = "geo_metro_1990") -> list[dict]:
             return
         text = cat + "\n" + "\n".join(entries)
         chunk_id = "toc_cat_" + re.sub(r"\W+", "_", cat.lower()).strip("_")
-        chunks.append({
+        chunks.append(_enrich_chunk_metadata({
             "chunk_id":     chunk_id,
             "doc_id":       doc_id,
             "page":         None,       # TOC has no single page
@@ -1345,7 +1555,7 @@ def build_toc_chunks(toc_md_path, doc_id: str = "geo_metro_1990") -> list[dict]:
             "figure_refs":  [],
             "asset_refs":   [],
             "token_count":  len(text) // CHARS_PER_TOKEN,
-        })
+        }))
 
     for raw_line in lines:
         line = raw_line.strip()
@@ -1381,7 +1591,7 @@ def build_toc_chunks(toc_md_path, doc_id: str = "geo_metro_1990") -> list[dict]:
                 f"Category: {current_category or 'General'}"
             )
             toc_section_path = f"{current_category} > {section_name}" if current_category else section_name
-            chunks.append({
+            chunks.append(_enrich_chunk_metadata({
                 "chunk_id":     chunk_id,
                 "doc_id":       doc_id,
                 "page":         None,
@@ -1399,7 +1609,7 @@ def build_toc_chunks(toc_md_path, doc_id: str = "geo_metro_1990") -> list[dict]:
                 "figure_refs":  [],
                 "asset_refs":   [],
                 "token_count":  len(full_text) // CHARS_PER_TOKEN,
-            })
+            }))
         else:
             # It's a category heading (all-caps or no "—" separator)
             flush_category(current_category, category_entries)
@@ -1492,7 +1702,7 @@ def build_csv_table_chunks(table_spec: dict, doc_id: str = "geo_metro_1990",
         # Chunk ID — include schedule type to avoid collisions across schedules
         sched_suffix = f"_{schedule_type.lower()}" if schedule_type else ""
         chunk_id = f"maint_{section_code.lower()}{sched_suffix}_{item_num or len(chunks)}"
-        chunks.append({
+        chunks.append(_enrich_chunk_metadata({
             "chunk_id":     chunk_id,
             "doc_id":       doc_id,
             "page":         page,
@@ -1510,11 +1720,11 @@ def build_csv_table_chunks(table_spec: dict, doc_id: str = "geo_metro_1990",
             "figure_refs":  [],
             "asset_refs":   [str(path)],
             "token_count":  len(row_text) // CHARS_PER_TOKEN,
-        })
+        }))
 
     # Summary chunk — all rows together for broad queries like "what's the maintenance schedule?"
     summary_text = "\n".join(all_lines)
-    chunks.insert(0, {
+    chunks.insert(0, _enrich_chunk_metadata({
         "chunk_id":     f"maint_{section_code.lower()}_summary",
         "doc_id":       doc_id,
         "page":         page,
@@ -1532,6 +1742,6 @@ def build_csv_table_chunks(table_spec: dict, doc_id: str = "geo_metro_1990",
         "figure_refs":  [],
         "asset_refs":   [str(path)],
         "token_count":  len(summary_text) // CHARS_PER_TOKEN,
-    })
+    }))
 
     return chunks

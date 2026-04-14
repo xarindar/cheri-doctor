@@ -83,6 +83,15 @@ class ChunkRecord:
     kv: list[dict] | None = None
     figure_refs: list[str] = field(default_factory=list)
     asset_refs: list[str] = field(default_factory=list)
+    info_types: list[str] = field(default_factory=list)
+    entities: list[str] = field(default_factory=list)
+    body_styles: list[str] = field(default_factory=list)
+    trim_variants: list[str] = field(default_factory=list)
+    sir_equipped: bool | None = None
+    same_page_chunk_ids: list[str] = field(default_factory=list)
+    same_page_figure_ids: list[str] = field(default_factory=list)
+    related_figure_ids: list[str] = field(default_factory=list)
+    related_table_ids: list[str] = field(default_factory=list)
     token_count: int = 0
     source_doc: str = "main"           # "main" or "supplement" — supplement wins on conflict
 
@@ -109,3 +118,5 @@ class ChatResponse:
     figure_refs: list[str] = field(default_factory=list)
     next_question: str | None = None
     evidence_used: list[str] = field(default_factory=list)
+    mode: str = "normal"  # "normal" or "deep_research"
+    deep_research_summary: str | None = None
