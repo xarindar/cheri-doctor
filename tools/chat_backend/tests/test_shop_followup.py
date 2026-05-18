@@ -126,7 +126,7 @@ class TestShopFollowup(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(parts_calls[1]["part_name"], "cigarette lighter socket")
         self.assertTrue(payload.get("shopping_results"), "follow-up should include attempted results")
 
-    async def test_watchdog_injects_shop_tag_when_search_is_promised(self) -> None:
+    async def test_watchdog_injects_shop_tag_when_search_is_promised_with_explicit_source(self) -> None:
         serve._shop_sessions.clear()
         prior_index = serve.index
         serve.index = object()
@@ -188,7 +188,7 @@ class TestShopFollowup(unittest.IsolatedAsyncioTestCase):
         req = serve.ChatRequest(
             query=(
                 "The manual calls it a CIGAR LIGHTER ASSEMBLY. "
-                "Find a flush-mount USB charger for the 20.63mm opening."
+                "Look on Amazon for a flush-mount USB charger for the 20.63mm opening."
             ),
             conversation=[],
             shop_mode_hint=False,
@@ -205,9 +205,61 @@ class TestShopFollowup(unittest.IsolatedAsyncioTestCase):
             serve.index = prior_index
 
         self.assertEqual(len(parts_calls), 1, "watchdog should trigger exactly one parts search")
-        self.assertEqual(parts_calls[0]["sources"], ["amazon", "ebay", "rockauto"])
+        self.assertEqual(parts_calls[0]["sources"], ["amazon"])
         self.assertIn("usb charger", parts_calls[0]["part_name"].lower())
         self.assertTrue(payload.get("shopping_results"), "watchdog-triggered search should return results")
+
+    async def test_shop_tag_is_suppressed_without_explicit_source_request(self) -> None:
+        serve._shop_sessions.clear()
+        prior_index = serve.index
+        serve.index = object()
+        parts_called = False
+
+        async def _fake_parts_search(
+            part_name: str,
+            sources: list[str] | None = None,
+            manual_context: str | None = None,
+            progress_cb=None,
+        ) -> serve.PartsSearchResult:
+            nonlocal parts_called
+            parts_called = True
+            return serve.PartsSearchResult(
+                llm_text="[PARTS SEARCH]",
+                sources=[],
+                items=[],
+            )
+
+        def _fake_chat(
+            query: str,
+            conversation: list[dict],
+            index,
+            config,
+            skip_vision: bool,
+            project_context,
+            vehicle_settings: str,
+            images=None,
+            progress_cb=None,
+        ) -> _DummyChatResponse:
+            return _DummyChatResponse("I found the right part.\n[SHOP_SEARCH: alternator | amazon]")
+
+        req = serve.ChatRequest(
+            query="Find me an alternator for Cheri",
+            conversation=[],
+            shop_mode_hint=False,
+            shop_part_hint=None,
+            tech_mode_hint=False,
+        )
+
+        try:
+            with patch.object(serve, "_parts_search", new=_fake_parts_search), \
+                 patch.object(serve, "chat", new=_fake_chat):
+                payload = await serve._run_chat_request(req)
+        finally:
+            serve.index = prior_index
+
+        self.assertFalse(parts_called, "shopping should require an explicit source request")
+        self.assertNotIn("[SHOP_SEARCH", payload["answer"])
+        self.assertEqual(payload.get("shopping_results"), [])
 
     async def test_query_quality_guard_falls_back_to_session_part(self) -> None:
         serve._shop_sessions.clear()

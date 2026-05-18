@@ -1386,6 +1386,12 @@ def _reranked_has_coverage(category: str, reranked: list[dict]) -> bool:
     return any(predicate(row["chunk"]) for row in reranked)
 
 
+def _pinout_connector_letter(chunk: dict) -> str:
+    """Return 'A' or 'B' based on which connector a pinout chunk covers."""
+    connector, _ = _parse_pinout_rows(chunk.get("text", ""))
+    return connector
+
+
 def _enforce_metadata_coverage(
     query: str,
     reranked: list[dict],
@@ -1405,16 +1411,39 @@ def _enforce_metadata_coverage(
 
     seen_ids = {row["chunk"]["chunk_id"] for row in reranked}
     additions: list[dict] = []
+
     for category in required:
-        if _reranked_has_coverage(category, reranked):
-            continue
-        for candidate in coverage_candidates.get(category, []):
-            cid = candidate["chunk"]["chunk_id"]
-            if cid in seen_ids:
+        if category == "pinout" and _is_pinout_query(query):
+            # For pinout queries, ensure BOTH Connector A and B are present.
+            present_connectors: set[str] = set()
+            for row in reranked:
+                if _is_pinout_candidate(row["chunk"]):
+                    letter = _pinout_connector_letter(row["chunk"])
+                    if letter:
+                        present_connectors.add(letter)
+            for needed in ("A", "B"):
+                if needed in present_connectors:
+                    continue
+                for candidate in coverage_candidates.get(category, []):
+                    cid = candidate["chunk"]["chunk_id"]
+                    if cid in seen_ids:
+                        continue
+                    letter = _pinout_connector_letter(candidate["chunk"])
+                    if letter == needed:
+                        additions.append(candidate)
+                        seen_ids.add(cid)
+                        present_connectors.add(needed)
+                        break
+        else:
+            if _reranked_has_coverage(category, reranked):
                 continue
-            additions.append(candidate)
-            seen_ids.add(cid)
-            break
+            for candidate in coverage_candidates.get(category, []):
+                cid = candidate["chunk"]["chunk_id"]
+                if cid in seen_ids:
+                    continue
+                additions.append(candidate)
+                seen_ids.add(cid)
+                break
 
     if additions:
         print(f"  [chat] Enforced metadata coverage with {len(additions)} candidate(s)")
@@ -2419,10 +2448,17 @@ def _build_messages(query: str,
 
     if _is_pinout_query(query):
         system_prompt += (
-            "\n\n## CITATION RULES\n\n"
-            "When you answer from textual specs or pinout tables, prefer citing the retrieved text chunk directly "
+            "\n\n## PINOUT QUERY RULES\n\n"
+            "This is a technical pinout/connector identification query. Follow these rules strictly:\n\n"
+            "1. **Use ALL pinout evidence.** If evidence contains tables for both Connector A and Connector B, "
+            "you MUST include data from BOTH in your answer. Do not stop at one connector.\n\n"
+            "2. **Citation format.** Cite the retrieved text chunk directly "
             "with the exact chunk ID format like [p369 | tbl_6e2_p369_1]. "
-            "Do not rely on a figure-only citation when the answer content comes from table text."
+            "Do not rely on a figure-only citation when the answer content comes from table text.\n\n"
+            "3. **No shopping.** This is a technical reference question. Do NOT emit any [SHOP_SEARCH] tags "
+            "or offer to search for parts. Do NOT suggest buying connectors or pins. "
+            "Answer purely from the manual evidence.\n\n"
+            "4. **No notes.** Do not save notes for pinout lookups."
         )
 
     # Format evidence blocks — use chunk_id as the label (not numbered)

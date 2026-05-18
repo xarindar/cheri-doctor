@@ -114,6 +114,149 @@
       object-fit: contain;
     }
 
+    .vehicle-picker {
+      position: relative;
+      margin: 0 4px 2px;
+    }
+
+    .vehicle-switcher-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 8px 10px;
+      background: none;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      color: var(--text-1);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      transition: background 0.1s, border-color 0.1s;
+    }
+
+    .vehicle-switcher-btn:hover {
+      background: var(--surface);
+    }
+
+    .vehicle-switcher-btn:focus {
+      outline: none;
+      border-color: var(--text-3);
+      background: var(--surface);
+    }
+
+    .vehicle-switcher-icon {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-2);
+      flex-shrink: 0;
+    }
+
+    .vehicle-switcher-copy {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .vehicle-switcher-label {
+      font-size: 0.64rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 2px;
+    }
+
+    .vehicle-switcher-value {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-1);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .vehicle-switcher-chevron {
+      color: var(--text-3);
+      flex-shrink: 0;
+      transition: transform 0.15s;
+    }
+
+    .vehicle-switcher-btn[aria-expanded="true"] .vehicle-switcher-chevron {
+      transform: rotate(180deg);
+    }
+
+    .vehicle-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      margin-top: 4px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      padding: 4px;
+      display: none;
+    }
+
+    @keyframes dropdown-fade {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .vehicle-dropdown.open {
+      display: block;
+      animation: dropdown-fade 0.13s ease-out;
+    }
+
+    .vehicle-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: var(--text-2);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.1s, color 0.1s;
+    }
+
+    .vehicle-item:hover {
+      background: var(--surface);
+      color: var(--text-1);
+    }
+
+    .vehicle-item.active {
+      color: var(--text-1);
+      background: var(--surface-2);
+    }
+
+    .vehicle-item-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-3);
+      background: var(--surface-2);
+      border-radius: 4px;
+    }
+
+    .vehicle-item.active .vehicle-item-icon {
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+    }
+
     #new-chat-btn, #new-project-btn {
       display: flex;
       align-items: center;
@@ -2844,8 +2987,23 @@
         <div class="brand-logo"><img src="/assets/logowhite.svg" alt="Cheri Doctor"></div>
         <div class="brand-info">
           <div class="brand-name">Cheri Doctor</div>
-          <div class="brand-sub">1990 Geo Metro</div>
+          <div class="brand-sub" id="brand-vehicle-label">1990 Geo Metro</div>
         </div>
+      </div>
+      <div class="vehicle-picker">
+        <button id="vehicle-switcher-btn" class="vehicle-switcher-btn" aria-haspopup="listbox" aria-expanded="false">
+          <div class="vehicle-switcher-icon" id="active-vehicle-icon">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 16H9m10 0h2m-4 0H7m-2 0H3"></path><path d="M6 11 8 6h8l2 5"></path><circle cx="7.5" cy="16.5" r="1.5"></circle><circle cx="16.5" cy="16.5" r="1.5"></circle>
+            </svg>
+          </div>
+          <div class="vehicle-switcher-copy">
+            <div class="vehicle-switcher-label">Vehicle</div>
+            <div class="vehicle-switcher-value" id="active-vehicle-name">1990 Geo Metro</div>
+          </div>
+          <svg class="vehicle-switcher-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div id="vehicle-dropdown" class="vehicle-dropdown" role="listbox" aria-label="Select vehicle"></div>
       </div>
     </div>
 
@@ -2874,7 +3032,7 @@
       </button>
       <button id="settings-btn" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;background:none;border:none;border-radius:8px;color:var(--text-2);font-size:0.8rem;font-weight:500;cursor:pointer;font-family:inherit;transition:background 0.12s,color 0.12s;" onmouseover="this.style.background='var(--surface)';this.style.color='var(--text-1)'" onmouseout="this.style.background='none';this.style.color='var(--text-2)'">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        Vehicle Settings
+        <span id="settings-btn-label">Vehicle Settings</span>
       </button>
     </div>
   </nav>
@@ -2895,6 +3053,7 @@
 
       <div class="header-title">
         <h1 id="header-title-text">Cheri Doctor</h1>
+        <p id="header-subtitle-text">1990 Geo Metro</p>
       </div>
 
       <button id="memory-btn" class="hidden" title="Open memory" aria-label="Open memory">
@@ -3076,6 +3235,42 @@ const STORE_KEY    = 'geo_metro_sessions_v2';
 const MODEL_KEY    = 'geo_metro_selected_model';
 const PROJECTS_KEY = 'geo_metro_projects';
 const TAB_KEY      = 'geo_metro_tab_session'; // sessionStorage — tab-specific active chat
+const VEHICLE_KEY  = 'cheri_selected_vehicle';
+const DEFAULT_VEHICLE_ID = 'metro';
+const VEHICLE_PROFILES = {
+  metro: {
+    id: 'metro',
+    label: '1990 Geo Metro',
+    chatPlaceholder: 'Ask about your Geo Metro…',
+    checklistLabel: '1990 Geo Metro Diagnostic Procedure',
+    settingsEnabled: true,
+    chips: [
+      { label: 'Oil change procedure' },
+      { label: 'AC filter drier replacement' },
+      { label: 'Idle speed spec' },
+      { label: 'Valve clearance adjustment' },
+      { label: 'Coolant system flush' },
+      { label: 'Alternator checklist', prompt: 'alternator diagnostic tests', worksheet: true },
+      { label: 'Cooling system checklist', prompt: 'cooling system diagnostic tests', worksheet: true },
+    ],
+  },
+  cruze: {
+    id: 'cruze',
+    label: 'Chevrolet Cruze',
+    chatPlaceholder: 'Ask about your Chevrolet Cruze…',
+    checklistLabel: 'Chevrolet Cruze Diagnostic Procedure',
+    settingsEnabled: true,
+    chips: [
+      { label: 'Oil change procedure' },
+      { label: 'Ignition coil replacement' },
+      { label: 'Thermostat housing removal' },
+      { label: 'Coolant bleed procedure' },
+      { label: 'Turbocharger oil feed line' },
+      { label: 'Charging system checklist', prompt: 'charging system diagnostic tests', worksheet: true },
+      { label: 'Cooling system checklist', prompt: 'cooling system diagnostic tests', worksheet: true },
+    ],
+  },
+};
 
 // ── State ──────────────────────────────────────────────────────────────────
 let sessions     = {};
@@ -3093,6 +3288,7 @@ let activeAudioUrl = null;
 let activeTtsButton = null;
 let speechRecognition = null;
 let micListening = false;
+let activeVehicleId = DEFAULT_VEHICLE_ID;
 
 // Context-aware diagrams state
 let msgFiguresMap = {}; // msgId -> figures array
@@ -3115,14 +3311,144 @@ const micBtn          = document.getElementById('mic-btn');
 const sendBtn         = document.getElementById('send-btn');
 const lightbox        = document.getElementById('lightbox');
 const lightboxImg     = document.getElementById('lightbox-img');
+const brandVehicleLabel = document.getElementById('brand-vehicle-label');
 const headerTitleText = document.getElementById('header-title-text');
+const headerSubtitleText = document.getElementById('header-subtitle-text');
 const modelSelect     = document.getElementById('model-select');
+const vehicleSwitcherBtn = document.getElementById('vehicle-switcher-btn');
+const vehicleDropdown    = document.getElementById('vehicle-dropdown');
 const refPane         = document.getElementById('reference-pane');
 const paneContent     = document.getElementById('pane-content');
 const togglePaneBtn   = document.getElementById('toggle-pane-btn');
 const deepResearchSuggestion = document.getElementById('deep-research-suggestion');
 const deepResearchSuggestionText = document.getElementById('deep-research-suggestion-text');
 const deepResearchSuggestionBtn = document.getElementById('deep-research-suggestion-btn');
+const chipsEl         = document.getElementById('chips');
+const settingsBtn     = document.getElementById('settings-btn');
+const settingsBtnLabel = document.getElementById('settings-btn-label');
+
+function normalizeVehicleId(vehicleId) {
+  return VEHICLE_PROFILES[vehicleId] ? vehicleId : DEFAULT_VEHICLE_ID;
+}
+
+function getVehicleProfile(vehicleId = activeVehicleId) {
+  return VEHICLE_PROFILES[normalizeVehicleId(vehicleId)];
+}
+
+function getSessionVehicleId(session) {
+  return normalizeVehicleId(session?.vehicle);
+}
+
+function vehicleApiPath(path, vehicleId = activeVehicleId) {
+  const url = new URL(path, window.location.origin);
+  url.searchParams.set('vehicle', normalizeVehicleId(vehicleId));
+  return `${url.pathname}${url.search}`;
+}
+
+function renderVehicleChips() {
+  const vehicle = getVehicleProfile();
+  if (!chipsEl) return;
+  chipsEl.innerHTML = vehicle.chips.map((chip) => {
+    if (chip.worksheet) {
+      return `<button class="chip chip-worksheet" data-prompt="${escAttr(chip.prompt || chip.label)}">${escHtml(chip.label)}</button>`;
+    }
+    return `<button class="chip">${escHtml(chip.label)}</button>`;
+  }).join('');
+}
+
+const CAR_SVG_INNER = '<path d="M14 16H9m10 0h2m-4 0H7m-2 0H3"></path><path d="M6 11 8 6h8l2 5"></path><circle cx="7.5" cy="16.5" r="1.5"></circle><circle cx="16.5" cy="16.5" r="1.5"></circle>';
+
+function renderVehicleDropdown() {
+  if (!vehicleDropdown) return;
+  vehicleDropdown.innerHTML = Object.values(VEHICLE_PROFILES).map(v => `
+    <div class="vehicle-item${v.id === activeVehicleId ? ' active' : ''}" role="option" aria-selected="${v.id === activeVehicleId}" data-id="${v.id}">
+      <div class="vehicle-item-icon">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${CAR_SVG_INNER}</svg>
+      </div>
+      <span>${v.label}</span>
+    </div>
+  `).join('');
+  vehicleDropdown.querySelectorAll('.vehicle-item').forEach(el => {
+    el.onclick = (e) => {
+      e.stopPropagation();
+      vehicleDropdown.classList.remove('open');
+      vehicleSwitcherBtn.setAttribute('aria-expanded', 'false');
+      handleVehicleSelection(el.dataset.id);
+    };
+  });
+}
+
+function initVehicleSwitcher() {
+  if (!vehicleSwitcherBtn || !vehicleDropdown) return;
+  vehicleSwitcherBtn.onclick = (e) => {
+    e.stopPropagation();
+    const open = vehicleDropdown.classList.toggle('open');
+    vehicleSwitcherBtn.setAttribute('aria-expanded', String(open));
+  };
+  document.addEventListener('click', () => {
+    vehicleDropdown.classList.remove('open');
+    vehicleSwitcherBtn.setAttribute('aria-expanded', 'false');
+  });
+  vehicleDropdown.addEventListener('click', e => e.stopPropagation());
+}
+
+function refreshVehicleUi() {
+  const vehicle = getVehicleProfile();
+  const nameEl = document.getElementById('active-vehicle-name');
+  if (nameEl) nameEl.textContent = vehicle.label;
+  if (brandVehicleLabel) brandVehicleLabel.textContent = vehicle.label;
+  if (headerSubtitleText) headerSubtitleText.textContent = vehicle.label;
+  if (settingsBtn) settingsBtn.style.display = vehicle.settingsEnabled ? 'flex' : 'none';
+  if (settingsBtnLabel) settingsBtnLabel.textContent = 'Vehicle Settings';
+  document.title = `Cheri Doctor · ${vehicle.label}`;
+  renderVehicleChips();
+  renderVehicleDropdown();
+  _syncModeUi();
+}
+
+async function refreshManualViewerIfOpen() {
+  if (!document.querySelector('.manual-viewer')) return;
+  await loadManualInfo();
+  await loadManualToc();
+  messagesEl.innerHTML = '';
+  messagesEl.style.overflow = 'hidden';
+  renderManualViewer();
+}
+
+function setActiveVehicle(vehicleId, { persist = true } = {}) {
+  const nextVehicleId = normalizeVehicleId(vehicleId);
+  activeVehicleId = nextVehicleId;
+  if (persist) localStorage.setItem(VEHICLE_KEY, nextVehicleId);
+  refreshVehicleUi();
+}
+
+async function handleVehicleSelection(nextVehicleId) {
+  const normalized = normalizeVehicleId(nextVehicleId);
+  if (normalized === activeVehicleId) return;
+
+  const currentSession = activeId ? sessions[activeId] : null;
+  const hasMessages = !!currentSession?.messages?.length;
+  const settingsViewOpen = !!document.getElementById('settings-view-container');
+
+  if (currentSession && !hasMessages) {
+    currentSession.vehicle = normalized;
+    syncSession(currentSession.id);
+  }
+
+  setActiveVehicle(normalized);
+
+  if (settingsViewOpen) {
+    await showSettingsView();
+    return;
+  }
+
+  if (hasMessages && getSessionVehicleId(currentSession) !== normalized) {
+    startNewChat();
+    return;
+  }
+
+  await refreshManualViewerIfOpen();
+}
 
 // ── Session / Project sync (server-side) ──────────────────────────────────
 function syncSession(id) {
@@ -3187,7 +3513,7 @@ function editProject(id, name, description) {
 function createSession(projectId) {
   const id = Date.now().toString();
   const now = Date.now();
-  sessions[id] = { id, title: 'New Chat', messages: [], created: now, updated: now };
+  sessions[id] = { id, title: 'New Chat', messages: [], created: now, updated: now, vehicle: activeVehicleId };
   if (projectId) sessions[id].projectId = projectId;
   syncSession(id);
   return id;
@@ -3483,6 +3809,7 @@ function startNewChat() {
   paneContent.innerHTML = '<div style="padding:40px 20px; text-align:center; color:var(--text-3); font-size:0.85rem;">Figures mentioned in the chat will appear here for easy reference.</div>';
   renderSidebar();
   headerTitleText.textContent = 'Cheri Doctor';
+  refreshVehicleUi();
   refreshMemoryState();
   queryEl.focus();
 }
@@ -3492,6 +3819,11 @@ function loadSession(id) {
   if (window.innerWidth <= 768) closeSidebarMobile();
   clearOrphanRetry();
   activeId = id;
+  if (!sessions[id].vehicle) {
+    sessions[id].vehicle = DEFAULT_VEHICLE_ID;
+    syncSession(id);
+  }
+  setActiveVehicle(getSessionVehicleId(sessions[id]));
   sessionStorage.setItem(TAB_KEY, id);
   activeProjectId = sessions[id].projectId || null;
   document.getElementById('input-area').style.display = '';
@@ -3839,21 +4171,21 @@ function addFigureToPane(f) {
 
 // ── Parts search detection ──────────────────────────────────────────────────
 const _SHOP_EXPLICIT_SOURCE_RE = /\b(?:rock\s*auto|roc\s*auto|rockauto|rocauto|rokauto|ebay|amazon|auto\s*zone|autozone|o'?reill(?:y|ey)|oreilly)\b/i;
-const _SHOP_EXPLICIT_BUY_RE = /\b(?:buy|purchase|order(?:\s+online)?|shop\s+for|in\s+stock|for\s+sale|sell|search\s+for\s+parts|parts\s+search|find\s+(?:a|an)\s+replacement|find\s+replacement)\b/i;
+const _SHOP_EXPLICIT_ACTION_RE = /\b(?:look(?:\s+on)?|search(?:\s+on|\s+for)?|check(?:\s+on|\s+for)?|find(?:\s+it|\s+one|\s+me|\s+for)?|buy|purchase|order(?:\s+online)?|shop\s+for|source|price\s+check|compare\s+prices|in\s+stock|available|does)\b/i;
 const _SHOP_MANUAL_LOOKUP_RE = /\b(?:manual|diagram|figure|info|information|procedure|specs?|wiring|schematic|show\s+diagram|look\s+up)\b/i;
 
 function _detectPartsSearch(query) {
   if (techModeActive) return null;
   const q = query || '';
   const hasSource = _SHOP_EXPLICIT_SOURCE_RE.test(q);
-  const hasBuyVerb = _SHOP_EXPLICIT_BUY_RE.test(q);
+  const hasAction = _SHOP_EXPLICIT_ACTION_RE.test(q);
   const hasManualLookup = _SHOP_MANUAL_LOOKUP_RE.test(q);
 
-  // Only obvious shopping signals should pre-trigger shop UI.
-  if (!hasSource && !hasBuyVerb) return null;
+  // Only explicit source-directed shopping requests should pre-trigger shop UI.
+  if (!hasSource || !hasAction) return null;
 
   // Explicit manual lookups without shopping verbs should not pre-trigger.
-  if (hasManualLookup && !hasBuyVerb) return null;
+  if (hasManualLookup && !hasAction) return null;
   return '__explicit_shop__';
 }
 
@@ -3868,7 +4200,7 @@ function _syncModeUi() {
   deepresearchItem.classList.toggle('active', deepResearchActive);
   if (techModeActive) queryEl.placeholder = 'Tech Mode — describe what you see or enter readings…';
   else if (deepResearchActive) queryEl.placeholder = 'Deep Research — ask a broad or multi-part manual question…';
-  else queryEl.placeholder = 'Ask about your Geo Metro…';
+  else queryEl.placeholder = getVehicleProfile().chatPlaceholder;
 }
 
 function setDeepResearchMode(on, { persist = true } = {}) {
@@ -4110,7 +4442,7 @@ function showShoppingPane(items, partName, { silent = false } = {}) {
   const paneSubtitle = document.getElementById('pane-subtitle');
   if (paneTitle) paneTitle.textContent = 'Parts Results';
   if (paneSubtitle) {
-    paneSubtitle.textContent = `1990 Geo Metro — ${partName}`;
+    paneSubtitle.textContent = `${getVehicleProfile().label} — ${partName}`;
     paneSubtitle.style.display = 'block';
   }
   paneContent.innerHTML = '';
@@ -4236,6 +4568,9 @@ async function sendMessage(options = {}) {
     renderSidebar();
   }
   const requestSessionId = activeId;
+  if (requestSessionId && sessions[requestSessionId]) {
+    sessions[requestSessionId].vehicle = activeVehicleId;
+  }
 
   // Auto-detect Tech Mode activation/deactivation from natural language
   if (/\[tech_mode:\s*on\]|tech mode|let'?s (do this|get to work|start)|ready to (start|work)|heading to the garage/i.test(q)) {
@@ -4283,6 +4618,7 @@ async function sendMessage(options = {}) {
         query: q,
         conversation,
         model,
+        vehicle: activeVehicleId,
         project_context: projectContext,
         images: imagesToSend,
         shop_mode_hint: !!preShopHint,
@@ -4460,11 +4796,11 @@ function parseMarkdown(text) {
 function buildChecklistHtml(title, content) {
     const steps = content.trim().split('\n').filter(line => line.trim());
     const checklistId = 'checklist-' + Math.random().toString(36).substr(2, 9);
-    
+
     let html = `<div class="checklist" id="${checklistId}">`;
     html += `<div class="checklist-header">`;
     html += `<div class="checklist-title">${title.trim()}</div>`;
-    html += `<div class="checklist-subtitle">1990 Geo Metro Diagnostic Procedure</div>`;
+    html += `<div class="checklist-subtitle">${escHtml(getVehicleProfile().checklistLabel)}</div>`;
     html += `</div>`;
     
     let stepNumber = 1;
@@ -4488,7 +4824,7 @@ function buildChecklistHtml(title, content) {
         const figMatch = trimmed.match(/\[p(\d+)\s*\|\s*fig:\s*([^\]]+)\]/);
         if (figMatch) {
           html += `<div class="checklist-figure">`;
-          html += `<img src="/api/figures/${figMatch[2].trim()}" alt="Figure ${figMatch[2]}" onerror="this.style.display='none'">`;
+          html += `<img src="${vehicleApiPath(`/api/figures/${encodeURIComponent(figMatch[2].trim())}`)}" alt="Figure ${figMatch[2]}" onerror="this.style.display='none'">`;
           html += `<div class="checklist-figure-caption">Figure ${figMatch[2]} (Page ${figMatch[1]})</div>`;
           html += `</div>`;
         }
@@ -4584,7 +4920,7 @@ function jumpToFig(figId, page = 0) {
   if (!targetFig) {
     targetFig = {
       figure_id: figId,
-      url: `/api/figures/${encodeURIComponent(figId)}`,
+      url: vehicleApiPath(`/api/figures/${encodeURIComponent(figId)}`),
       page: page || null,
       caption_text: '',
     };
@@ -4790,28 +5126,31 @@ function copyText(btn, text) {
 }
 
 // ── Vehicle Settings ───────────────────────────────────────────────────────
-let vehicleSettings = null;
+const vehicleSettingsCache = {};
 let _settingsPrevState = null; // {activeId, activeProjectId} before opening settings
 
-async function loadVehicleSettings() {
+async function loadVehicleSettings(vehicleId = activeVehicleId) {
+  if (!getVehicleProfile(vehicleId).settingsEnabled) return;
+  if (vehicleSettingsCache[vehicleId]) return;
   try {
-    const res = await fetch('/api/settings');
+    const res = await fetch(vehicleApiPath('/api/settings', vehicleId));
     if (res.ok) {
-      vehicleSettings = await res.json();
+      vehicleSettingsCache[vehicleId] = await res.json();
     }
   } catch (e) { /* silent — server may not be ready */ }
 }
 
 
-function showSettingsView() {
-  _settingsPrevState = { id: activeId, projectId: activeProjectId };
+async function showSettingsView() {
+  await loadVehicleSettings();
+  if (!_settingsPrevState) _settingsPrevState = { id: activeId, projectId: activeProjectId };
 
   document.getElementById('input-area').style.display = 'none';
   emptyState.style.display = 'none';
   messagesEl.innerHTML = '';
-  headerTitleText.textContent = 'Vehicle Settings';
+  headerTitleText.textContent = `${getVehicleProfile().label} Settings`;
 
-  const s = vehicleSettings || {};
+  const s = vehicleSettingsCache[activeVehicleId] || {};
   const sh = s.service_history || {};
 
   const GEAR_ICON = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`;
@@ -4822,7 +5161,7 @@ function showSettingsView() {
   view.innerHTML = `
     <div class="settings-view-header">
       ${GEAR_ICON}
-      <h2>Vehicle Settings</h2>
+      <h2>${escHtml(getVehicleProfile().label)} Settings</h2>
       <button class="sv-back-btn" id="sv-back-btn">← Back to Chat</button>
     </div>
 
@@ -5065,13 +5404,13 @@ async function saveSettingsFromView() {
   };
 
   try {
-    const res = await fetch('/api/settings', {
+    const res = await fetch(vehicleApiPath('/api/settings'), {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(settings),
     });
     if (!res.ok) throw new Error(`Server error ${res.status}`);
-    vehicleSettings = settings;
+    vehicleSettingsCache[activeVehicleId] = settings;
     saveBtn.textContent = 'Saved ✓';
     setTimeout(() => { if (saveBtn) saveBtn.textContent = 'Save Settings'; }, 2000);
     const toast = document.getElementById('settings-toast');
@@ -5441,22 +5780,33 @@ let _manualPrevState = null;
 let _manualTotalPages = 771;
 let _manualCurrentPage = 1;
 let _manualToc = [];
+let _manualInfoVehicleId = null;
+let _manualTocVehicleId = null;
 
 async function loadManualInfo() {
+  const vehicleId = activeVehicleId;
+  if (_manualInfoVehicleId === vehicleId) return;
+  _manualTotalPages = 0;
   try {
-    const res = await fetch('/api/manual/info');
+    const res = await fetch(vehicleApiPath('/api/manual/info', vehicleId));
     if (res.ok) {
       const info = await res.json();
-      _manualTotalPages = info.total_pages || 771;
+      _manualTotalPages = typeof info.total_pages === 'number' ? info.total_pages : 771;
+      _manualInfoVehicleId = vehicleId;
     }
   } catch {}
 }
 
 async function loadManualToc() {
-  if (_manualToc.length) return;
+  const vehicleId = activeVehicleId;
+  if (_manualTocVehicleId === vehicleId) return;
+  _manualToc = [];
   try {
-    const res = await fetch('/api/manual/toc');
-    if (res.ok) _manualToc = await res.json();
+    const res = await fetch(vehicleApiPath('/api/manual/toc', vehicleId));
+    if (res.ok) {
+      _manualToc = await res.json();
+    }
+    _manualTocVehicleId = vehicleId;
   } catch {}
 }
 
@@ -5469,8 +5819,7 @@ function showManualViewer(page) {
   messagesEl.innerHTML = '';
   headerTitleText.textContent = 'Service Manual';
 
-  loadManualInfo();
-  loadManualToc().then(() => renderManualViewer());
+  Promise.all([loadManualInfo(), loadManualToc()]).then(() => renderManualViewer());
 }
 
 function renderManualViewer() {
@@ -5498,7 +5847,7 @@ function renderManualViewer() {
     <div class="manual-body">
       <div class="manual-toc-panel" id="manual-toc-panel">${tocHtml || '<div style="padding:14px;color:var(--text-3);font-size:0.78rem;">Loading...</div>'}</div>
       <div class="manual-page-container" id="manual-page-container">
-        <img id="manual-page-img" src="/api/manual/page/${_manualCurrentPage}" alt="Manual page ${_manualCurrentPage}">
+        <img id="manual-page-img" src="${vehicleApiPath(`/api/manual/page/${_manualCurrentPage}`)}" alt="Manual page ${_manualCurrentPage}">
       </div>
     </div>
   `;
@@ -5511,7 +5860,7 @@ function renderManualViewer() {
     _manualCurrentPage = p;
     document.getElementById('manual-page-num').value = p;
     const img = document.getElementById('manual-page-img');
-    img.src = `/api/manual/page/${p}`;
+    img.src = vehicleApiPath(`/api/manual/page/${p}`);
     img.alt = `Manual page ${p}`;
   }
 
@@ -5789,6 +6138,7 @@ async function voiceHandleFinalTranscript(text) {
   }
   if (activeId && sessions[activeId]) {
     sessions[activeId].deepResearchActive = deepResearchActive;
+    sessions[activeId].vehicle = activeVehicleId;
   }
   updateSessionTimestamp(activeId);
 
@@ -5823,6 +6173,7 @@ async function voiceHandleFinalTranscript(text) {
       query: text,
       conversation,
       model: selectedModel,
+      vehicle: activeVehicleId,
       project_context: projectContext,
       images: [],
       tech_mode_hint: !!techModeActive,
@@ -6137,8 +6488,11 @@ modelSelect.onchange = (e) => localStorage.setItem(MODEL_KEY, e.target.value);
 // ── Init ───────────────────────────────────────────────────────────────────
 (async function init() {
   initVoiceInput();
+  initVehicleSwitcher();
   const savedModel = localStorage.getItem(MODEL_KEY);
+  const savedVehicle = normalizeVehicleId(localStorage.getItem(VEHICLE_KEY));
   if (savedModel && modelSelect) modelSelect.value = savedModel;
+  setActiveVehicle(savedVehicle, { persist: false });
 
   // Load sessions + projects from server
   try {
@@ -6170,6 +6524,10 @@ modelSelect.onchange = (e) => localStorage.setItem(MODEL_KEY, e.target.value);
     } catch (e) { /* ignore */ }
   }
 
+  for (const session of Object.values(sessions)) {
+    if (!session.vehicle) session.vehicle = DEFAULT_VEHICLE_ID;
+  }
+
   // Restore last tab session, or show welcome
   const tabSessionId = sessionStorage.getItem(TAB_KEY);
   if (tabSessionId && sessions[tabSessionId]) {
@@ -6181,7 +6539,7 @@ modelSelect.onchange = (e) => localStorage.setItem(MODEL_KEY, e.target.value);
   // Collapse sidebar by default on mobile
   if (window.innerWidth <= 768) sidebar.classList.add('collapsed');
 
-  loadVehicleSettings();
+  if (getVehicleProfile().settingsEnabled) await loadVehicleSettings();
   queryEl.focus();
 })();
 </script>

@@ -41,7 +41,7 @@ from pydantic import BaseModel
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from src.utils import load_config
-from src.chat import chat, load_index
+from src.chat import chat, load_index, _is_pinout_query
 from src.utils import load_jsonl
 
 app = FastAPI(title="Metro Manual Chat")
@@ -732,7 +732,15 @@ async def serve_assets(file_path: str):
     return FileResponse(str(resolved))
 
 # ── Vehicle settings ─────────────────────────────────────────────────────
-SETTINGS_FILE = PROJECT_ROOT / "configs" / "vehicle_settings.json"
+SETTINGS_FILE = PROJECT_ROOT / "configs" / "vehicle_settings.json"  # legacy metro file
+
+def _settings_file(vehicle_id: str) -> Path:
+    """Return the per-vehicle settings file path, migrating the legacy file on first access."""
+    path = PROJECT_ROOT / "configs" / f"vehicle_settings_{vehicle_id}.json"
+    if not path.exists() and vehicle_id == DEFAULT_VEHICLE_ID and SETTINGS_FILE.exists():
+        import shutil
+        shutil.copy2(SETTINGS_FILE, path)
+    return path
 SERVICE_HISTORY_CSV = PROJECT_ROOT / "data" / "CheriServiceHistory.csv"
 
 
@@ -801,16 +809,17 @@ _DEFAULT_SETTINGS = {
     "modifications": None,
 }
 
-def _load_settings() -> dict:
-    if SETTINGS_FILE.exists():
+def _load_settings(vehicle_id: str = DEFAULT_VEHICLE_ID) -> dict:
+    path = _settings_file(vehicle_id)
+    if path.exists():
         try:
-            return json.loads(SETTINGS_FILE.read_text(encoding="utf-8"))
+            return json.loads(path.read_text(encoding="utf-8"))
         except Exception:
             pass
     return dict(_DEFAULT_SETTINGS)
 
-def _save_settings(data: dict):
-    SETTINGS_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
+def _save_settings(data: dict, vehicle_id: str = DEFAULT_VEHICLE_ID):
+    _settings_file(vehicle_id).write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 # Trim-specific feature overrides — these lock in which manual variant applies
 # for systems where the manual covers multiple configurations.
@@ -1051,6 +1060,60 @@ def _resolve_shop_sources(query: str, conversation: list[dict] | None) -> list[s
     prior = _last_user_query_with_source(conversation)
     if prior:
         return _extract_sources(prior)
+    return None
+
+
+_SHOP_EXPLICIT_ACTION_RE = _re.compile(
+    r'\b(?:look(?:\s+on)?|search(?:\s+on|\s+for)?|check(?:\s+on|\s+for)?|'
+    r'find(?:\s+it|\s+one|\s+me|\s+for)?|buy|purchase|order(?:\s+online)?|'
+    r'shop\s+for|source|price\s+check|compare\s+prices|in\s+stock|available|does)\b',
+    _re.IGNORECASE,
+)
+
+
+def _is_explicit_source_shop_request(query: str) -> bool:
+    q = (query or "").strip()
+    if not q:
+        return False
+    if not _extract_sources(q):
+        return False
+    if not _SHOP_EXPLICIT_ACTION_RE.search(q):
+        return False
+    # "look up" tends to mean manual/reference lookup, not shopping.
+    if _re.search(r'\blook\s+up\b', q, _re.IGNORECASE) and not _re.search(r'\bon\s+', q, _re.IGNORECASE):
+        return False
+    return True
+
+
+def _is_authorized_shop_request(
+    query: str,
+    conversation: list[dict] | None,
+    shop_session: "ShopSession | None",
+) -> bool:
+    if _is_explicit_source_shop_request(query):
+        return True
+    if shop_session and _is_affirmative_shop_followup(query, conversation, shop_session):
+        return True
+    return False
+
+
+def _authorized_shop_sources(
+    query: str,
+    conversation: list[dict] | None,
+    shop_session: "ShopSession | None",
+) -> list[str] | None:
+    explicit = _resolve_shop_sources(query, conversation)
+    if explicit:
+        return explicit
+    if not shop_session or not _is_affirmative_shop_followup(query, conversation, shop_session):
+        return None
+    if shop_session.pending_plan:
+        available = _normalize_shop_sources(shop_session.pending_plan.get("available") or [])
+        if available:
+            return available
+    offered = _normalize_shop_sources(shop_session.last_sources_offered)
+    if offered:
+        return offered
     return None
 
 
@@ -2076,19 +2139,21 @@ def _synthesize_google_tts(text: str, voice: str | None = None) -> bytes:
 
 
 @app.get("/api/settings")
-async def get_settings():
-    return JSONResponse(_load_settings())
+async def get_settings(vehicle: str | None = None):
+    vid = _normalize_vehicle_id(vehicle) if vehicle else DEFAULT_VEHICLE_ID
+    return JSONResponse(_load_settings(vid))
 
 
 @app.put("/api/settings")
-async def put_settings(request: Request):
+async def put_settings(request: Request, vehicle: str | None = None):
+    vid = _normalize_vehicle_id(vehicle) if vehicle else DEFAULT_VEHICLE_ID
     data = await request.json()
     allowed = {
         "vin", "maintenance_schedule", "oil_viscosity", "odometer",
         "tire_size", "driving_profile", "service_history", "modifications",
     }
     cleaned = {k: v for k, v in data.items() if k in allowed}
-    _save_settings(cleaned)
+    _save_settings(cleaned, vid)
     return JSONResponse({"ok": True})
 
 
@@ -2162,17 +2227,17 @@ _AFFIRM_SHOP_FOLLOWUP_RE = _re.compile(
 
 def _is_shop_query(query: str, conversation: list[dict] | None = None) -> bool:
     q = query or ""
-    if _SHOP_INTENT_RE.search(q) or _RA_SEARCH_RE.search(q) or _extract_sources(q):
+    shop_session = _get_shop_session(query, conversation)
+    if _is_authorized_shop_request(q, conversation, shop_session):
         return True
     last_asst = _last_assistant_text(conversation)
-    if last_asst and _SHOP_OFFER_RE.search(last_asst):
-        if _AFFIRMATIVE_RE.search(q) or _AFFIRM_SHOP_FOLLOWUP_RE.search(q):
-            return True
+    if last_asst and _SHOP_OFFER_RE.search(last_asst) and _is_affirmative_shop_followup(q, conversation, shop_session):
+        return True
     if not _SHOP_FOLLOWUP_RE.search(q):
         return False
     if last_asst and _SHOP_CONTEXT_RE.search(last_asst):
-        return True
-    return bool(last_asst and _SHOP_OFFER_RE.search(last_asst) and _AFFIRM_SHOP_FOLLOWUP_RE.search(q))
+        return _is_affirmative_shop_followup(q, conversation, shop_session)
+    return bool(last_asst and _SHOP_OFFER_RE.search(last_asst) and _is_affirmative_shop_followup(q, conversation, shop_session))
 
 
 def _last_shop_user_query(conversation: list[dict] | None) -> str:
@@ -2284,8 +2349,9 @@ async def _run_chat_request(
         chat_config["chat"]["model"] = req.model
 
     vehicle_settings = ""
-    if vehicle_id == DEFAULT_VEHICLE_ID:
-        vehicle_settings = _build_settings_context(_load_settings())
+    settings_ctx = _build_settings_context(_load_settings(vehicle_id))
+    if settings_ctx.strip():
+        vehicle_settings = settings_ctx
 
     # Enrich query (URL fetch, web search) — parts search is now handled by the
     # LLM via [SHOP_SEARCH] tags so it can use its full context to decide what
@@ -2362,9 +2428,34 @@ async def _run_chat_request(
 
     shopping_part_name: str | None = None
 
+    # Suppress shop behavior for technical pinout/connector queries
+    _is_technical_pinout = _is_pinout_query(req.query)
+    if _is_technical_pinout:
+        # Strip any [SHOP_SEARCH] tags the LLM may have emitted
+        cleaned = _SHOP_SEARCH_RE.sub('', response.answer or '').strip()
+        if cleaned != (response.answer or '').strip():
+            print(f"  [shop] Suppressed shop search for pinout query")
+            from src.models import ChatResponse
+            response = ChatResponse(
+                answer=cleaned,
+                citations=response.citations,
+                figure_refs=response.figure_refs,
+                mode=response.mode,
+                deep_research_summary=response.deep_research_summary,
+            )
+
+    shop_request_authorized = _is_authorized_shop_request(req.query, req.conversation, shop_session)
+    authorized_sources = _authorized_shop_sources(req.query, req.conversation, shop_session)
+
     # Watchdog safety-net: if Cheri promises a search but misses [SHOP_SEARCH],
     # auto-inject a tag and execute it so the turn doesn't dead-end.
-    if (not _SHOP_SEARCH_RE.search(response.answer or "")) and _SHOP_PROMISE_RE.search(response.answer or ""):
+    if (
+        not _is_technical_pinout
+        and shop_request_authorized
+        and authorized_sources
+        and (not _SHOP_SEARCH_RE.search(response.answer or ""))
+        and _SHOP_PROMISE_RE.search(response.answer or "")
+    ):
         watchdog_base_part = _sanitize_shop_part_hint(shop_session.last_part_name)
         if not watchdog_base_part:
             hinted_part = _sanitize_shop_part_hint(req.shop_part_hint)
@@ -2381,7 +2472,11 @@ async def _run_chat_request(
             base_part=watchdog_base_part,
         )
         if watchdog_terms:
-            watchdog_sources = _infer_watchdog_sources(response.answer or "")
+            watchdog_sources = _normalize_shop_sources(_infer_watchdog_sources(response.answer or ""))
+            if not watchdog_sources:
+                watchdog_sources = authorized_sources
+            else:
+                watchdog_sources = [src for src in watchdog_sources if src in authorized_sources] or authorized_sources
             auto_tag = f"[SHOP_SEARCH: {watchdog_terms} | {', '.join(watchdog_sources)}]"
             print(f"[shop-watchdog] Auto-injected tag: {auto_tag}")
             from src.models import ChatResponse
@@ -2395,6 +2490,19 @@ async def _run_chat_request(
 
     # Parse all [SHOP_SEARCH] tags in the response and execute each once.
     shop_matches = list(_SHOP_SEARCH_RE.finditer(response.answer or ""))
+    if shop_matches:
+        if not shop_request_authorized or not authorized_sources:
+            print("[shop] Suppressed unauthorized shop search request")
+            from src.models import ChatResponse
+            response = ChatResponse(
+                answer=_SHOP_SEARCH_RE.sub('', response.answer).strip(),
+                citations=response.citations,
+                figure_refs=response.figure_refs,
+                mode=response.mode,
+                deep_research_summary=response.deep_research_summary,
+            )
+            shop_matches = []
+
     if shop_matches:
         search_specs: list[tuple[str, list[str] | None]] = []
         seen_specs: set[tuple[str, tuple[str, ...]]] = set()
@@ -2411,6 +2519,10 @@ async def _run_chat_request(
                 _normalize_shop_sources([s.strip() for s in source_str.split(",") if s.strip()])
                 if source_str else None
             )
+            if parsed_sources:
+                parsed_sources = [src for src in parsed_sources if src in authorized_sources] or authorized_sources
+            else:
+                parsed_sources = authorized_sources
             spec_key = (terms.lower(), tuple(parsed_sources or []))
             if spec_key in seen_specs:
                 continue
