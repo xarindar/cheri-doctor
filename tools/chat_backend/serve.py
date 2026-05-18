@@ -2075,6 +2075,19 @@ def _synthesize_google_tts(text: str, voice: str | None = None) -> bytes:
         raise HTTPException(502, "Google TTS response contained invalid audio data") from exc
 
 
+@app.get("/api/vehicles")
+async def get_vehicles():
+    """Return list of available vehicle profiles."""
+    return JSONResponse([
+        {
+            "id": profile.vehicle_id,
+            "label": profile.label,
+            "index_ready": _index_ready(profile.index_dir),
+        }
+        for profile in VEHICLE_PROFILES.values()
+    ])
+
+
 @app.get("/api/settings")
 async def get_settings():
     return JSONResponse(_load_settings())

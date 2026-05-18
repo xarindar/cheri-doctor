@@ -114,6 +114,144 @@
       object-fit: contain;
     }
 
+    /* ── Vehicle Switcher ──────────────────────────────────────── */
+    .vehicle-switcher-wrap {
+      position: relative;
+    }
+
+    .vehicle-switcher {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      width: 100%;
+      padding: 7px 10px;
+      background: none;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: left;
+      transition: background 0.12s, border-color 0.12s;
+    }
+
+    .vehicle-switcher:hover {
+      background: var(--surface);
+      border-color: var(--border);
+    }
+
+    .vehicle-switcher.open {
+      background: var(--surface);
+      border-color: var(--border);
+    }
+
+    .vs-car-icon {
+      flex-shrink: 0;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+    }
+
+    .vs-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .vs-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .vs-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-1);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .vs-chevron {
+      flex-shrink: 0;
+      color: var(--text-3);
+      transition: transform 0.18s;
+    }
+
+    .vehicle-switcher.open .vs-chevron {
+      transform: rotate(180deg);
+    }
+
+    .vehicle-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 4px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      z-index: 100;
+      display: none;
+    }
+
+    .vehicle-dropdown.open {
+      display: block;
+    }
+
+    .vehicle-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .vehicle-option:hover {
+      background: var(--surface-3);
+    }
+
+    .vehicle-option.active {
+      background: var(--accent-dim);
+    }
+
+    .vo-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .vo-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-1);
+      line-height: 1.3;
+    }
+
+    .vo-sub {
+      font-size: 0.7rem;
+      color: var(--text-3);
+      line-height: 1.3;
+    }
+
+    .vo-check {
+      flex-shrink: 0;
+      color: var(--accent);
+    }
+
+    .vo-unavail {
+      font-size: 0.65rem;
+      color: var(--text-3);
+      padding: 1px 5px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+    }
+
     #new-chat-btn, #new-project-btn {
       display: flex;
       align-items: center;
@@ -2847,6 +2985,21 @@
           <div class="brand-sub">1990 Geo Metro</div>
         </div>
       </div>
+      <div class="vehicle-switcher-wrap" id="vehicle-switcher-wrap">
+        <button class="vehicle-switcher" id="vehicle-switcher-btn">
+          <span class="vs-car-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+          </span>
+          <div class="vs-info">
+            <div class="vs-label">Active Vehicle</div>
+            <div class="vs-name" id="vs-name-display">1990 Geo Metro</div>
+          </div>
+          <span class="vs-chevron">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+        </button>
+        <div class="vehicle-dropdown" id="vehicle-dropdown"></div>
+      </div>
     </div>
 
     <div class="sidebar-actions">
@@ -3069,6 +3222,19 @@
 </div>
 
 <script>
+// ── Active Vehicle ─────────────────────────────────────────────────────────
+const VEHICLE_KEY = 'cheri_active_vehicle';
+let activeVehicle = localStorage.getItem(VEHICLE_KEY) || 'metro';
+
+const VEHICLE_META = {
+  metro: { label: '1990 Geo Metro', sub: 'Cheri · G10 1.0L' },
+  cruze: { label: 'Chevrolet Cruze', sub: '2014 · 1.4L Turbo' },
+};
+let availableVehicles = [
+  { id: 'metro', label: '1990 Geo Metro', index_ready: true },
+  { id: 'cruze', label: 'Chevrolet Cruze', index_ready: false },
+];
+
 // ── Config ─────────────────────────────────────────────────────────────────
 const API_URL    = '/api/chat';
 const API_STREAM_URL = '/api/chat/stream';
@@ -4283,6 +4449,7 @@ async function sendMessage(options = {}) {
         query: q,
         conversation,
         model,
+        vehicle: activeVehicle || null,
         project_context: projectContext,
         images: imagesToSend,
         shop_mode_hint: !!preShopHint,
@@ -4788,6 +4955,96 @@ function copyText(btn, text) {
     setTimeout(() => { btn.innerHTML = icon; }, 1500);
   });
 }
+
+// ── Vehicle Switcher ───────────────────────────────────────────────────────
+function renderVehicleSwitcher() {
+  const btn = document.getElementById('vehicle-switcher-btn');
+  const dropdown = document.getElementById('vehicle-dropdown');
+  const nameDisplay = document.getElementById('vs-name-display');
+  if (!btn || !dropdown || !nameDisplay) return;
+
+  const meta = VEHICLE_META[activeVehicle] || { label: activeVehicle, sub: '' };
+  nameDisplay.textContent = meta.label;
+
+  dropdown.innerHTML = availableVehicles.map(v => {
+    const vmeta = VEHICLE_META[v.id] || { label: v.label, sub: '' };
+    const isActive = v.id === activeVehicle;
+    const unavailBadge = !v.index_ready ? `<span class="vo-unavail">not indexed</span>` : '';
+    const checkIcon = isActive
+      ? `<svg class="vo-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`
+      : '';
+    return `<div class="vehicle-option${isActive ? ' active' : ''}" data-vehicle-id="${v.id}">
+      <div class="vo-body">
+        <div class="vo-name">${escHtml(vmeta.label)}</div>
+        <div class="vo-sub">${escHtml(vmeta.sub)}</div>
+      </div>
+      ${unavailBadge}
+      ${checkIcon}
+    </div>`;
+  }).join('');
+
+  dropdown.querySelectorAll('.vehicle-option').forEach(el => {
+    el.addEventListener('click', () => {
+      switchVehicle(el.dataset.vehicleId);
+    });
+  });
+}
+
+function switchVehicle(vehicleId) {
+  if (!availableVehicles.find(v => v.id === vehicleId)) return;
+  activeVehicle = vehicleId;
+  localStorage.setItem(VEHICLE_KEY, vehicleId);
+  closeVehicleDropdown();
+  renderVehicleSwitcher();
+  // Reload vehicle settings for the new vehicle
+  loadVehicleSettings();
+  // Update header title
+  const meta = VEHICLE_META[vehicleId] || { label: vehicleId };
+  if (!activeId && !activeProjectId) {
+    headerTitleText.textContent = 'Cheri Doctor';
+  }
+}
+
+function openVehicleDropdown() {
+  document.getElementById('vehicle-switcher-btn')?.classList.add('open');
+  document.getElementById('vehicle-dropdown')?.classList.add('open');
+}
+
+function closeVehicleDropdown() {
+  document.getElementById('vehicle-switcher-btn')?.classList.remove('open');
+  document.getElementById('vehicle-dropdown')?.classList.remove('open');
+}
+
+async function fetchAvailableVehicles() {
+  try {
+    const res = await fetch('/api/vehicles');
+    if (res.ok) {
+      availableVehicles = await res.json();
+    }
+  } catch (e) { /* use defaults */ }
+  renderVehicleSwitcher();
+}
+
+// Wire up vehicle switcher button
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('vehicle-switcher-btn');
+  if (btn) {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const dropdown = document.getElementById('vehicle-dropdown');
+      if (dropdown?.classList.contains('open')) {
+        closeVehicleDropdown();
+      } else {
+        openVehicleDropdown();
+      }
+    });
+  }
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#vehicle-switcher-wrap')) {
+      closeVehicleDropdown();
+    }
+  });
+});
 
 // ── Vehicle Settings ───────────────────────────────────────────────────────
 let vehicleSettings = null;
@@ -5823,6 +6080,7 @@ async function voiceHandleFinalTranscript(text) {
       query: text,
       conversation,
       model: selectedModel,
+      vehicle: activeVehicle || null,
       project_context: projectContext,
       images: [],
       tech_mode_hint: !!techModeActive,
@@ -6181,6 +6439,7 @@ modelSelect.onchange = (e) => localStorage.setItem(MODEL_KEY, e.target.value);
   // Collapse sidebar by default on mobile
   if (window.innerWidth <= 768) sidebar.classList.add('collapsed');
 
+  fetchAvailableVehicles();
   loadVehicleSettings();
   queryEl.focus();
 })();
