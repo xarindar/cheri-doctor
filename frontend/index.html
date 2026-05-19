@@ -1057,6 +1057,37 @@
       font-family: inherit;
     }
     .note-add-btn:hover { background: var(--accent-hover); }
+    /* Chat-grouped notes in project memory view */
+    .notes-group { margin-bottom: 12px; }
+    .notes-group-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 4px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 6px;
+    }
+    .notes-group-icon { font-size: 0.85rem; }
+    .notes-group-title {
+      flex: 1;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-2);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .notes-group-count {
+      font-size: 0.68rem;
+      color: var(--text-3);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1px 7px;
+      flex-shrink: 0;
+    }
     /* Note saved indicator in chat messages */
     .note-saved-indicator {
       display: inline-flex;
@@ -3483,7 +3514,7 @@ function removeProjectRemote(id) {
 
 function createProject(name, description) {
   const id = Date.now().toString();
-  projects[id] = { id, name, description, created: Date.now() };
+  projects[id] = { id, name, description, created: Date.now(), vehicle: activeVehicleId };
   syncProject(id);
   renderSidebar();
   return id;
@@ -3527,7 +3558,9 @@ function deleteSession(id) {
     showProjectView(wasProjectId);
     return;
   }
-  const remaining = Object.values(sessions).sort((a, b) => (b.updated || b.created) - (a.updated || a.created));
+  const remaining = Object.values(sessions)
+    .filter(s => getSessionVehicleId(s) === activeVehicleId)
+    .sort((a, b) => (b.updated || b.created) - (a.updated || a.created));
   if (remaining.length) loadSession(remaining[0].id);
   else startNewChat();
   renderSidebar();
@@ -3583,11 +3616,16 @@ function renderSidebar() {
   historyList.innerHTML = '';
   const q = chatSearchQuery;
   const allSessions = Object.values(sessions)
+    .filter(s => getSessionVehicleId(s) === activeVehicleId)
     .sort((a, b) => (b.updated || b.created) - (a.updated || a.created))
     .filter(s => !q || (s.title || '').toLowerCase().includes(q) ||
       (s.messages || []).some(m => (m.text || '').toLowerCase().includes(q)));
   // When searching, suppress project folders — show only matching chats
-  const projectList = q ? [] : Object.values(projects).sort((a, b) => b.created - a.created);
+  // Projects are also scoped to the active vehicle (legacy projects without a vehicle field
+  // are treated as belonging to the default vehicle).
+  const projectList = q ? [] : Object.values(projects)
+    .filter(p => (p.vehicle || DEFAULT_VEHICLE_ID) === activeVehicleId)
+    .sort((a, b) => b.created - a.created);
   const allContent = projectList.length || allSessions.length;
   if (allContent) {
     const divider = document.createElement('div');
@@ -4625,6 +4663,7 @@ async function sendMessage(options = {}) {
         shop_part_hint: null,
         tech_mode_hint: !!techModeActive,
         deep_research: !!deepResearchActive,
+        voice_mode: !!voiceModeActive,
         session_id: activeId || null,
         project_id: activeProjectId || null,
       },
@@ -5660,6 +5699,53 @@ function buildMemoryNoteCard(note, tab) {
   `;
 }
 
+function buildProjectNotesGrouped(notes) {
+  // Separate direct project notes (no session) from chat-sourced notes
+  const projectDirect = notes.filter(n => !n.session_id);
+  const byChatId = {};
+  for (const note of notes) {
+    if (!note.session_id) continue;
+    if (!byChatId[note.session_id]) byChatId[note.session_id] = [];
+    byChatId[note.session_id].push(note);
+  }
+  // Sort chat groups by most recent note
+  const chatGroups = Object.entries(byChatId).sort(([, a], [, b]) => {
+    const aMax = Math.max(...a.map(n => n.updated || n.created || 0));
+    const bMax = Math.max(...b.map(n => n.updated || n.created || 0));
+    return bMax - aMax;
+  });
+
+  let html = '';
+
+  if (projectDirect.length) {
+    html += `<div class="notes-group">
+      <div class="notes-group-header">
+        <span class="notes-group-icon">📌</span>
+        <span class="notes-group-title">Project</span>
+        <span class="notes-group-count">${projectDirect.length}</span>
+      </div>
+      ${projectDirect.map(n => buildMemoryNoteCard(n, 'project')).join('')}
+    </div>`;
+  }
+
+  for (const [sessId, sessNotes] of chatGroups) {
+    const sess = sessions[sessId];
+    const title = (sess?.title && sess.title !== 'New Chat') ? sess.title : 'Chat';
+    const isCurrent = activeId && String(sessId) === String(activeId);
+    const label = isCurrent ? `${escHtml(title)} (current)` : escHtml(title);
+    html += `<div class="notes-group">
+      <div class="notes-group-header">
+        <span class="notes-group-icon">💬</span>
+        <span class="notes-group-title">${label}</span>
+        <span class="notes-group-count">${sessNotes.length}</span>
+      </div>
+      ${sessNotes.map(n => buildMemoryNoteCard(n, 'project')).join('')}
+    </div>`;
+  }
+
+  return html || `<div class="memory-modal-empty">No project memory yet. Cheri Doctor will drop notes here as you work across chats, and you can add your own.</div>`;
+}
+
 function renderMemoryModal() {
   const tabs = getMemoryTabs();
   const activeTab = getMemoryDefaultTab(_memoryState.activeTab);
@@ -5681,7 +5767,9 @@ function renderMemoryModal() {
       }</div>`
     : '';
   const notesHtml = notes.length
-    ? notes.map(note => buildMemoryNoteCard(note, activeTab)).join('')
+    ? (activeTab === 'project'
+        ? buildProjectNotesGrouped(notes)
+        : notes.map(note => buildMemoryNoteCard(note, activeTab)).join(''))
     : `<div class="memory-modal-empty">${
         activeTab === 'project'
           ? 'No project memory yet. Cheri Doctor will drop notes here as you work across chats, and you can add your own.'
@@ -5726,10 +5814,12 @@ function renderMemoryModal() {
     showNoteEditModal(null, async (data) => {
       data.source = 'user';
       if (_memoryState.activeTab === 'project') {
+        // Project-level note: not tied to any specific chat
         data.project_id = activeProjectId || null;
         data.session_id = null;
       } else {
-        data.project_id = activeProjectId || null;
+        // Chat note: contained to this conversation only
+        data.project_id = null;
         data.session_id = activeId || null;
       }
       const result = await createNote(data);
@@ -6178,6 +6268,7 @@ async function voiceHandleFinalTranscript(text) {
       images: [],
       tech_mode_hint: !!techModeActive,
       deep_research: !!deepResearchActive,
+      voice_mode: true,
       session_id: activeId || null,
       project_id: activeProjectId || null,
     }, () => {});

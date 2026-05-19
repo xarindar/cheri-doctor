@@ -581,9 +581,19 @@ def _load_notes_for_scope(
 
     with _get_db() as conn:
         if scope_kind == "project":
+            # Include explicit project-level notes AND notes from any chat session
+            # that belongs to this project (keyed by projectId in sessions.data).
+            # DISTINCT prevents duplicates when a note has both fields set.
             rows = conn.execute(
-                "SELECT * FROM notes WHERE project_id = ? ORDER BY updated DESC",
-                (scope_id,),
+                """
+                SELECT DISTINCT n.*
+                FROM notes n
+                LEFT JOIN sessions s ON n.session_id = s.id
+                WHERE n.project_id = ?
+                   OR json_extract(s.data, '$.projectId') = ?
+                ORDER BY n.updated DESC
+                """,
+                (scope_id, scope_id),
             ).fetchall()
         else:
             rows = conn.execute(
@@ -2005,6 +2015,7 @@ class ChatRequest(BaseModel):
   shop_part_hint: str | None = None
   tech_mode_hint: bool = False
   deep_research: bool = False
+  voice_mode: bool = False
   session_id: str | None = None
   project_id: str | None = None
 
@@ -2390,13 +2401,17 @@ async def _run_chat_request(
             return
         note_id = f"note_{int(time.time()*1000)}_{secrets.token_hex(4)}"
         now_ms = int(time.time() * 1000)
+        # Notes saved during a chat are contained to that chat (session_id only).
+        # Project-level notes (no session) use project_id. The project aggregation
+        # query surfaces chat notes in the project view automatically.
+        note_project_id = None if _clean_scope_id(req.session_id) else req.project_id
         with _get_db() as conn:
             conn.execute(
                 "INSERT INTO notes (id, project_id, session_id, created, updated, title, content, tags, source) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (
                     note_id,
-                    req.project_id,
+                    note_project_id,
                     req.session_id,
                     now_ms,
                     now_ms,
@@ -2417,6 +2432,7 @@ async def _run_chat_request(
         config=chat_config,
         skip_vision=False,
         deep_research=req.deep_research,
+        voice_mode=req.voice_mode,
         project_context=req.project_context,
         notes_context=notes_context,
         vehicle_settings=vehicle_settings,

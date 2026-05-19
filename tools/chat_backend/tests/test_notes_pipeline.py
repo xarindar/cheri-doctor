@@ -236,6 +236,54 @@ class TestNotesPipeline(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(scope_kind, "none")
         self.assertEqual(notes, [])
 
+    def test_project_scope_aggregates_chat_notes_from_project_sessions(self) -> None:
+        """Project view must surface notes from sessions belonging to the project,
+        even when those notes only have session_id set (not project_id)."""
+        import json as _json
+
+        # Insert a session belonging to project-1
+        now = 1_700_000_000_000
+        with serve._get_db() as conn:
+            conn.execute(
+                "INSERT OR REPLACE INTO sessions (id, created, updated, data) VALUES (?, ?, ?, ?)",
+                (
+                    "sess-proj",
+                    now,
+                    now,
+                    _json.dumps({"id": "sess-proj", "projectId": "project-1", "title": "Lean chase"}),
+                ),
+            )
+
+        # Note is chat-contained: only session_id, no project_id
+        self._insert_note(
+            note_id="note-chat-in-proj",
+            session_id="sess-proj",
+            title="O2 sensor ruling",
+            content="Upstream O2 replaced — no change in lean condition.",
+        )
+        # Note from a different session NOT in the project — should not appear
+        self._insert_note(
+            note_id="note-other-sess",
+            session_id="sess-other",
+            title="Unrelated note",
+            content="Tyre rotation done.",
+        )
+        # Direct project-level note (project_id only) — should also appear
+        self._insert_note(
+            note_id="note-proj-direct",
+            project_id="project-1",
+            title="Project goal",
+            content="Resolve intermittent lean condition on 1990 Geo Metro.",
+        )
+
+        notes, scope_kind = serve._load_notes_for_scope(project_id="project-1")
+
+        self.assertEqual(scope_kind, "project")
+        ids = {n["id"] for n in notes}
+        self.assertIn("note-chat-in-proj", ids, "chat note from project session must be in project view")
+        self.assertIn("note-proj-direct", ids, "direct project note must be in project view")
+        self.assertNotIn("note-other-sess", ids, "note from unrelated session must not appear")
+
     async def test_create_note_rejects_unscoped_payload(self) -> None:
         with self.assertRaises(serve.HTTPException) as ctx:
             await serve.create_note(
