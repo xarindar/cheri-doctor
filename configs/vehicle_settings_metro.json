@@ -1,0 +1,24 @@
+{
+  "vin": "JG1MR3362LK769576",
+  "trim": "LSi",
+  "maintenance_schedule": "I",
+  "oil_viscosity": "5W-30",
+  "odometer": 80000,
+  "tire_size": "155/80SR13",
+  "driving_profile": "severe",
+  "service_history": {
+    "oil_change":    { "mileage": null },
+    "spark_plugs":   { "mileage": null },
+    "trans_fluid":   { "mileage": null },
+    "coolant_flush": { "mileage": null },
+    "brake_fluid":   { "mileage": null }
+  },
+  "modifications": [
+    {
+      "id": "1",
+      "category": "retrofit",
+      "title": "A/C Refrigerant",
+      "description": "Converted from R-12 to R-134a in 2007"
+    }
+  ]
+}

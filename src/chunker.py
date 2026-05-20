@@ -23,6 +23,7 @@ FIGURE_REF_RE    = re.compile(r"(?:Figure|Fig\.?)\s*(\d+)", re.IGNORECASE)
 FIGURE_MENTION_RE = re.compile(r"\b(?:figures?|fig\.?|diagrams?|schematics?|illustrations?|charts?)\b", re.IGNORECASE)
 TOC_NOISE_RE    = re.compile(r"\.{4,}|0A-\d|\b0B-\d|\b1[A-Z]-\d")
 SECTION_CODE_RE = re.compile(r"\b\d+[A-Z]-\d+\b")
+SENTENCE_BOUNDARY_RE = re.compile(r"(?<=[.!?])(?:[\"')\]]*)\s+(?=[A-Z])|\n+")
 # Matches section refs like "6A1-33", "10-1-5", "7A-4", "C1-5", "B-3", "A-18"
 INDEX_REF_RE    = re.compile(r"^[A-Z\d][A-Z\d]*-\d[\d-]*$")
 # Running page header: "8-30 BODY AND CHASSIS ELECTRICAL" or "6E2-2 DRIVEABILITY"
@@ -181,7 +182,7 @@ def _get_engine_variant(section_code: str | None, section_path: str) -> str:
         return "G10"
     
     # Default for this manual is G10 unless specified
-    return "both"
+    return "G10"
 
 def build_chunks(document: dict, config: dict, source_doc: str = "main") -> tuple[list[dict], list[dict]]:
     """Produce chunks.jsonl and figures.jsonl records from document.json.
@@ -204,6 +205,14 @@ def build_chunks(document: dict, config: dict, source_doc: str = "main") -> tupl
         section_code = page.get("section_code")
         source_label = page.get("source_label")
         section_path = page.get("section_path", "")
+
+        # Priority 8: Chapter 10 subsection promotion
+        # Promote source_label (e.g. "10-5-1") to section_code if it's a bare "10"
+        if section_code == "10" and source_label and source_label.startswith("10-"):
+            section_code = source_label
+            if section_path in ("", "10"):
+                section_path = source_label
+
         last_caption: str = "" # Track most recent caption ON THIS PAGE
 
         # Counter for deterministic chunk IDs per page
@@ -356,7 +365,8 @@ def build_chunks(document: dict, config: dict, source_doc: str = "main") -> tupl
                 chunk = _chunk_procedure(block, doc_id, pn, section_code,
                                          source_label, section_path, seq_counter,
                                          page_figure_ids, fig_num_to_id, title=ctx,
-                                         block_id_to_fig_id=block_id_to_fig_id)
+                                         block_id_to_fig_id=block_id_to_fig_id,
+                                         caption_map=caption_map)
                 if chunk:
                     chunks.append(chunk)
 
@@ -698,7 +708,8 @@ def _chunk_procedure(block, doc_id, pn, section_code, source_label,
                      page_figure_ids: list | None = None,
                      fig_num_to_id: dict | None = None,
                      title: str = "",
-                     block_id_to_fig_id: dict | None = None) -> dict | None:
+                     block_id_to_fig_id: dict | None = None,
+                     caption_map: dict | None = None) -> dict | None:
     steps = block.get("steps") or []
     if not steps:
         return None  # A procedure with zero steps is just a header, not a chunk
@@ -788,6 +799,20 @@ def _chunk_procedure(block, doc_id, pn, section_code, source_label,
         if fid not in seen:
             seen.add(fid)
             merged_fig_refs.append(fid)
+
+    # Inline compact figure captions for explicitly resolved refs.
+    # Only appended when the caption is substantive (>15 chars) to avoid
+    # cluttering chunks with fallback headings like "DISASSEMBLY".
+    if caption_map and merged_fig_refs:
+        inline_caps: list[str] = []
+        for fig_id in merged_fig_refs:
+            cap = (caption_map.get(fig_id) or "").strip()
+            if len(cap) > 15:
+                m = FIGURE_REF_RE.search(cap)
+                label = f"Figure {m.group(1)}" if m else fig_id
+                inline_caps.append(f"[{label}: {cap}]")
+        if inline_caps:
+            text = text + "\n" + "\n".join(inline_caps)
 
     return _make_chunk(
         chunk_id=_gen_id("proc", section_code, pn, seq_counter),
@@ -890,6 +915,7 @@ def _chunk_table(block, doc_id, pn, section_code, source_label,
         rows = [[str(cell) if cell is not None else "" for cell in r] for r in rows]
     # Use block's own title (vision pages) or last heading seen
     table_title = (block.get("title") or "").strip() or title
+    table_type = _classify_table_type(table_title, rows)
     if not rows:
         text = block.get("retrieval_text", "")
         if not text:
@@ -902,11 +928,12 @@ def _chunk_table(block, doc_id, pn, section_code, source_label,
             block_ids=[f"p{pn}_{block['block_id']}"], bbox=block.get("bbox"),
             ctype="table", section_code=section_code,
             source_label=source_label, section_path=section_path,
-            text=text, asset_refs=[block["asset_path"]] if block.get("asset_path") else []
+            text=text, asset_refs=[block["asset_path"]] if block.get("asset_path") else [],
+            table_type=table_type,
         )], ""
 
     # Cross-reference index tables: render as flat "Topic: section-ref" list
-    if _is_index_table(rows):
+    if table_type == "index":
         lines = [
             f"{r[0]}: {r[1]}" for r in rows
             if len(r) >= 2
@@ -928,6 +955,7 @@ def _chunk_table(block, doc_id, pn, section_code, source_label,
                 source_label=source_label, section_path=section_path,
                 text=text,
                 asset_refs=[block["asset_path"]] if block.get("asset_path") else [],
+                table_type=table_type,
             ))
         return result, ""
 
@@ -990,6 +1018,7 @@ def _chunk_table(block, doc_id, pn, section_code, source_label,
                 source_label=source_label, section_path=section_path,
                 text=text,
                 asset_refs=[block["asset_path"]] if block.get("asset_path") else [],
+                table_type=table_type,
             )], tbl_last_cond
 
     chunks = []
@@ -1029,7 +1058,8 @@ def _chunk_table(block, doc_id, pn, section_code, source_label,
             source_label=source_label,
             section_path=section_path,
             text=group_text,
-            asset_refs=[block["asset_path"]] if block.get("asset_path") else []
+            asset_refs=[block["asset_path"]] if block.get("asset_path") else [],
+            table_type=table_type,
         )
         chunks.append(chunk)
 
@@ -1102,6 +1132,39 @@ def _is_index_table(rows: list) -> bool:
     )
     return hits >= len(rows) * 0.7
 
+
+_PINOUT_TABLE_RE = re.compile(
+    r"\b(?:pin|terminal|cavity|circuit|wire color|connector)\b",
+    re.IGNORECASE,
+)
+_SPEC_TABLE_RE = re.compile(
+    r"\b(?:voltage|resistance|torque|pressure|clearance|spec(?:ification)?|"
+    r"capacity|n[·.]?m|ft-?lb|lb\.?-?ft|psi|kpa)\b",
+    re.IGNORECASE,
+)
+
+
+def _classify_table_type(title: str, rows: list[list[str]] | None) -> str | None:
+    """Classify high-value table types for retrieval and reranking."""
+    if not rows:
+        return None
+    if _is_index_table(rows):
+        return "index"
+
+    header = rows[0]
+    data_rows = rows[1:] if len(rows) > 1 and _looks_like_header(rows[0]) else rows
+    if _is_diagnostic_table(header, data_rows):
+        return "diagnostic"
+
+    header_text = " ".join(cell.strip() for cell in header if str(cell).strip())
+    title_text = (title or "").strip()
+    combined = " ".join(part for part in (title_text, header_text) if part)
+    if _PINOUT_TABLE_RE.search(combined):
+        return "pinout"
+    if _SPEC_TABLE_RE.search(combined):
+        return "spec"
+    return None
+
 def _is_diagnostic_table(header: list[str], data_rows: list[list[str]]) -> bool:
     """Return True if this table is a diagnostic/troubleshooting table that should be split by condition.
 
@@ -1127,7 +1190,46 @@ def _is_diagnostic_table(header: list[str], data_rows: list[list[str]]) -> bool:
         if has_condition and has_cause and has_correction:
             return True
 
-    return False
+    # Criterion 2: sparse fill-down pattern in the first column.
+    # Diagnostic tables often only populate the condition in the first row
+    # of each group, leaving continuation rows blank until chunk-time fill-down.
+    if len(data_rows) < 4:
+        return False
+
+    first_col = [row[0].strip() for row in data_rows if row]
+    non_empty_conditions = [value for value in first_col if value]
+    distinct_conditions = {value for value in non_empty_conditions}
+
+    if len(distinct_conditions) < 2:
+        return False
+
+    # Ordinary spec tables usually populate column 0 on every row. We only
+    # want the sparse group-label pattern used by troubleshooting tables.
+    if not any(not value for value in first_col):
+        return False
+
+    non_empty_ratio = len(non_empty_conditions) / len(first_col)
+    if non_empty_ratio > 0.6:
+        return False
+
+    # Condition labels are typically short symptom phrases, not long prose.
+    short_condition_count = sum(
+        1 for value in non_empty_conditions
+        if len(re.findall(r"\S+", value)) <= 5
+    )
+    if short_condition_count < len(non_empty_conditions) * 0.8:
+        return False
+
+    # Require actual payload outside the first column so sparse index-like
+    # tables do not get treated as condition/cause/correction groups.
+    payload_rows = sum(
+        1 for row in data_rows
+        if any(cell.strip() for cell in row[1:])
+    )
+    if payload_rows < max(3, len(data_rows) // 2):
+        return False
+
+    return True
 
 
 def _render_table_group_text(header: list[str], group_rows: list[list[str]], condition: str) -> str:
@@ -1181,6 +1283,46 @@ def _clean_toc_noise(text: str) -> str:
     return t
 
 
+def _split_oversized_paragraph_text(text: str, max_chars: int, min_chars: int) -> list[str]:
+    text = text.strip()
+    if not text or len(text) <= max_chars:
+        return [text] if text else []
+
+    parts: list[str] = []
+    remaining = text
+    min_split = max(min_chars, max_chars // 2)
+
+    while len(remaining) > max_chars:
+        search_window = remaining[:max_chars + 1]
+        split_at = None
+        for match in SENTENCE_BOUNDARY_RE.finditer(search_window):
+            if match.start() >= min_split:
+                split_at = match.start()
+
+        if split_at is None:
+            split_at = search_window.rfind(" ", min_split, max_chars + 1)
+        if split_at is None or split_at < min_split:
+            split_at = max_chars
+
+        piece = remaining[:split_at].strip()
+        if not piece:
+            split_at = max_chars
+            piece = remaining[:split_at].strip()
+        parts.append(piece)
+        remaining = remaining[split_at:].strip()
+
+    if remaining:
+        if parts and len(remaining) < max(min_chars // 2, 80):
+            merged = f"{parts[-1]} {remaining}".strip()
+            if len(merged) <= max_chars + max(min_chars // 2, 40):
+                parts[-1] = merged
+            else:
+                parts.append(remaining)
+        else:
+            parts.append(remaining)
+    return parts
+
+
 def _chunk_paragraphs(para_blocks: list[dict], doc_id, pn, section_code,
                       source_label, section_path, seq_counter,
                       min_tok: int, max_tok: int,
@@ -1199,19 +1341,20 @@ def _chunk_paragraphs(para_blocks: list[dict], doc_id, pn, section_code,
         text = "\n\n".join(buf_text).strip()
         if not text:
             return
-        chunk = _make_chunk(
-            chunk_id=_gen_id("para", section_code, pn, seq_counter),
-            doc_id=doc_id, page=pn,
-            block_ids=list(buf_ids),
-            bbox=buf_bbox,
-            ctype="paragraph",
-            section_code=section_code,
-            source_label=source_label,
-            section_path=section_path,
-            text=text,
-            figure_refs=_resolve_fig_refs(text, page_figure_ids or [], fig_num_to_id),
-        )
-        chunks.append(chunk)
+        for part in _split_oversized_paragraph_text(text, max_chars, min_chars):
+            chunk = _make_chunk(
+                chunk_id=_gen_id("para", section_code, pn, seq_counter),
+                doc_id=doc_id, page=pn,
+                block_ids=list(buf_ids),
+                bbox=buf_bbox,
+                ctype="paragraph",
+                section_code=section_code,
+                source_label=source_label,
+                section_path=section_path,
+                text=part,
+                figure_refs=_resolve_fig_refs(part, page_figure_ids or [], fig_num_to_id),
+            )
+            chunks.append(chunk)
 
     for block in para_blocks:
         text = (block.get("text") or "").strip()
@@ -1278,7 +1421,8 @@ def _make_chunk(*, chunk_id, doc_id, page, block_ids, bbox, ctype,
                 procedure_type=None, system=None, engine_variant=None,
                 steps=None, kv=None, figure_refs=None, asset_refs=None,
                 starting_step=1, info_types=None, entities=None,
-                body_styles=None, trim_variants=None, sir_equipped=None) -> dict:
+                body_styles=None, trim_variants=None, sir_equipped=None,
+                table_type=None) -> dict:
     if not system:
         system = _get_system(section_code, section_path)
     if not engine_variant:
@@ -1311,6 +1455,7 @@ def _make_chunk(*, chunk_id, doc_id, page, block_ids, bbox, ctype,
         "body_styles":    body_styles,
         "trim_variants":  trim_variants,
         "sir_equipped":   sir_equipped,
+        "table_type":     table_type,
         "token_count":    len(text) // CHARS_PER_TOKEN,
     })
 
@@ -1352,6 +1497,7 @@ def _enrich_chunk_metadata(chunk: dict) -> dict:
     chunk.setdefault("same_page_figure_ids", [])
     chunk.setdefault("related_figure_ids", [])
     chunk.setdefault("related_table_ids", [])
+    chunk.setdefault("table_type", None)
     chunk.setdefault("source_doc", "main")
     if "token_count" not in chunk:
         chunk["token_count"] = len(text) // CHARS_PER_TOKEN

@@ -1,0 +1,2121 @@
+{
+  "total_chunks": 5686,
+  "under_20_total": 1112,
+  "under_20_by_type": {
+    "toc_category": 2,
+    "toc_entry": 22,
+    "figure": 531,
+    "important": 14,
+    "paragraph": 223,
+    "table": 177,
+    "notice": 81,
+    "procedure": 30,
+    "note": 24,
+    "caution": 8
+  },
+  "under_20_duplicate_groups_by_type": {
+    "figure": 1,
+    "notice": 6,
+    "paragraph": 9,
+    "note": 1
+  },
+  "family_counts": {
+    "toc_category_other": 2,
+    "toc_entry_other": 22,
+    "protected_figure_caption": 531,
+    "protected_advisory": 127,
+    "other_short_paragraph": 204,
+    "other_short_table": 149,
+    "protected_procedure": 30,
+    "xrefish_paragraph_candidate": 13,
+    "protected_semantic_table": 27,
+    "stub_paragraph_candidate": 6,
+    "xref_or_index_table_candidate": 1
+  },
+  "canaries": {
+    "fig_0b_p17_0": {
+      "present": true,
+      "type": "figure",
+      "token_count": 12,
+      "text": "Fig. 3 Engine Oil Viscosity Recommendation \u2013 1.0L"
+    },
+    "caut_6c_p293_0": {
+      "present": true,
+      "type": "caution",
+      "token_count": 47,
+      "text": "CAUTION: A small amount of fuel may be released after the fuel hose is disconnected. In order to reduce the chance of pe"
+    },
+    "note_6e2_p419_0": {
+      "present": true,
+      "type": "note",
+      "token_count": 12,
+      "text": "NOTE: IF CODE 42 IS STORED, GO TO THAT CODE FIRST."
+    }
+  },
+  "top_info_type_buckets_by_type": {
+    "toc_category": [
+      {
+        "info_types": [
+          "cross_reference"
+        ],
+        "count": 2
+      }
+    ],
+    "toc_entry": [
+      {
+        "info_types": [
+          "cross_reference"
+        ],
+        "count": 21
+      },
+      {
+        "info_types": [
+          "cross_reference",
+          "wiring"
+        ],
+        "count": 1
+      }
+    ],
+    "figure": [
+      {
+        "info_types": [
+          "diagram"
+        ],
+        "count": 457
+      },
+      {
+        "info_types": [
+          "diagram",
+          "spec"
+        ],
+        "count": 26
+      },
+      {
+        "info_types": [
+          "diagram",
+          "wiring"
+        ],
+        "count": 25
+      },
+      {
+        "info_types": [
+          "diagram",
+          "location"
+        ],
+        "count": 8
+      },
+      {
+        "info_types": [
+          "diagnostic",
+          "diagram"
+        ],
+        "count": 6
+      },
+      {
+        "info_types": [
+          "diagram",
+          "pinout"
+        ],
+        "count": 3
+      },
+      {
+        "info_types": [
+          "diagram",
+          "spec",
+          "wiring"
+        ],
+        "count": 2
+      },
+      {
+        "info_types": [
+          "diagnostic",
+          "diagram",
+          "spec"
+        ],
+        "count": 2
+      }
+    ],
+    "important": [
+      {
+        "info_types": [
+          "<none>"
+        ],
+        "count": 12
+      },
+      {
+        "info_types": [
+          "diagram"
+        ],
+        "count": 1
+      },
+      {
+        "info_types": [
+          "wiring"
+        ],
+        "count": 1
+      }
+    ],
+    "paragraph": [
+      {
+        "info_types": [
+          "<none>"
+        ],
+        "count": 157
+      },
+      {
+        "info_types": [
+          "cross_reference"
+        ],
+        "count": 14
+      },
+      {
+        "info_types": [
+          "diagram"
+        ],
+        "count": 13
+      },
+      {
+        "info_types": [
+          "spec"
+        ],
+        "count": 8
+      },
+      {
+        "info_types": [
+          "wiring"
+        ],
+        "count": 8
+      },
+      {
+        "info_types": [
+          "diagnostic"
+        ],
+        "count": 7
+      },
+      {
+        "info_types": [
+          "diagnostic",
+          "wiring"
+        ],
+        "count": 4
+      },
+      {
+        "info_types": [
+          "diagnostic",
+          "diagram",
+          "wiring"
+        ],
+        "count": 3
+      }
+    ],
+    "table": [
+      {
+        "info_types": [
+          "<none>"
+        ],
+        "count": 150
+      },
+      {
+        "info_types": [
+          "diagnostic"
+        ],
+        "count": 9
+      },
+      {
+        "info_types": [
+          "spec"
+        ],
+        "count": 6
+      },
+      {
+        "info_types": [
+          "wiring"
+        ],
+        "count": 5
+      },
+      {
+        "info_types": [
+          "location"
+        ],
+        "count": 2
+      },
+      {
+        "info_types": [
+          "location",
+          "wiring"
+        ],
+        "count": 2
+      },
+      {
+        "info_types": [
+          "diagnostic",
+          "pinout",
+          "wiring"
+        ],
+        "count": 1
+      },
+      {
+        "info_types": [
+          "pinout",
+          "wiring"
+        ],
+        "count": 1
+      }
+    ],
+    "notice": [
+      {
+        "info_types": [
+          "<none>"
+        ],
+        "count": 71
+      },
+      {
+        "info_types": [
+          "diagram"
+        ],
+        "count": 3
+      },
+      {
+        "info_types": [
+          "spec"
+        ],
+        "count": 2
+      },
+      {
+        "info_types": [
+          "wiring"
+        ],
+        "count": 2
+      },
+      {
+        "info_types": [
+          "cross_reference"
+        ],
+        "count": 1
+      },
+      {
+        "info_types": [
+          "diagnostic"
+        ],
+        "count": 1
+      },
+      {
+        "info_types": [
+          "location"
+        ],
+        "count": 1
+      }
+    ],
+    "procedure": [
+      {
+        "info_types": [
+          "procedure"
+        ],
+        "count": 24
+      },
+      {
+        "info_types": [
+          "procedure",
+          "wiring"
+        ],
+        "count": 3
+      },
+      {
+        "info_types": [
+          "procedure",
+          "spec"
+        ],
+        "count": 2
+      },
+      {
+        "info_types": [
+          "diagram",
+          "procedure"
+        ],
+        "count": 1
+      }
+    ],
+    "note": [
+      {
+        "info_types": [
+          "<none>"
+        ],
+        "count": 23
+      },
+      {
+        "info_types": [
+          "diagnostic"
+        ],
+        "count": 1
+      }
+    ],
+    "caution": [
+      {
+        "info_types": [
+          "<none>"
+        ],
+        "count": 8
+      }
+    ]
+  },
+  "family_examples": {
+    "toc_category_other": [
+      {
+        "chunk_id": "toc_cat_general_information",
+        "type": "toc_category",
+        "section_code": null,
+        "page": null,
+        "token_count": 19,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "GENERAL INFORMATION General Information \u2014 0A Maintenance and Lubrication \u2014 0B"
+      },
+      {
+        "chunk_id": "toc_cat_accessories",
+        "type": "toc_category",
+        "section_code": null,
+        "page": null,
+        "token_count": 5,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "ACCESSORIES Radio \u2014 9A"
+      }
+    ],
+    "toc_entry_other": [
+      {
+        "chunk_id": "toc_6a1",
+        "type": "toc_entry",
+        "section_code": "6A1",
+        "page": null,
+        "token_count": 19,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Engine Mechanical (Section 6A1) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6b",
+        "type": "toc_entry",
+        "section_code": "6B",
+        "page": null,
+        "token_count": 18,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Engine Cooling (Section 6B) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6c",
+        "type": "toc_entry",
+        "section_code": "6C",
+        "page": null,
+        "token_count": 17,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Fuel System (Section 6C) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6d",
+        "type": "toc_entry",
+        "section_code": "6D",
+        "page": null,
+        "token_count": 19,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Engine Electrical (Section 6D) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6d1",
+        "type": "toc_entry",
+        "section_code": "6D1",
+        "page": null,
+        "token_count": 16,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Battery (Section 6D1) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6d2",
+        "type": "toc_entry",
+        "section_code": "6D2",
+        "page": null,
+        "token_count": 18,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Cranking System (Section 6D2) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6d3",
+        "type": "toc_entry",
+        "section_code": "6D3",
+        "page": null,
+        "token_count": 18,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Charging System (Section 6D3) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6d4",
+        "type": "toc_entry",
+        "section_code": "6D4",
+        "page": null,
+        "token_count": 18,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Ignition System (Section 6D4) Category: ENGINE \u2014 6"
+      }
+    ],
+    "protected_figure_caption": [
+      {
+        "chunk_id": "fig_0a_p5_0",
+        "type": "figure",
+        "section_code": "0A",
+        "page": 5,
+        "token_count": 13,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Figure 1 Electrostatic Discharge Sensitive Parts Label"
+      },
+      {
+        "chunk_id": "fig_0a_p5_1",
+        "type": "figure",
+        "section_code": "0A",
+        "page": 5,
+        "token_count": 11,
+        "info_types": [
+          "diagram",
+          "location"
+        ],
+        "table_type": null,
+        "text": "Figure 2 Vehicle Identification Number Location"
+      },
+      {
+        "chunk_id": "fig_0a_p7_1",
+        "type": "figure",
+        "section_code": "0A",
+        "page": 7,
+        "token_count": 13,
+        "info_types": [
+          "diagram",
+          "location"
+        ],
+        "table_type": null,
+        "text": "Figure 6 Front Support Location 1: FRONT CROSSMEMBER"
+      },
+      {
+        "chunk_id": "fig_0b_p17_0",
+        "type": "figure",
+        "section_code": "0B",
+        "page": 17,
+        "token_count": 12,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Fig. 3 Engine Oil Viscosity Recommendation \u2013 1.0L"
+      },
+      {
+        "chunk_id": "fig_1a_p23_0",
+        "type": "figure",
+        "section_code": "1A",
+        "page": 23,
+        "token_count": 13,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Figure 2 Heater Control Operation and Air Distribution"
+      },
+      {
+        "chunk_id": "fig_1a_p30_1",
+        "type": "figure",
+        "section_code": "1A",
+        "page": 30,
+        "token_count": 10,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Figure 13 Instrument Panel Carrier Removal"
+      },
+      {
+        "chunk_id": "fig_1a_p30_2",
+        "type": "figure",
+        "section_code": "1A",
+        "page": 30,
+        "token_count": 16,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Figure 14 Heater Case Removal 1: MOUNTING BOLTS 2: MOUNTING NUTS"
+      },
+      {
+        "chunk_id": "fig_1a_p31_0",
+        "type": "figure",
+        "section_code": "1A",
+        "page": 31,
+        "token_count": 13,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Figure 15 Heater Case Disassembly 1: ATTACHING SCREWS"
+      }
+    ],
+    "protected_advisory": [
+      {
+        "chunk_id": "impo_0b_p14_0",
+        "type": "important",
+        "section_code": "0B",
+        "page": 14,
+        "token_count": 19,
+        "info_types": [],
+        "table_type": null,
+        "text": "IMPORTANT: ALWAYS USE SG QUALITY ENERGY CONSERVING II OILS OF PROPER VISCOSITY"
+      },
+      {
+        "chunk_id": "noti_1a_p27_0",
+        "type": "notice",
+        "section_code": "1A",
+        "page": 27,
+        "token_count": 19,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Adjust fresh/recirculate cable. See \"Adjust\" procedure in this section."
+      },
+      {
+        "chunk_id": "noti_1a_p28_0",
+        "type": "notice",
+        "section_code": "1A",
+        "page": 28,
+        "token_count": 17,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Adjust control cables. See \"Adjust\" procedure in this section."
+      },
+      {
+        "chunk_id": "noti_1a_p28_1",
+        "type": "notice",
+        "section_code": "1A",
+        "page": 28,
+        "token_count": 14,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Note cable routing for ease of cable installation."
+      },
+      {
+        "chunk_id": "noti_1a_p28_2",
+        "type": "notice",
+        "section_code": "1A",
+        "page": 28,
+        "token_count": 14,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Note cable routing for ease of cable installation."
+      },
+      {
+        "chunk_id": "noti_1b_p41_0",
+        "type": "notice",
+        "section_code": "1B",
+        "page": 41,
+        "token_count": 16,
+        "info_types": [
+          "spec"
+        ],
+        "table_type": null,
+        "text": "NOTICE: Make sure the high pressure-side valve is closed securely."
+      },
+      {
+        "chunk_id": "noti_1b_p47_1",
+        "type": "notice",
+        "section_code": "1B",
+        "page": 47,
+        "token_count": 18,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Exercise care not to damage fins of the condenser during removal."
+      },
+      {
+        "chunk_id": "noti_1b_p49_0",
+        "type": "notice",
+        "section_code": "1B",
+        "page": 49,
+        "token_count": 13,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Do not use water for cleaning the evaporator."
+      }
+    ],
+    "other_short_paragraph": [
+      {
+        "chunk_id": "para_0b_p17_1",
+        "type": "paragraph",
+        "section_code": "0B",
+        "page": 17,
+        "token_count": 18,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "1.0L (VIN 6) \u2013 Perform EGR System check. See Section 6E2 or 6E3, Chart C7."
+      },
+      {
+        "chunk_id": "para_0b_p17_2",
+        "type": "paragraph",
+        "section_code": "0B",
+        "page": 17,
+        "token_count": 12,
+        "info_types": [
+          "spec"
+        ],
+        "table_type": null,
+        "text": "Adjust timing to underhood label specifications."
+      },
+      {
+        "chunk_id": "para_0b_p17_4",
+        "type": "paragraph",
+        "section_code": "0B",
+        "page": 17,
+        "token_count": 12,
+        "info_types": [],
+        "table_type": null,
+        "text": "Make sure the indicator points to the gear chosen."
+      },
+      {
+        "chunk_id": "para_1a_p28_0",
+        "type": "paragraph",
+        "section_code": "1A",
+        "page": 28,
+        "token_count": 14,
+        "info_types": [],
+        "table_type": null,
+        "text": "\u2022 Control cables. See \"Adjust\" procedure in this section."
+      },
+      {
+        "chunk_id": "para_1b_p48_0",
+        "type": "paragraph",
+        "section_code": "1B",
+        "page": 48,
+        "token_count": 17,
+        "info_types": [],
+        "table_type": null,
+        "text": "Receiver/dryer bracket attaching screw and receiver/dryer from bracket."
+      },
+      {
+        "chunk_id": "para_1b_p48_1",
+        "type": "paragraph",
+        "section_code": "1B",
+        "page": 48,
+        "token_count": 14,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Control cable. Refer to HEATING AND VENTILATION (SEC.1A)."
+      },
+      {
+        "chunk_id": "para_1b_p53_1",
+        "type": "paragraph",
+        "section_code": "1B",
+        "page": 53,
+        "token_count": 18,
+        "info_types": [],
+        "table_type": null,
+        "text": "\u25cf Tighten 12 mm compressor attaching bolts and nut to 28 N\u00b7m (21 lb.ft.)."
+      },
+      {
+        "chunk_id": "para_1b_p54_0",
+        "type": "paragraph",
+        "section_code": "1B",
+        "page": 54,
+        "token_count": 14,
+        "info_types": [],
+        "table_type": null,
+        "text": "\u2022 Mount for cracks and for fractures. Replace as necessary."
+      }
+    ],
+    "other_short_table": [
+      {
+        "chunk_id": "tbl_1a_p21_1",
+        "type": "table",
+        "section_code": "1A",
+        "page": 21,
+        "token_count": 4,
+        "info_types": [],
+        "table_type": null,
+        "text": "Heater Core: 1A-9"
+      },
+      {
+        "chunk_id": "tbl_1b_p32_2",
+        "type": "table",
+        "section_code": "1B",
+        "page": 32,
+        "token_count": 18,
+        "info_types": [],
+        "table_type": null,
+        "text": "Compressor Drive Belt: 1B-23 Performance Test: 1B-23 Special Tools: 1B-26"
+      },
+      {
+        "chunk_id": "tbl_1b_p51_0",
+        "type": "table",
+        "section_code": "1B",
+        "page": 51,
+        "token_count": 13,
+        "info_types": [],
+        "table_type": null,
+        "text": "POSITION: OFF POSITION: ON | PINK/BLACK: O | BLACK: O"
+      },
+      {
+        "chunk_id": "tbl_1d_p71_0",
+        "type": "table",
+        "section_code": "1D",
+        "page": 71,
+        "token_count": 15,
+        "info_types": [],
+        "table_type": null,
+        "text": "Install Service Valves 26 N\u00b7m: 26 N\u00b7m | 19 lb. ft.: 19 lb. ft."
+      },
+      {
+        "chunk_id": "tbl_3b_p96_0",
+        "type": "table",
+        "section_code": "3B",
+        "page": 96,
+        "token_count": 9,
+        "info_types": [],
+        "table_type": null,
+        "text": "INSTALLATION N\u00b7m: 60 | lb. ft.: 44.0"
+      },
+      {
+        "chunk_id": "tbl_3b_p97_0",
+        "type": "table",
+        "section_code": "3B",
+        "page": 97,
+        "token_count": 9,
+        "info_types": [],
+        "table_type": null,
+        "text": "INSTALLATION N\u00b7m: 85 | lb. ft.: 63.0"
+      },
+      {
+        "chunk_id": "tbl_3e_p144_0",
+        "type": "table",
+        "section_code": "3E",
+        "page": 144,
+        "token_count": 16,
+        "info_types": [],
+        "table_type": null,
+        "text": "Wheel nuts:: Wheel nuts: | 60 N\u00b7m (44 lb ft.): 60 N\u00b7m (44 lb ft.)"
+      },
+      {
+        "chunk_id": "tbl_3e_p146_0",
+        "type": "table",
+        "section_code": "3E",
+        "page": 146,
+        "token_count": 16,
+        "info_types": [],
+        "table_type": null,
+        "text": "Wheel nuts: Wheel nuts | 60 N\u00b7m (44 lb. ft.): 60 N\u00b7m (44 lb. ft.)"
+      }
+    ],
+    "protected_procedure": [
+      {
+        "chunk_id": "proc_1d_p70_0",
+        "type": "procedure",
+        "section_code": "1D",
+        "page": 70,
+        "token_count": 9,
+        "info_types": [
+          "procedure"
+        ],
+        "table_type": null,
+        "text": "Install Snap Ring 7. Install snap ring."
+      },
+      {
+        "chunk_id": "proc_2_p77_0",
+        "type": "procedure",
+        "section_code": "2",
+        "page": 77,
+        "token_count": 14,
+        "info_types": [
+          "procedure"
+        ],
+        "table_type": null,
+        "text": "Hood Hinge Retaining Bolts 4. Hood hinge retaining bolts."
+      },
+      {
+        "chunk_id": "proc_2_p78_1",
+        "type": "procedure",
+        "section_code": "2",
+        "page": 78,
+        "token_count": 16,
+        "info_types": [
+          "procedure"
+        ],
+        "table_type": null,
+        "text": "Remove or Disconnect 1. Front wheel. 2. Inner wheel house skirt."
+      },
+      {
+        "chunk_id": "proc_2_p78_2",
+        "type": "procedure",
+        "section_code": "2",
+        "page": 78,
+        "token_count": 15,
+        "info_types": [
+          "procedure"
+        ],
+        "table_type": null,
+        "text": "Install or Connect 1. Inner wheel house skirt. 2. Front wheel."
+      },
+      {
+        "chunk_id": "proc_3c_p115_0",
+        "type": "procedure",
+        "section_code": "3C",
+        "page": 115,
+        "token_count": 13,
+        "info_types": [
+          "procedure"
+        ],
+        "table_type": null,
+        "text": "Install or Connect Tighten 7. Wheel. 8. Lower vehicle."
+      },
+      {
+        "chunk_id": "proc_6a1_p245_0",
+        "type": "procedure",
+        "section_code": "6A1",
+        "page": 245,
+        "token_count": 15,
+        "info_types": [
+          "procedure",
+          "spec"
+        ],
+        "table_type": null,
+        "text": "Install or Connect 1. Oil gage. 1 pressure gage. 2. Oil filter."
+      },
+      {
+        "chunk_id": "proc_6a1_p245_1",
+        "type": "procedure",
+        "section_code": "6A1",
+        "page": 245,
+        "token_count": 14,
+        "info_types": [
+          "procedure",
+          "spec"
+        ],
+        "table_type": null,
+        "text": "Remove or Disconnect 1. Oil filter. 2. Oil pressure gage."
+      },
+      {
+        "chunk_id": "proc_6e2_p452_1",
+        "type": "procedure",
+        "section_code": "6E2",
+        "page": 452,
+        "token_count": 18,
+        "info_types": [
+          "procedure",
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Install or Connect (Figure C2-30) 1. TPS to throttle body. 2. Adjust TPS."
+      }
+    ],
+    "xrefish_paragraph_candidate": [
+      {
+        "chunk_id": "para_6a1_p265_1",
+        "type": "paragraph",
+        "section_code": "6A1",
+        "page": 265,
+        "token_count": 18,
+        "info_types": [
+          "spec"
+        ],
+        "table_type": null,
+        "text": "Check the clearance by using gaging plastic. The procedure is as follows:"
+      },
+      {
+        "chunk_id": "para_6b_p281_2",
+        "type": "paragraph",
+        "section_code": "6B",
+        "page": 281,
+        "token_count": 12,
+        "info_types": [],
+        "table_type": null,
+        "text": "The cooling system should be serviced as follows:"
+      },
+      {
+        "chunk_id": "para_6d1_p301_4",
+        "type": "paragraph",
+        "section_code": "6D1",
+        "page": 301,
+        "token_count": 15,
+        "info_types": [],
+        "table_type": null,
+        "text": "The following procedure should be used for testing batteries:"
+      },
+      {
+        "chunk_id": "para_6d4_p342_0",
+        "type": "paragraph",
+        "section_code": "6D4",
+        "page": 342,
+        "token_count": 13,
+        "info_types": [],
+        "table_type": null,
+        "text": "\u25cf Signal rotor air gap to 0.2-0.4 mm (0.008-0.016 in.)."
+      },
+      {
+        "chunk_id": "para_7a_p483_0",
+        "type": "paragraph",
+        "section_code": "7A",
+        "page": 483,
+        "token_count": 15,
+        "info_types": [],
+        "table_type": null,
+        "text": "Solenoid position so that the solenoid will operate as follows:"
+      },
+      {
+        "chunk_id": "para_7a1_p575_5",
+        "type": "paragraph",
+        "section_code": "7A1",
+        "page": 575,
+        "token_count": 9,
+        "info_types": [
+          "spec"
+        ],
+        "table_type": null,
+        "text": "TORQUE BOLTS TO: 4-6 N\u2022m (3-4 LB. FT.)"
+      },
+      {
+        "chunk_id": "para_10_p744_1",
+        "type": "paragraph",
+        "section_code": "10",
+        "page": 744,
+        "token_count": 19,
+        "info_types": [],
+        "table_type": null,
+        "text": "The following switches are incorporated into the automatic safety belt system:"
+      },
+      {
+        "chunk_id": "sup_para_8a_p82_0",
+        "type": "paragraph",
+        "section_code": "8A",
+        "page": 82,
+        "token_count": 12,
+        "info_types": [],
+        "table_type": null,
+        "text": "SEE 8A-4-0 FOR MEASURING AND HANDLING PROCEDURES"
+      }
+    ],
+    "protected_semantic_table": [
+      {
+        "chunk_id": "tbl_6d2_p306_1",
+        "type": "table",
+        "section_code": "6D2",
+        "page": 306,
+        "token_count": 12,
+        "info_types": [
+          "spec"
+        ],
+        "table_type": null,
+        "text": "TORQUE SPECIFICATIONS: 6D2-13 SPECIAL TOOLS: 6D2-13"
+      },
+      {
+        "chunk_id": "tbl_6d5_p344_0",
+        "type": "table",
+        "section_code": "6D5",
+        "page": 344,
+        "token_count": 6,
+        "info_types": [
+          "wiring"
+        ],
+        "table_type": null,
+        "text": "Engine Wiring Views: 6D5-1"
+      },
+      {
+        "chunk_id": "tbl_6e2_p375_2",
+        "type": "table",
+        "section_code": "6E2",
+        "page": 375,
+        "token_count": 14,
+        "info_types": [
+          "wiring"
+        ],
+        "table_type": null,
+        "text": "PARTS IDENTIFICATION 1: 4   - Fuel Tank: Fuel Pump Relay"
+      },
+      {
+        "chunk_id": "tbl_6e2_p375_5",
+        "type": "table",
+        "section_code": "6E2",
+        "page": 375,
+        "token_count": 16,
+        "info_types": [
+          "spec"
+        ],
+        "table_type": null,
+        "text": "PARTS IDENTIFICATION 1: 7   - Fuel Tank: Fuel Pressure Regulator"
+      },
+      {
+        "chunk_id": "tbl_6e2_p375_29",
+        "type": "table",
+        "section_code": "6E2",
+        "page": 375,
+        "token_count": 16,
+        "info_types": [
+          "pinout",
+          "diagnostic",
+          "wiring"
+        ],
+        "table_type": null,
+        "text": "PARTS IDENTIFICATION 1: 31   - Fuel Tank: Diagnosis Switch Terminal"
+      },
+      {
+        "chunk_id": "tbl_6e2_p375_30",
+        "type": "table",
+        "section_code": "6E2",
+        "page": 375,
+        "token_count": 15,
+        "info_types": [
+          "pinout",
+          "wiring"
+        ],
+        "table_type": null,
+        "text": "PARTS IDENTIFICATION 1: 32   - Fuel Tank: Test Switch Terminal"
+      },
+      {
+        "chunk_id": "tbl_6e2_p375_35",
+        "type": "table",
+        "section_code": "6E2",
+        "page": 375,
+        "token_count": 13,
+        "info_types": [
+          "wiring"
+        ],
+        "table_type": null,
+        "text": "PARTS IDENTIFICATION 1: 37   - Fuel Tank: Main Relay"
+      },
+      {
+        "chunk_id": "sup_tbl_0a_p12_26",
+        "type": "table",
+        "section_code": "0A",
+        "page": 12,
+        "token_count": 12,
+        "info_types": [
+          "spec"
+        ],
+        "table_type": null,
+        "text": "FASTENER STRENGTH IDENTIFICATION Multiply: TORQUE"
+      }
+    ],
+    "stub_paragraph_candidate": [
+      {
+        "chunk_id": "para_6e2_p419_4",
+        "type": "paragraph",
+        "section_code": "6E2",
+        "page": 419,
+        "token_count": 2,
+        "info_types": [],
+        "table_type": null,
+        "text": "FAULTY ECM"
+      },
+      {
+        "chunk_id": "para_7a_p481_0",
+        "type": "paragraph",
+        "section_code": "7A",
+        "page": 481,
+        "token_count": 3,
+        "info_types": [],
+        "table_type": null,
+        "text": "Oil strainer."
+      },
+      {
+        "chunk_id": "para_7a1_p554_2",
+        "type": "paragraph",
+        "section_code": "7A1",
+        "page": 554,
+        "token_count": 3,
+        "info_types": [],
+        "table_type": null,
+        "text": "Installation"
+      },
+      {
+        "chunk_id": "para_7c_p625_0",
+        "type": "paragraph",
+        "section_code": "7C",
+        "page": 625,
+        "token_count": 2,
+        "info_types": [],
+        "table_type": null,
+        "text": "\u2295 Arm bolt"
+      },
+      {
+        "chunk_id": "para_10_p729_2",
+        "type": "paragraph",
+        "section_code": "10",
+        "page": 729,
+        "token_count": 3,
+        "info_types": [],
+        "table_type": null,
+        "text": "Weather strips."
+      },
+      {
+        "chunk_id": "sup_para_3f4_p42_0",
+        "type": "paragraph",
+        "section_code": "3F4",
+        "page": 42,
+        "token_count": 3,
+        "info_types": [],
+        "table_type": null,
+        "text": "Figures 4 and 5"
+      }
+    ],
+    "xref_or_index_table_candidate": [
+      {
+        "chunk_id": "tbl_10_p767_6",
+        "type": "table",
+        "section_code": "10",
+        "page": 767,
+        "token_count": 19,
+        "info_types": [],
+        "table_type": null,
+        "text": "Drum Brake Shoe Removal and Installation: 5-32 Drum Brake Wheel Cylinder: 5-35"
+      }
+    ]
+  },
+  "samples_by_type": {
+    "caution": [
+      {
+        "chunk_id": "caut_6a1_p250_0",
+        "section_code": "6A1",
+        "page": 250,
+        "token_count": 10,
+        "info_types": [],
+        "table_type": null,
+        "text": "CAUTION: Pulley bolt to 60 N\u00b7m (44 lb.ft.)."
+      },
+      {
+        "chunk_id": "caut_6e2_p455_0",
+        "section_code": "6E2",
+        "page": 455,
+        "token_count": 19,
+        "info_types": [],
+        "table_type": null,
+        "text": "CAUTION: Do not suck on canister valve. Fuel vapor inside canister is harmful."
+      },
+      {
+        "chunk_id": "caut_7b_p598_0",
+        "section_code": "7B",
+        "page": 598,
+        "token_count": 15,
+        "info_types": [],
+        "table_type": null,
+        "text": "CAUTION: Confirm that snapring is installed in groove securely."
+      },
+      {
+        "chunk_id": "caut_7b_p602_0",
+        "section_code": "7B",
+        "page": 602,
+        "token_count": 16,
+        "info_types": [],
+        "table_type": null,
+        "text": "CAUTION: Confirm that snap ring is installed in groove securely."
+      },
+      {
+        "chunk_id": "caut_7b_p606_0",
+        "section_code": "7B",
+        "page": 606,
+        "token_count": 16,
+        "info_types": [],
+        "table_type": null,
+        "text": "CAUTION: Use of any other bolts than specified one is prohibited."
+      },
+      {
+        "chunk_id": "caut_7b_p609_0",
+        "section_code": "7B",
+        "page": 609,
+        "token_count": 11,
+        "info_types": [],
+        "table_type": null,
+        "text": "CAUTION: Left case plate to 7 N\u00b7m (5.0 lb.ft.)"
+      },
+      {
+        "chunk_id": "caut_7b_p609_1",
+        "section_code": "7B",
+        "page": 609,
+        "token_count": 12,
+        "info_types": [],
+        "table_type": null,
+        "text": "CAUTION: Counter shaft nut to 70 N\u00b7m (52.0 lb.ft.)."
+      },
+      {
+        "chunk_id": "caut_7b_p610_0",
+        "section_code": "7B",
+        "page": 610,
+        "token_count": 16,
+        "info_types": [],
+        "table_type": null,
+        "text": "CAUTION: Be careful not to pinch synchronizer ring spring by hub."
+      }
+    ],
+    "figure": [
+      {
+        "chunk_id": "fig_0a_p5_0",
+        "section_code": "0A",
+        "page": 5,
+        "token_count": 13,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Figure 1 Electrostatic Discharge Sensitive Parts Label"
+      },
+      {
+        "chunk_id": "fig_0a_p5_1",
+        "section_code": "0A",
+        "page": 5,
+        "token_count": 11,
+        "info_types": [
+          "diagram",
+          "location"
+        ],
+        "table_type": null,
+        "text": "Figure 2 Vehicle Identification Number Location"
+      },
+      {
+        "chunk_id": "fig_0a_p7_1",
+        "section_code": "0A",
+        "page": 7,
+        "token_count": 13,
+        "info_types": [
+          "diagram",
+          "location"
+        ],
+        "table_type": null,
+        "text": "Figure 6 Front Support Location 1: FRONT CROSSMEMBER"
+      },
+      {
+        "chunk_id": "fig_0b_p17_0",
+        "section_code": "0B",
+        "page": 17,
+        "token_count": 12,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Fig. 3 Engine Oil Viscosity Recommendation \u2013 1.0L"
+      },
+      {
+        "chunk_id": "fig_1a_p23_0",
+        "section_code": "1A",
+        "page": 23,
+        "token_count": 13,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Figure 2 Heater Control Operation and Air Distribution"
+      },
+      {
+        "chunk_id": "fig_1a_p30_1",
+        "section_code": "1A",
+        "page": 30,
+        "token_count": 10,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Figure 13 Instrument Panel Carrier Removal"
+      },
+      {
+        "chunk_id": "fig_1a_p30_2",
+        "section_code": "1A",
+        "page": 30,
+        "token_count": 16,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Figure 14 Heater Case Removal 1: MOUNTING BOLTS 2: MOUNTING NUTS"
+      },
+      {
+        "chunk_id": "fig_1a_p31_0",
+        "section_code": "1A",
+        "page": 31,
+        "token_count": 13,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Figure 15 Heater Case Disassembly 1: ATTACHING SCREWS"
+      },
+      {
+        "chunk_id": "fig_1a_p31_1",
+        "section_code": "1A",
+        "page": 31,
+        "token_count": 11,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Figure 16 Heater Core Removal 1: HEATER CORE"
+      },
+      {
+        "chunk_id": "fig_1b_p44_0",
+        "section_code": "1B",
+        "page": 44,
+        "token_count": 16,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Figure 15 Sight Glass 1: RECEIVER/DRYER 2: SIGHT GLASS 3: BUBBLES"
+      }
+    ],
+    "important": [
+      {
+        "chunk_id": "impo_0b_p14_0",
+        "section_code": "0B",
+        "page": 14,
+        "token_count": 19,
+        "info_types": [],
+        "table_type": null,
+        "text": "IMPORTANT: ALWAYS USE SG QUALITY ENERGY CONSERVING II OILS OF PROPER VISCOSITY"
+      },
+      {
+        "chunk_id": "impo_6a1_p262_0",
+        "section_code": "6A1",
+        "page": 262,
+        "token_count": 12,
+        "info_types": [],
+        "table_type": null,
+        "text": "IMPORTANT: Bearing cap nuts to 35 N\u00b7m (26 lb.ft.)."
+      },
+      {
+        "chunk_id": "impo_6d4_p330_0",
+        "section_code": "6D4",
+        "page": 330,
+        "token_count": 17,
+        "info_types": [],
+        "table_type": null,
+        "text": "IMPORTANT: Always follow the label procedures when adjusting timing."
+      },
+      {
+        "chunk_id": "impo_6e2_p461_0",
+        "section_code": "6E2",
+        "page": 461,
+        "token_count": 14,
+        "info_types": [],
+        "table_type": null,
+        "text": "IMPORTANT: Crankshaft should be aligned at top dead center."
+      },
+      {
+        "chunk_id": "impo_7a_p491_0",
+        "section_code": "7A",
+        "page": 491,
+        "token_count": 19,
+        "info_types": [],
+        "table_type": null,
+        "text": "IMPORTANT: Securely support the transaxle with a suitable jack before removing."
+      },
+      {
+        "chunk_id": "impo_7b_p591_1",
+        "section_code": "7B",
+        "page": 591,
+        "token_count": 19,
+        "info_types": [
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "IMPORTANT: Use of magnet would facilitate removal of guide ball (Figure 24)."
+      },
+      {
+        "chunk_id": "impo_7b_p595_1",
+        "section_code": "7B",
+        "page": 595,
+        "token_count": 13,
+        "info_types": [],
+        "table_type": null,
+        "text": "IMPORTANT: Install oil seal spring side towards case."
+      },
+      {
+        "chunk_id": "impo_10_p722_0",
+        "section_code": "10",
+        "page": 722,
+        "token_count": 18,
+        "info_types": [],
+        "table_type": null,
+        "text": "IMPORTANT: Apply adhesive to back of water deflector before installation."
+      },
+      {
+        "chunk_id": "impo_10_p728_0",
+        "section_code": "10",
+        "page": 728,
+        "token_count": 7,
+        "info_types": [],
+        "table_type": null,
+        "text": "IMPORTANT: Lower window fully."
+      },
+      {
+        "chunk_id": "impo_10_p740_0",
+        "section_code": "10",
+        "page": 740,
+        "token_count": 14,
+        "info_types": [
+          "wiring"
+        ],
+        "table_type": null,
+        "text": "IMPORTANT: The front wire is longer than the other three."
+      }
+    ],
+    "note": [
+      {
+        "chunk_id": "note_3f_p151_0",
+        "section_code": "3F",
+        "page": 151,
+        "token_count": 17,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTE: MARKED WITH * ARE STANDARD SCREWS. ALL OTHERS ARE TAPPING SCREWS."
+      },
+      {
+        "chunk_id": "note_6a1_p272_0",
+        "section_code": "6A1",
+        "page": 272,
+        "token_count": 10,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTE: \u2022 Housing bolts to 12 N\u00b7m (9 lb.ft.)."
+      },
+      {
+        "chunk_id": "note_6e_p346_0",
+        "section_code": "6E",
+        "page": 346,
+        "token_count": 11,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTE: *Not all items are used on all engines."
+      },
+      {
+        "chunk_id": "note_6e2_p415_0",
+        "section_code": "6E2",
+        "page": 415,
+        "token_count": 13,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTE: CLEAR CODES AND CONFIRM NO \"CHECK ENGINE\" LIGHT."
+      },
+      {
+        "chunk_id": "note_6e2_p419_0",
+        "section_code": "6E2",
+        "page": 419,
+        "token_count": 12,
+        "info_types": [
+          "diagnostic"
+        ],
+        "table_type": null,
+        "text": "NOTE: IF CODE 42 IS STORED, GO TO THAT CODE FIRST."
+      },
+      {
+        "chunk_id": "note_7a1_p506_0",
+        "section_code": "7A1",
+        "page": 506,
+        "token_count": 4,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTE: O Operated"
+      },
+      {
+        "chunk_id": "note_7a1_p506_2",
+        "section_code": "7A1",
+        "page": 506,
+        "token_count": 7,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTE: ** When engine is running"
+      },
+      {
+        "chunk_id": "note_7b_p588_0",
+        "section_code": "7B",
+        "page": 588,
+        "token_count": 12,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTE: Driven gear for abnormal wear or distortion."
+      },
+      {
+        "chunk_id": "note_7b_p588_1",
+        "section_code": "7B",
+        "page": 588,
+        "token_count": 3,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTE: Inspect"
+      },
+      {
+        "chunk_id": "note_7b_p588_2",
+        "section_code": "7B",
+        "page": 588,
+        "token_count": 9,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTE: Case bolt to 6 N\u00b7m (4 lb.ft.)."
+      }
+    ],
+    "notice": [
+      {
+        "chunk_id": "noti_1a_p27_0",
+        "section_code": "1A",
+        "page": 27,
+        "token_count": 19,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Adjust fresh/recirculate cable. See \"Adjust\" procedure in this section."
+      },
+      {
+        "chunk_id": "noti_1a_p28_0",
+        "section_code": "1A",
+        "page": 28,
+        "token_count": 17,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Adjust control cables. See \"Adjust\" procedure in this section."
+      },
+      {
+        "chunk_id": "noti_1a_p28_1",
+        "section_code": "1A",
+        "page": 28,
+        "token_count": 14,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Note cable routing for ease of cable installation."
+      },
+      {
+        "chunk_id": "noti_1a_p28_2",
+        "section_code": "1A",
+        "page": 28,
+        "token_count": 14,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Note cable routing for ease of cable installation."
+      },
+      {
+        "chunk_id": "noti_1b_p41_0",
+        "section_code": "1B",
+        "page": 41,
+        "token_count": 16,
+        "info_types": [
+          "spec"
+        ],
+        "table_type": null,
+        "text": "NOTICE: Make sure the high pressure-side valve is closed securely."
+      },
+      {
+        "chunk_id": "noti_1b_p47_1",
+        "section_code": "1B",
+        "page": 47,
+        "token_count": 18,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Exercise care not to damage fins of the condenser during removal."
+      },
+      {
+        "chunk_id": "noti_1b_p49_0",
+        "section_code": "1B",
+        "page": 49,
+        "token_count": 13,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Do not use water for cleaning the evaporator."
+      },
+      {
+        "chunk_id": "noti_1d_p59_1",
+        "section_code": "1D",
+        "page": 59,
+        "token_count": 16,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "NOTICE: For removal and installation procedures, (SEE SECTION 1B)."
+      },
+      {
+        "chunk_id": "noti_1d_p60_0",
+        "section_code": "1D",
+        "page": 60,
+        "token_count": 17,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Care should be exercised not to damage pulley when tapping off."
+      },
+      {
+        "chunk_id": "noti_1d_p64_0",
+        "section_code": "1D",
+        "page": 64,
+        "token_count": 8,
+        "info_types": [],
+        "table_type": null,
+        "text": "NOTICE: Do not reuse five washers."
+      }
+    ],
+    "paragraph": [
+      {
+        "chunk_id": "para_0b_p17_1",
+        "section_code": "0B",
+        "page": 17,
+        "token_count": 18,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "1.0L (VIN 6) \u2013 Perform EGR System check. See Section 6E2 or 6E3, Chart C7."
+      },
+      {
+        "chunk_id": "para_0b_p17_2",
+        "section_code": "0B",
+        "page": 17,
+        "token_count": 12,
+        "info_types": [
+          "spec"
+        ],
+        "table_type": null,
+        "text": "Adjust timing to underhood label specifications."
+      },
+      {
+        "chunk_id": "para_0b_p17_4",
+        "section_code": "0B",
+        "page": 17,
+        "token_count": 12,
+        "info_types": [],
+        "table_type": null,
+        "text": "Make sure the indicator points to the gear chosen."
+      },
+      {
+        "chunk_id": "para_1a_p28_0",
+        "section_code": "1A",
+        "page": 28,
+        "token_count": 14,
+        "info_types": [],
+        "table_type": null,
+        "text": "\u2022 Control cables. See \"Adjust\" procedure in this section."
+      },
+      {
+        "chunk_id": "para_1b_p48_0",
+        "section_code": "1B",
+        "page": 48,
+        "token_count": 17,
+        "info_types": [],
+        "table_type": null,
+        "text": "Receiver/dryer bracket attaching screw and receiver/dryer from bracket."
+      },
+      {
+        "chunk_id": "para_1b_p48_1",
+        "section_code": "1B",
+        "page": 48,
+        "token_count": 14,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Control cable. Refer to HEATING AND VENTILATION (SEC.1A)."
+      },
+      {
+        "chunk_id": "para_1b_p53_1",
+        "section_code": "1B",
+        "page": 53,
+        "token_count": 18,
+        "info_types": [],
+        "table_type": null,
+        "text": "\u25cf Tighten 12 mm compressor attaching bolts and nut to 28 N\u00b7m (21 lb.ft.)."
+      },
+      {
+        "chunk_id": "para_1b_p54_0",
+        "section_code": "1B",
+        "page": 54,
+        "token_count": 14,
+        "info_types": [],
+        "table_type": null,
+        "text": "\u2022 Mount for cracks and for fractures. Replace as necessary."
+      },
+      {
+        "chunk_id": "para_1d_p64_1",
+        "section_code": "1D",
+        "page": 64,
+        "token_count": 6,
+        "info_types": [],
+        "table_type": null,
+        "text": "9. Remove front housing."
+      },
+      {
+        "chunk_id": "para_1d_p64_2",
+        "section_code": "1D",
+        "page": 64,
+        "token_count": 13,
+        "info_types": [],
+        "table_type": null,
+        "text": "10. Remove the front housing by prying at protrusion."
+      }
+    ],
+    "procedure": [
+      {
+        "chunk_id": "proc_1d_p70_0",
+        "section_code": "1D",
+        "page": 70,
+        "token_count": 9,
+        "info_types": [
+          "procedure"
+        ],
+        "table_type": null,
+        "text": "Install Snap Ring 7. Install snap ring."
+      },
+      {
+        "chunk_id": "proc_2_p77_0",
+        "section_code": "2",
+        "page": 77,
+        "token_count": 14,
+        "info_types": [
+          "procedure"
+        ],
+        "table_type": null,
+        "text": "Hood Hinge Retaining Bolts 4. Hood hinge retaining bolts."
+      },
+      {
+        "chunk_id": "proc_2_p78_1",
+        "section_code": "2",
+        "page": 78,
+        "token_count": 16,
+        "info_types": [
+          "procedure"
+        ],
+        "table_type": null,
+        "text": "Remove or Disconnect 1. Front wheel. 2. Inner wheel house skirt."
+      },
+      {
+        "chunk_id": "proc_2_p78_2",
+        "section_code": "2",
+        "page": 78,
+        "token_count": 15,
+        "info_types": [
+          "procedure"
+        ],
+        "table_type": null,
+        "text": "Install or Connect 1. Inner wheel house skirt. 2. Front wheel."
+      },
+      {
+        "chunk_id": "proc_3c_p115_0",
+        "section_code": "3C",
+        "page": 115,
+        "token_count": 13,
+        "info_types": [
+          "procedure"
+        ],
+        "table_type": null,
+        "text": "Install or Connect Tighten 7. Wheel. 8. Lower vehicle."
+      },
+      {
+        "chunk_id": "proc_6a1_p245_0",
+        "section_code": "6A1",
+        "page": 245,
+        "token_count": 15,
+        "info_types": [
+          "procedure",
+          "spec"
+        ],
+        "table_type": null,
+        "text": "Install or Connect 1. Oil gage. 1 pressure gage. 2. Oil filter."
+      },
+      {
+        "chunk_id": "proc_6a1_p245_1",
+        "section_code": "6A1",
+        "page": 245,
+        "token_count": 14,
+        "info_types": [
+          "procedure",
+          "spec"
+        ],
+        "table_type": null,
+        "text": "Remove or Disconnect 1. Oil filter. 2. Oil pressure gage."
+      },
+      {
+        "chunk_id": "proc_6e2_p452_1",
+        "section_code": "6E2",
+        "page": 452,
+        "token_count": 18,
+        "info_types": [
+          "procedure",
+          "diagram"
+        ],
+        "table_type": null,
+        "text": "Install or Connect (Figure C2-30) 1. TPS to throttle body. 2. Adjust TPS."
+      },
+      {
+        "chunk_id": "proc_6e2_p455_1",
+        "section_code": "6E2",
+        "page": 455,
+        "token_count": 19,
+        "info_types": [
+          "procedure"
+        ],
+        "table_type": null,
+        "text": "CHARCOAL CANISTER REPLACEMENT 1. Canister and bracket to cowl. 2. Vacuum hoses."
+      },
+      {
+        "chunk_id": "proc_6e2_p465_4",
+        "section_code": "6E2",
+        "page": 465,
+        "token_count": 19,
+        "info_types": [
+          "procedure"
+        ],
+        "table_type": null,
+        "text": "Install or Connect 1. Vacuum hoses (3) to modulator. 2. Air cleaner assembly."
+      }
+    ],
+    "table": [
+      {
+        "chunk_id": "tbl_1a_p21_1",
+        "section_code": "1A",
+        "page": 21,
+        "token_count": 4,
+        "info_types": [],
+        "table_type": null,
+        "text": "Heater Core: 1A-9"
+      },
+      {
+        "chunk_id": "tbl_1b_p32_2",
+        "section_code": "1B",
+        "page": 32,
+        "token_count": 18,
+        "info_types": [],
+        "table_type": null,
+        "text": "Compressor Drive Belt: 1B-23 Performance Test: 1B-23 Special Tools: 1B-26"
+      },
+      {
+        "chunk_id": "tbl_1b_p51_0",
+        "section_code": "1B",
+        "page": 51,
+        "token_count": 13,
+        "info_types": [],
+        "table_type": null,
+        "text": "POSITION: OFF POSITION: ON | PINK/BLACK: O | BLACK: O"
+      },
+      {
+        "chunk_id": "tbl_1d_p71_0",
+        "section_code": "1D",
+        "page": 71,
+        "token_count": 15,
+        "info_types": [],
+        "table_type": null,
+        "text": "Install Service Valves 26 N\u00b7m: 26 N\u00b7m | 19 lb. ft.: 19 lb. ft."
+      },
+      {
+        "chunk_id": "tbl_3b_p96_0",
+        "section_code": "3B",
+        "page": 96,
+        "token_count": 9,
+        "info_types": [],
+        "table_type": null,
+        "text": "INSTALLATION N\u00b7m: 60 | lb. ft.: 44.0"
+      },
+      {
+        "chunk_id": "tbl_3b_p97_0",
+        "section_code": "3B",
+        "page": 97,
+        "token_count": 9,
+        "info_types": [],
+        "table_type": null,
+        "text": "INSTALLATION N\u00b7m: 85 | lb. ft.: 63.0"
+      },
+      {
+        "chunk_id": "tbl_3e_p144_0",
+        "section_code": "3E",
+        "page": 144,
+        "token_count": 16,
+        "info_types": [],
+        "table_type": null,
+        "text": "Wheel nuts:: Wheel nuts: | 60 N\u00b7m (44 lb ft.): 60 N\u00b7m (44 lb ft.)"
+      },
+      {
+        "chunk_id": "tbl_3e_p146_0",
+        "section_code": "3E",
+        "page": 146,
+        "token_count": 16,
+        "info_types": [],
+        "table_type": null,
+        "text": "Wheel nuts: Wheel nuts | 60 N\u00b7m (44 lb. ft.): 60 N\u00b7m (44 lb. ft.)"
+      },
+      {
+        "chunk_id": "tbl_5_p182_0",
+        "section_code": "5",
+        "page": 182,
+        "token_count": 15,
+        "info_types": [],
+        "table_type": null,
+        "text": "2. REMOVE AND INSTALL REAR BRAKE HOSE/PIPE N*m: 16 | lb.ft.: 12"
+      },
+      {
+        "chunk_id": "tbl_5_p185_0",
+        "section_code": "5",
+        "page": 185,
+        "token_count": 12,
+        "info_types": [],
+        "table_type": null,
+        "text": "INSTALL OR CONNECT N-m: 55 | kg-m: 5.5 | lb-ft: 41"
+      }
+    ],
+    "toc_category": [
+      {
+        "chunk_id": "toc_cat_general_information",
+        "section_code": null,
+        "page": null,
+        "token_count": 19,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "GENERAL INFORMATION General Information \u2014 0A Maintenance and Lubrication \u2014 0B"
+      },
+      {
+        "chunk_id": "toc_cat_accessories",
+        "section_code": null,
+        "page": null,
+        "token_count": 5,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "ACCESSORIES Radio \u2014 9A"
+      }
+    ],
+    "toc_entry": [
+      {
+        "chunk_id": "toc_6a1",
+        "section_code": "6A1",
+        "page": null,
+        "token_count": 19,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Engine Mechanical (Section 6A1) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6b",
+        "section_code": "6B",
+        "page": null,
+        "token_count": 18,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Engine Cooling (Section 6B) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6c",
+        "section_code": "6C",
+        "page": null,
+        "token_count": 17,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Fuel System (Section 6C) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6d",
+        "section_code": "6D",
+        "page": null,
+        "token_count": 19,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Engine Electrical (Section 6D) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6d1",
+        "section_code": "6D1",
+        "page": null,
+        "token_count": 16,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Battery (Section 6D1) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6d2",
+        "section_code": "6D2",
+        "page": null,
+        "token_count": 18,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Cranking System (Section 6D2) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6d3",
+        "section_code": "6D3",
+        "page": null,
+        "token_count": 18,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Charging System (Section 6D3) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6d4",
+        "section_code": "6D4",
+        "page": null,
+        "token_count": 18,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Ignition System (Section 6D4) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6d5",
+        "section_code": "6D5",
+        "page": null,
+        "token_count": 18,
+        "info_types": [
+          "cross_reference",
+          "wiring"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Engine Wiring (Section 6D5) Category: ENGINE \u2014 6"
+      },
+      {
+        "chunk_id": "toc_6f",
+        "section_code": "6F",
+        "page": null,
+        "token_count": 18,
+        "info_types": [
+          "cross_reference"
+        ],
+        "table_type": null,
+        "text": "Table of Contents entry: Exhaust System (Section 6F) Category: ENGINE \u2014 6"
+      }
+    ]
+  }
+}

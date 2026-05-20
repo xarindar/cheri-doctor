@@ -1703,6 +1703,7 @@ def chat(query: str,
          config: dict,
          skip_vision: bool = False,
          deep_research: bool = False,
+         voice_mode: bool = False,
          project_context: str | None = None,
          notes_context: str | None = None,
          vehicle_settings: str | None = None,
@@ -1874,6 +1875,7 @@ def chat(query: str,
     # 4. Build prompt
     messages = _build_messages(query, reranked, figure_evidence,
                                conversation, config,
+                               voice_mode=voice_mode,
                                project_context=project_context,
                                notes_context=notes_context,
                                vehicle_settings=vehicle_settings,
@@ -1969,6 +1971,7 @@ def _rerank(results: list[dict], top_n: int, query: str = "",
     """Rerank by retrieval score + type boost + procedure_type match. Return top_n."""
     q_lower = query.lower()
     is_engine_oil_service = _is_engine_oil_service_query(query)
+    is_pinout = _is_pinout_query(query)
 
     # Detect specific procedure type intent
     intent = None
@@ -2019,6 +2022,8 @@ def _rerank(results: list[dict], top_n: int, query: str = "",
         elif is_procedural:
             # Procedural query — boost procedures and safety info
             boost = TYPE_BOOST.get(ctype, 0.0)
+            if ctype == "procedure" and not is_engine_oil_service:
+                boost += 0.05
             # Extra boost if procedure_type matches specific intent
             ptype = chunk.get("procedure_type")
             if intent and ptype == intent:
@@ -2036,8 +2041,19 @@ def _rerank(results: list[dict], top_n: int, query: str = "",
 
         # Diagnostic intent: extra boost for table chunks that contain
         # structured CONDITION/CAUSE/CORRECTION diagnostic data.
-        if is_diagnostic and ctype == "table" and "CONDITION:" in chunk_text[:300]:
-            boost += 0.15
+        if is_diagnostic:
+            if ctype == "table":
+                boost += 0.08
+                if "CONDITION:" in chunk_text[:300]:
+                    boost += 0.15
+            if _chunk_has_any_info_type(chunk, "diagnostic"):
+                boost += 0.12 if ctype == "table" else 0.05
+
+        if is_pinout:
+            if ctype == "table" and _chunk_has_any_info_type(chunk, "pinout", "connector_face", "wiring"):
+                boost += 0.18
+            elif ctype == "figure" and _chunk_has_any_info_type(chunk, "connector_face", "diagram"):
+                boost += 0.05
 
         # Penalize cross-references slightly to prefer local system results.
         # Tables/specs get a lighter penalty — they often contain critical
@@ -2206,13 +2222,41 @@ def _expand_dependencies(reranked: list[dict], index: RetrievalIndex) -> list[di
     """Pull in referenced figure/flowchart chunks that aren't already retrieved.
 
     Detects three kinds of references:
-      1. figure_refs field (pipeline-assigned figure IDs) — same-page figures
+      1. graph-linked figures/tables via figure_refs, related_figure_ids,
+         same_page_figure_ids, and related_table_ids
       2. "Figure X" text patterns — cross-page figure chunks
-      3. "diagnostic chart" / "diagram" text — same-page and adjacent-page figures
+      3. "diagnostic chart" / "diagram" text — adjacent-page figure fallback
     """
     MAX_DEP_FIGURES = 4
     seen_ids = {r["chunk"]["chunk_id"] for r in reranked}
     additions = []
+    figure_chunks_by_id: dict[str, list[dict]] = {}
+    figure_chunks_by_page: dict[int, list[dict]] = {}
+    figure_chunks_by_label: dict[str, list[dict]] = {}
+
+    for candidate in index.lookup.values():
+        if candidate.get("type") != "figure":
+            continue
+        for fig_id in candidate.get("figure_refs", []):
+            figure_chunks_by_id.setdefault(fig_id, []).append(candidate)
+        page = candidate.get("page")
+        if isinstance(page, int):
+            figure_chunks_by_page.setdefault(page, []).append(candidate)
+        cand_text = candidate.get("text", "")
+        for match in FIGURE_TEXT_REF_RE.finditer(cand_text):
+            figure_chunks_by_label.setdefault(match.group(1), []).append(candidate)
+
+    def _append_dependency(candidate: dict, source_row: dict, *, weight: float) -> bool:
+        chunk_id = candidate.get("chunk_id")
+        if not chunk_id or chunk_id in seen_ids:
+            return False
+        additions.append({
+            "chunk": candidate,
+            "score": source_row["score"] * weight,
+            "rerank_score": source_row["rerank_score"] * weight,
+        })
+        seen_ids.add(chunk_id)
+        return True
 
     for r in reranked:
         if len(additions) >= MAX_DEP_FIGURES:
@@ -2220,27 +2264,27 @@ def _expand_dependencies(reranked: list[dict], index: RetrievalIndex) -> list[di
         chunk = r["chunk"]
         page = chunk.get("page")
 
-        # 1. Check figure_refs field (pipeline-assigned references)
-        #    Match on the SPECIFIC figure_id, not just same-page.
-        for fig_id in chunk.get("figure_refs", []):
+        # 1. Use graph-linked figure/table edges first.
+        graph_figure_ids: list[str] = []
+        for field in ("figure_refs", "related_figure_ids", "same_page_figure_ids"):
+            for fig_id in chunk.get(field, []) or []:
+                if fig_id not in graph_figure_ids:
+                    graph_figure_ids.append(fig_id)
+
+        for fig_id in graph_figure_ids:
             if len(additions) >= MAX_DEP_FIGURES:
                 break
-            # Find the chunk whose figure_refs contains this fig_id
-            # or whose text mentions the figure
-            for cid, candidate in index.lookup.items():
-                if cid in seen_ids or candidate.get("type") != "figure":
-                    continue
-                # Match: chunk has this fig_id in its own figure_refs,
-                # or chunk text contains the figure ID string
-                cand_figs = candidate.get("figure_refs", [])
-                if fig_id in cand_figs or fig_id in candidate.get("text", ""):
-                    additions.append({
-                        "chunk": candidate,
-                        "score": r["score"] * 0.9,
-                        "rerank_score": r["rerank_score"] * 0.9,
-                    })
-                    seen_ids.add(cid)
-                    break  # Found the match for this fig_id
+            for candidate in figure_chunks_by_id.get(fig_id, []):
+                if _append_dependency(candidate, r, weight=0.9):
+                    break
+
+        for table_id in chunk.get("related_table_ids", []) or []:
+            if len(additions) >= MAX_DEP_FIGURES:
+                break
+            candidate = index.lookup.get(table_id)
+            if not candidate:
+                continue
+            _append_dependency(candidate, r, weight=0.88)
 
         # 2. Scan text for explicit "Figure X" references
         #    Skip figure chunks — they name themselves (e.g. "Figure 3 Oil
@@ -2253,38 +2297,23 @@ def _expand_dependencies(reranked: list[dict], index: RetrievalIndex) -> list[di
                 if len(additions) >= MAX_DEP_FIGURES:
                     break
                 fig_label = m.group(1)
-                for cid, candidate in index.lookup.items():
-                    if cid in seen_ids or candidate.get("type") != "figure":
-                        continue
-                    cand_text = candidate.get("text", "")
-                    if f"Figure {fig_label}" in cand_text or f"Figure {fig_label} " in cand_text:
-                        additions.append({
-                            "chunk": candidate,
-                            "score": r["score"] * 0.8,
-                            "rerank_score": r["rerank_score"] * 0.8,
-                        })
-                        seen_ids.add(cid)
+                for candidate in figure_chunks_by_label.get(fig_label, []):
+                    if _append_dependency(candidate, r, weight=0.8):
                         break
 
-        # 3. Detect "diagnostic chart" / "diagram" references — search
-        #    same page and adjacent pages for figure chunks (common in
-        #    section 6E2 where chart keys and flowcharts are on facing pages)
+        # 3. Detect "diagnostic chart" / "diagram" references — graph edges
+        #    should have already pulled same-page dependencies, so keep this
+        #    as a narrow adjacent-page fallback for facing-page charts.
         if len(additions) >= MAX_DEP_FIGURES:
             continue
         if page and CHART_REF_RE.search(text):
-            nearby_pages = {page - 1, page, page + 1}
-            for cid, candidate in index.lookup.items():
+            nearby_pages = (page - 1, page + 1)
+            for nearby_page in nearby_pages:
                 if len(additions) >= MAX_DEP_FIGURES:
                     break
-                if (cid not in seen_ids
-                        and candidate.get("type") == "figure"
-                        and candidate.get("page") in nearby_pages):
-                    additions.append({
-                        "chunk": candidate,
-                        "score": r["score"] * 0.85,
-                        "rerank_score": r["rerank_score"] * 0.85,
-                    })
-                    seen_ids.add(cid)
+                for candidate in figure_chunks_by_page.get(nearby_page, []):
+                    if _append_dependency(candidate, r, weight=0.85):
+                        break
 
     # 4. Procedure continuation linking: if a retrieved procedure starts
     #    mid-sequence or has [CONTINUED ON NEXT PAGE], find preceding/following
@@ -2399,6 +2428,7 @@ def _build_messages(query: str,
                     figures: list[dict],
                     conversation: list[dict],
                     config: dict,
+                    voice_mode: bool = False,
                     project_context: str | None = None,
                     notes_context: str | None = None,
                     vehicle_settings: str | None = None,
@@ -2407,6 +2437,16 @@ def _build_messages(query: str,
     # Load system prompt
     sys_prompt_path = _system_prompt_path_from_config(config)
     system_prompt   = sys_prompt_path.read_text(encoding="utf-8")
+
+    if voice_mode:
+        system_prompt += (
+            "\n\n## VOICE CHAT MODE\n\n"
+            "You are in VOICE CHAT MODE. The user is listening to your response via Text-to-Speech. "
+            "Respond naturally and conversationally. Avoid using Markdown formatting like bolding or bullet points. "
+            "Do not include emojis. Speak in full, fluent sentences. "
+            "If you have a list of items, present them as a spoken narrative (e.g., 'First, check the battery. Then, look at the fuse.'). "
+            "Keep your response concise and easy to follow by ear."
+        )
 
     toc_text = get_toc_text(config)
     if toc_text:
@@ -2466,10 +2506,11 @@ def _build_messages(query: str,
     evidence_lines = []
     for i, r in enumerate(reranked, 1):
         chunk = r["chunk"]
+        section_label = chunk.get("section_path") or chunk.get("source_label") or ""
         header = (
             f"--- {chunk['chunk_id']} | "
             f"page: {chunk['page']} | "
-            f"source_label: {chunk.get('source_label', '')} | "
+            f"section: {section_label} | "
             f"type: {chunk['type']} ---"
         )
         evidence_lines.append(header)

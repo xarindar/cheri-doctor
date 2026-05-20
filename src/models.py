@@ -92,6 +92,7 @@ class ChunkRecord:
     same_page_figure_ids: list[str] = field(default_factory=list)
     related_figure_ids: list[str] = field(default_factory=list)
     related_table_ids: list[str] = field(default_factory=list)
+    table_type: str | None = None
     token_count: int = 0
     source_doc: str = "main"           # "main" or "supplement" — supplement wins on conflict
 
